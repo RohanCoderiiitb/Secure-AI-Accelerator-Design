@@ -40,7 +40,9 @@ endmodule
 // This module sums the generated partial products using a regular Carry-Save Adder (CSA) array
 // It avoids slow horizontal carry delays by passing carries diagonally down to the next row
 // The two "+1" compensation constants required by the BW algorithm are injected into the final vector merge adder's carry-in and the Most Significant Bit
-module baugh_wooley_multiplier #(parameter N = 8) (
+module baugh_wooley_multiplier #(
+    parameter N = 8
+) (
     input  wire [N-1:0]   x,
     input  wire [N-1:0]   y,
     output wire [2*N-1:0] p
