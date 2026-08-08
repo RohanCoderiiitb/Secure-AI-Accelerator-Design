@@ -13,8 +13,8 @@
 // ============================================================================
 module tb_systolic_array;
 
-    parameter ROWS = 16;
-    parameter COLS = 16;
+    parameter ROWS = 5;
+    parameter COLS = 5;
     parameter N    = 8;
     parameter ACCW = 32;
     parameter NVEC = 40;              // activation vectors streamed per test

@@ -7,8 +7,8 @@
 module systolic_array #(
     parameter N     = 8,
     parameter ACCW  = 32,
-    parameter ROWS  = 16,
-    parameter COLS  = 16
+    parameter ROWS  = 5,
+    parameter COLS  = 5
 ) (
     input wire                  clk, 
     input wire                  reset_n,
