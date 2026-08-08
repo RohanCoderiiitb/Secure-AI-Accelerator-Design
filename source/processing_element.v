@@ -2,7 +2,7 @@
 //Could be useful for MLP workloads
 module mac_unit #(
     parameter N = 8,
-    parameter ACCW = 32;
+    parameter ACCW = 32
 ) (
     input wire clk,
     input wire reset_n,
@@ -22,12 +22,13 @@ module mac_unit #(
         .p(raw_prod)
     );
     wire [2*N-1:0] prod = $signed(raw_prod);
+    wire signed [ACCW-1:0] prod_ext = {{(ACCW-2*N){prod[2*N-1]}},prod};
 
     //Accumulation logic
     always @(posedge clk) begin
         if(!reset_n) accum <= {ACCW{1'b0}};
-        if(clr) accum <= (en) ? {{(ACCW-2*N){prod[2*N-1]}},prod} : {ACCW{1'b0}};
-        if(en)  accum <= accum + {{(ACCW-2*N){prod[2*N-1]}},prod}
+        else if(clr) accum <= (en) ? prod_ext : {ACCW{1'b0}};
+        else if(en)  accum <= accum + prod_ext;
     end
 
 endmodule
@@ -46,11 +47,14 @@ module processing_element #(
     input wire valid_in,
     input wire signed [N-1:0] act_in,               // Received from the west
     input wire signed [ACCW-1:0] psum_in,           // Received from the north
-    output reg valid_out,                   
+    output reg valid_out,
+    output wire signed [N-1:0] wt_out,                   
     output reg signed [N-1:0] act_out,              // Propagated eastwards
     output reg signed [ACCW-1:0] psum_out           // Propagated southwards
 );
     reg signed [N-1:0] wt_reg;                      // wt_in is latched into this register inside the PE node          
+    assign wt_out = wt_reg;
+    
     wire [2*N-1:0] raw_prod;
     baugh_wooley_multiplier #(
         .N(N)
