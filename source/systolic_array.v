@@ -38,7 +38,7 @@ module systolic_array #(
             assign act[r][0]             = act_flat[r*N+:N];
             assign vld[r][0]             = valid_act_in[r];
             assign act_out[r*N+:N]       = act[r][COLS];
-            assign valid_act_out[r] = act[r][COLS];
+            assign valid_act_out[r]      = vld[r][COLS];
         end
         for(c=0; c<COLS; c=c+1) begin : g_north
             assign wt[0][c]               = wt_flat[c*N+:N];
