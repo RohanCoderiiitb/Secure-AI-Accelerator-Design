@@ -52,10 +52,14 @@ module psum_accum #(
                     end
                     vld_r <= valid_in[c] & last_tile;
                     if(valid_in[c]) begin
-                        mem[addr] <= sum;
-                        acc_r      <= sum;
-                        if(addr > DEPTH) ovf_r <= 1'b1;
-                        else if(!tile_start) addr <= addr + 1;
+                        if(addr >= DEPTH) begin
+                            // already out of range - do not write, do not advance
+                            ovf_r <= 1'b1;
+                        end else begin
+                            mem[addr] <= sum;
+                            acc_r      <= sum;
+                            if(!tile_start) addr <= addr + 1;
+                        end
                     end
                 end
             end
