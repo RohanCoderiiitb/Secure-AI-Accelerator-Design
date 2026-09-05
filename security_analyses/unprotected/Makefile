@@ -17,8 +17,12 @@
 #   WIN_LEN=8     pooling window size (DUT=maxpool only)
 #   PERM=500      label permutations for the ADLA threshold
 #
-# ADLA reuses the TVLA dataset:
+# ADLA and second-order TVLA reuse the TVLA dataset -- no re-simulation:
 #   make tvla DUT=pe   then   make adla DUT=pe      (or just: make both DUT=pe)
+#   make tvla2 DUT=pe            univariate 2nd order (parallel masking)
+#   make tvla2_biv DUT=pe        all cycle pairs (serialised masking/shuffling)
+#   make allorders DUT=pe        capture once, then 1st + ADLA + 2nd order
+#   make tvla2_all               univariate 2nd order on every block
 # =====================================================================
 
 IVERILOG ?= iverilog
@@ -42,14 +46,14 @@ BUILD := build
 TR    := traces
 OUT   := out
 
-SRC_MULT      := $(RTL)/multiplier.v
-SRC_PE        := $(RTL)/multiplier.v $(RTL)/processing_element.v
-SRC_ARRAY     := $(RTL)/multiplier.v $(RTL)/processing_element.v $(RTL)/systolic_array.v
-SRC_PSUM      := $(RTL)/partial_sum_accumulators.v
-SRC_OUT       := $(RTL)/requantization_block.v $(RTL)/activation_unit.v
-SRC_REQUANT   := $(RTL)/requantization_block.v
-SRC_ACT       := $(RTL)/activation_unit.v
-SRC_MAXPOOL   := $(RTL)/maxpool_unit.v
+SRC_MULT      := $(RTL)/multiplier.sv
+SRC_PE        := $(RTL)/multiplier.sv $(RTL)/processing_element.sv
+SRC_ARRAY     := $(RTL)/multiplier.sv $(RTL)/processing_element.sv $(RTL)/systolic_array.sv
+SRC_PSUM      := $(RTL)/partial_sum_accumulators.sv
+SRC_OUT       := $(RTL)/requantization_block.sv $(RTL)/activation_unit.sv
+SRC_REQUANT   := $(RTL)/requantization_block.sv
+SRC_ACT       := $(RTL)/activation_unit.sv
+SRC_MAXPOOL   := $(RTL)/maxpool_unit.sv
 
 DUT ?= pe
 
@@ -58,41 +62,41 @@ VVP_EXTRA :=
 
 ifeq ($(DUT),mult)
   SRCS := $(SRC_MULT)
-  TBF  := $(TB)/tb_tvla_mult.v
+  TBF  := $(TB)/tb_tvla_mult.sv
 endif
 ifeq ($(DUT),mac)
   SRCS := $(SRC_PE)
-  TBF  := $(TB)/tb_tvla_mac.v
+  TBF  := $(TB)/tb_tvla_mac.sv
 endif
 ifeq ($(DUT),pe)
   SRCS := $(SRC_PE)
-  TBF  := $(TB)/tb_tvla_pe.v
+  TBF  := $(TB)/tb_tvla_pe.sv
 endif
 ifeq ($(DUT),array)
   SRCS   := $(SRC_ARRAY)
-  TBF    := $(TB)/tb_tvla_array.v
+  TBF    := $(TB)/tb_tvla_array.sv
   PARAMS := -Ptb_tvla_array.ROWS=$(ROWS) -Ptb_tvla_array.COLS=$(COLS)
 endif
 ifeq ($(DUT),psum)
   SRCS := $(SRC_PSUM)
-  TBF  := $(TB)/tb_tvla_psum.v
+  TBF  := $(TB)/tb_tvla_psum.sv
 endif
 ifeq ($(DUT),outstage)
   SRCS := $(SRC_OUT)
-  TBF  := $(TB)/tb_tvla_output_stage.v
+  TBF  := $(TB)/tb_tvla_output_stage.sv
 endif
 ifeq ($(DUT),requantize)
   SRCS := $(SRC_REQUANT)
-  TBF  := $(TB)/tb_tvla_requantize.v
+  TBF  := $(TB)/tb_tvla_requantize.sv
 endif
 ifeq ($(DUT),act)
   SRCS      := $(SRC_ACT)
-  TBF       := $(TB)/tb_tvla_act.v
+  TBF       := $(TB)/tb_tvla_act.sv
   VVP_EXTRA := +ACT_MODE=$(ACT_MODE)
 endif
 ifeq ($(DUT),maxpool)
   SRCS      := $(SRC_MAXPOOL)
-  TBF       := $(TB)/tb_tvla_maxpool.v
+  TBF       := $(TB)/tb_tvla_maxpool.sv
   VVP_EXTRA := +WIN_LEN=$(WIN_LEN)
 endif
 
@@ -108,7 +112,8 @@ endif
 
 VVPF := $(BUILD)/tb_$(SUF).vvp
 
-.PHONY: all dirs build null tvla adla adla_null both sweep act_all clean
+.PHONY: all dirs build null tvla adla adla_null tvla2 tvla2_null tvla2_biv \
+        tvla2_selftest tvla2_all both allorders sweep act_all clean
 
 dirs:
 	@mkdir -p $(BUILD) $(TR) $(OUT)
@@ -155,6 +160,65 @@ adla:
 both: tvla
 	$(MAKE) --no-print-directory adla DUT=$(DUT) TARGET=$(TARGET) \
 	        ROWS=$(ROWS) COLS=$(COLS) ACT_MODE=$(ACT_MODE) PERM=$(PERM)
+
+# ---------------------------------------------------------------------
+# Second-order TVLA. Also reuses the TVLA dataset. Univariate is the
+# default: with a parallel masked datapath both shares land in the same
+# time sample, so (P_i - mu_i)^2 is the right transform and no cross-cycle
+# product is needed. Use tvla2_biv only for serialised masking or
+# shuffling, where the shares genuinely separate in time.
+# ---------------------------------------------------------------------
+tvla2_selftest:
+	cd scripts && $(PY) run_tvla_second_order.py --self-test
+
+tvla2_null:
+	cd scripts && $(PY) run_tvla_second_order.py \
+	       --npz ../$(TR)/$(SUF)_null.npz --null
+
+# Plot prefix carries a _2nd suffix so the three second-order PNGs sit
+# beside the first-order ones instead of overwriting them: the filenames
+# themselves (_t / _mean / _ttd) are deliberately identical.
+tvla2:
+	cd scripts && $(PY) run_tvla_second_order.py \
+	       --npz ../$(TR)/$(SUF)_$(TARGET).npz --compare --profile \
+	       --ttd --repeats $(REPEATS) \
+	       --plot ../$(OUT)/$(SUF)_$(TARGET)_2nd \
+	       --csv ../$(OUT)/tvla2_summary.csv
+
+tvla2_biv:
+	cd scripts && $(PY) run_tvla_second_order.py \
+	       --npz ../$(TR)/$(SUF)_$(TARGET).npz --bivariate \
+	       --csv ../$(OUT)/tvla2_summary.csv
+
+# ---------------------------------------------------------------------
+# Second-order univariate across every block, reusing the datasets that
+# `make all` already captured. No re-simulation, no re-elaboration --
+# this only reads traces/*.npz, so it is safe to run repeatedly.
+#
+# Bivariate is deliberately NOT run here: with an unprotected parallel
+# datapath both shares land in the same aggregate P[t], so all the
+# structure sits on the diagonal and the pair sweep costs T(T+1)/2 tests
+# to rediscover the univariate answer. Run tvla2_biv per-DUT once
+# countermeasures are in and the shares separate in time.
+# ---------------------------------------------------------------------
+tvla2_all:
+	@for d in mult mac pe psum outstage requantize maxpool; do \
+	  $(MAKE) --no-print-directory tvla2 DUT=$$d TARGET=$(TARGET) \
+	          REPEATS=$(REPEATS); \
+	done
+	$(MAKE) --no-print-directory tvla2 DUT=array ROWS=$(ROWS) COLS=$(COLS) \
+	        TARGET=$(TARGET) REPEATS=$(REPEATS)
+	@for m in 0 1 2 3; do \
+	  $(MAKE) --no-print-directory tvla2 DUT=act ACT_MODE=$$m \
+	          TARGET=$(TARGET) REPEATS=$(REPEATS); \
+	done
+
+# Capture once, then every statistical test on that one dataset.
+allorders: tvla
+	$(MAKE) --no-print-directory adla  DUT=$(DUT) TARGET=$(TARGET) \
+	        ROWS=$(ROWS) COLS=$(COLS) ACT_MODE=$(ACT_MODE) PERM=$(PERM)
+	$(MAKE) --no-print-directory tvla2 DUT=$(DUT) TARGET=$(TARGET) \
+	        ROWS=$(ROWS) COLS=$(COLS) ACT_MODE=$(ACT_MODE)
 
 # ---------------------------------------------------------------------
 # Array-size ladder. TTD is expected to grow with the PE count because

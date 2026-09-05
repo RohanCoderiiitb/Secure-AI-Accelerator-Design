@@ -1,2 +1,7 @@
+venv/
 security_analyses/unprotected/traces/
 security_analyses/unprotected/build/
+security_analyses/unprotected/scripts/run_tvla_second_order.py
+security_analyses/unprotected/scripts/tvla_second_order.py
+security_analyses/unprotected/out/tvla_second_order_outputs
+.DS_Store
