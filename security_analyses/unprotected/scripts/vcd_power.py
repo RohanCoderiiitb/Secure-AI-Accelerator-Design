@@ -98,6 +98,15 @@ def parse_timescale(tokens):
     return mag * to_ns
 
 
+def _popcount(v_int, v_str):
+    """Number of known 1 bits. x/z positions contribute nothing."""
+    if v_int is not None:
+        return v_int.bit_count()
+    if v_str is None:
+        return 0
+    return v_str.count("1")
+
+
 def normalize(val, width):
     """Left-extend a VCD vector value to `width` chars, per IEEE 1364 rules."""
     if len(val) >= width:
@@ -212,10 +221,17 @@ def parse_body(fh, vars_by_id, dropped_ids=frozenset(), skip_xz=True,
         comb_hd int64 array, combinational toggle count at that timestamp
         stats   dict of diagnostics
     """
-    times, reg_hd, comb_hd = [], [], []
+    times, reg_hd, comb_hd, hw_state = [], [], [], []
     cur_t = 0
     acc_r = 0
     acc_c = 0
+    # Running Hamming WEIGHT of all sequential state. Unlike HD this is a
+    # STATE, not a transition count, so it is maintained incrementally and
+    # sampled per cycle rather than accumulated. HW is the right model for
+    # precharged buses and for SRAM read paths -- psum_accum's mem[] in
+    # particular -- where consumption tracks the value held rather than the
+    # transition made.
+    hw_total = 0
     absorb = True          # true until the first real value-change section
     n_xz_skipped = 0
     n_unknown_id = 0
@@ -229,6 +245,7 @@ def parse_body(fh, vars_by_id, dropped_ids=frozenset(), skip_xz=True,
             times.append(cur_t)
             reg_hd.append(acc_r)
             comb_hd.append(acc_c)
+            hw_state.append(hw_total)
         acc_r = 0
         acc_c = 0
 
@@ -287,6 +304,8 @@ def parse_body(fh, vars_by_id, dropped_ids=frozenset(), skip_xz=True,
             new_str = normalize(val.lower(), v.width)
 
         if absorb or not started:
+            if v.is_reg:
+                hw_total += _popcount(new_int, new_str) - _popcount(v.v_int, v.v_str)
             v.v_int, v.v_str = new_int, new_str
             continue
 
@@ -312,6 +331,8 @@ def parse_body(fh, vars_by_id, dropped_ids=frozenset(), skip_xz=True,
                     else:
                         hd += 1
 
+        if v.is_reg:
+            hw_total += _popcount(new_int, new_str) - _popcount(v.v_int, v.v_str)
         v.v_int, v.v_str = new_int, new_str
         if hd:
             if v.is_reg:
@@ -334,6 +355,7 @@ def parse_body(fh, vars_by_id, dropped_ids=frozenset(), skip_xz=True,
     return (np.asarray(times, dtype=np.int64),
             np.asarray(reg_hd, dtype=np.int64),
             np.asarray(comb_hd, dtype=np.int64),
+            np.asarray(hw_state, dtype=np.int64),
             stats)
 
 
@@ -350,10 +372,24 @@ def read_meta(path):
                 k, _, v = line[1:].strip().partition("=")
                 hdr[k.strip()] = v.strip()
             elif line.startswith("trace_id"):
+                cols = [c.strip() for c in line.split(",")]
                 continue
             elif line.strip():
-                tid, grp, t0, t1 = line.split(",")
-                rows.append((int(tid), grp.strip(), float(t0), float(t1)))
+                f = [x.strip() for x in line.split(",")]
+                if len(f) == 4:
+                    # TVLA / ADLA layout: trace_id, group, t_start, t_end
+                    rows.append((int(f[0]), f[1], -1, -1, -1, -1,
+                                 float(f[2]), float(f[3])))
+                elif len(f) == 8:
+                    # QIF layout, additionally carrying secret and context.
+                    # Both layouts are read by the same parser so a QIF
+                    # capture and a TVLA capture stay directly comparable.
+                    rows.append((int(f[0]), f[1], int(f[2]), int(f[3]),
+                                 int(f[4]), int(f[5]),
+                                 float(f[6]), float(f[7])))
+                else:
+                    raise ValueError("meta row has %d fields, expected 4 or 8: %r"
+                                     % (len(f), line))
     if not rows:
         raise ValueError("no trace windows in %s" % path)
     return hdr, rows
@@ -362,7 +398,8 @@ def read_meta(path):
 # ---------------------------------------------------------------------
 # Framing
 # ---------------------------------------------------------------------
-def build_matrices(times_ticks, reg_hd, comb_hd, ns_per_tick, hdr, rows):
+def build_matrices(times_ticks, reg_hd, comb_hd, hw_state, ns_per_tick,
+                   hdr, rows):
     period = float(hdr["clk_period_ns"])
     ncyc = int(hdr["capture_cycles"])
     ntr = len(rows)
@@ -371,17 +408,25 @@ def build_matrices(times_ticks, reg_hd, comb_hd, ns_per_tick, hdr, rows):
 
     P_reg = np.zeros((ntr, ncyc), dtype=np.float64)
     P_comb = np.zeros((ntr, ncyc), dtype=np.float64)
+    P_hw = np.zeros((ntr, ncyc), dtype=np.float64)
     labels = np.zeros(ntr, dtype=np.int8)
+    secret_id = np.full(ntr, -1, dtype=np.int64)
+    secret_val = np.full(ntr, -1, dtype=np.int64)
+    context_id = np.full(ntr, -1, dtype=np.int64)
+    context_val = np.full(ntr, -1, dtype=np.int64)
 
-    starts = np.array([r[2] for r in rows])
+    starts = np.array([r[-2] for r in rows])
     order = np.argsort(t_ns)
     t_sorted = t_ns[order]
     r_sorted = reg_hd[order]
     c_sorted = comb_hd[order]
+    w_sorted = hw_state[order]
 
     dropped = 0
-    for i, (tid, grp, ts, te) in enumerate(rows):
+    for i, (tid, grp, sid, sval, cid, cval, ts, te) in enumerate(rows):
         labels[i] = 1 if grp == "R" else 0
+        secret_id[i], secret_val[i] = sid, sval
+        context_id[i], context_val[i] = cid, cval
         lo = np.searchsorted(t_sorted, ts - 0.5 * period, side="left")
         hi = np.searchsorted(t_sorted, te + 0.5 * period, side="left")
         if hi <= lo:
@@ -398,8 +443,17 @@ def build_matrices(times_ticks, reg_hd, comb_hd, ns_per_tick, hdr, rows):
         np.add.at(P_reg[i], bins[ok], r_sorted[lo:hi][ok])
         np.add.at(P_comb[i], bins[ok], c_sorted[lo:hi][ok])
 
+        # HW is a state, so it is SAMPLED at each posedge rather than summed
+        # over the cycle. Take the most recent recorded value at or before
+        # each clock edge; a cycle with no activity inherits the previous
+        # state instead of reading zero.
+        edges = ts + np.arange(ncyc) * period
+        j = np.searchsorted(t_sorted, edges + 1e-9, side="right") - 1
+        P_hw[i] = np.where(j >= 0, w_sorted[np.clip(j, 0, None)], 0.0)
+
     _ = starts  # kept for debugging convenience
-    return P_reg, P_comb, labels, dropped
+    return (P_reg, P_comb, P_hw, labels, dropped,
+            secret_id, secret_val, context_id, context_val)
 
 
 def main():
@@ -439,7 +493,7 @@ def main():
             comb_regex=args.comb_regex, exclude_regex=args.exclude_regex)
         print("[vcd] timescale = %g ns/tick, %d dumped nets"
               % (ns_per_tick, len(vars_by_id)))
-        times, reg_hd, comb_hd, stats = parse_body(
+        times, reg_hd, comb_hd, hw_state, stats = parse_body(
             fh, vars_by_id, dropped_ids=dropped_ids,
             skip_xz=not args.count_xz, progress=args.progress)
 
@@ -452,8 +506,9 @@ def main():
         print("[vcd] WARNING: %d value changes for filtered-out ids"
               % stats["n_unknown_id"])
 
-    P_reg, P_comb, labels, dropped = build_matrices(
-        times, reg_hd, comb_hd, ns_per_tick, hdr, rows)
+    (P_reg, P_comb, P_hw, labels, dropped, secret_id, secret_val,
+     context_id, context_val) = build_matrices(
+        times, reg_hd, comb_hd, hw_state, ns_per_tick, hdr, rows)
     P_tot = P_reg + P_comb
 
     if dropped:
@@ -463,8 +518,8 @@ def main():
     nF = int((labels == 0).sum())
     nR = int((labels == 1).sum())
     print("[vcd] matrices %s  (fixed=%d, random=%d)" % (P_reg.shape, nF, nR))
-    print("[vcd] mean P_reg=%.1f  P_comb=%.1f  P_tot=%.1f bits/cycle"
-          % (P_reg.mean(), P_comb.mean(), P_tot.mean()))
+    print("[vcd] mean P_reg=%.1f  P_comb=%.1f  P_tot=%.1f  P_hw=%.1f bits/cycle"
+          % (P_reg.mean(), P_comb.mean(), P_tot.mean(), P_hw.mean()))
 
     if P_reg.sum() == 0:
         print("[vcd] ERROR: P_reg is identically zero. Either the DUT has no "
@@ -474,12 +529,14 @@ def main():
     os.makedirs(os.path.dirname(os.path.abspath(args.out)), exist_ok=True)
     np.savez_compressed(
         args.out,
-        P_reg=P_reg, P_comb=P_comb, P_tot=P_tot, labels=labels,
+        P_reg=P_reg, P_comb=P_comb, P_tot=P_tot, P_hw=P_hw, labels=labels,
         clk_period_ns=float(hdr["clk_period_ns"]),
         capture_cycles=int(hdr["capture_cycles"]),
         dut=hdr.get("dut", ""), mode=hdr.get("mode", ""),
         tvla_target=hdr.get("tvla_target", ""), seed=hdr.get("seed", ""),
         n_reg_bits=stats["n_reg_bits"], n_comb_bits=stats["n_comb_bits"],
+        secret_id=secret_id, secret_val=secret_val,
+        context_id=context_id, context_val=context_val,
     )
     print("[vcd] wrote %s" % args.out)
 
