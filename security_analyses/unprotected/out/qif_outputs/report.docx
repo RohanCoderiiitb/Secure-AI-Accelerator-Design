@@ -1,0 +1,248 @@
+const {
+  Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType,
+  Table, TableRow, TableCell, WidthType, BorderStyle, ShadingType,
+  LevelFormat
+} = require("docx");
+
+const US_LETTER = { width: 12240, height: 15840 };
+
+function figurePlaceholder(label) {
+  return new Table({
+    width: { size: 9360, type: WidthType.DXA },
+    columnWidths: [9360],
+    rows: [
+      new TableRow({
+        children: [
+          new TableCell({
+            width: { size: 9360, type: WidthType.DXA },
+            shading: { type: ShadingType.CLEAR, color: "auto", fill: "F2F2F2" },
+            borders: {
+              top: { style: BorderStyle.DASHED, size: 4, color: "999999" },
+              bottom: { style: BorderStyle.DASHED, size: 4, color: "999999" },
+              left: { style: BorderStyle.DASHED, size: 4, color: "999999" },
+              right: { style: BorderStyle.DASHED, size: 4, color: "999999" },
+            },
+            children: [
+              new Paragraph({ text: "", spacing: { before: 1200 } }),
+              new Paragraph({
+                alignment: AlignmentType.CENTER,
+                children: [new TextRun({ text: `[ ${label} — space reserved ]`, italics: true, color: "808080" })],
+              }),
+              new Paragraph({ text: "", spacing: { after: 1200 } }),
+            ],
+          }),
+        ],
+      }),
+    ],
+  });
+}
+
+function figureCaption(text) {
+  return new Paragraph({
+    alignment: AlignmentType.CENTER,
+    spacing: { after: 240 },
+    children: [new TextRun({ text, italics: true, size: 20, color: "444444" })],
+  });
+}
+
+function sectionHeading(text) {
+  return new Paragraph({
+    heading: HeadingLevel.HEADING_1,
+    spacing: { before: 260, after: 120 },
+    children: [new TextRun({ text })],
+  });
+}
+
+function subHeading(text) {
+  return new Paragraph({
+    heading: HeadingLevel.HEADING_2,
+    spacing: { before: 180, after: 80 },
+    children: [new TextRun({ text })],
+  });
+}
+
+function subsubHeading(text) {
+  return new Paragraph({
+    heading: HeadingLevel.HEADING_3,
+    spacing: { before: 140, after: 60 },
+    children: [new TextRun({ text, italics: true })],
+  });
+}
+
+function body(text) {
+  return new Paragraph({
+    spacing: { after: 160 },
+    alignment: AlignmentType.JUSTIFIED,
+    children: [new TextRun({ text, size: 22 })],
+  });
+}
+
+function bullet(text, level = 0) {
+  return new Paragraph({
+    numbering: { reference: "bullet-list", level },
+    spacing: { after: 60 },
+    children: [new TextRun({ text, size: 22 })],
+  });
+}
+
+function mono(text) {
+  return new Paragraph({
+    spacing: { after: 160 },
+    indent: { left: 360 },
+    children: [new TextRun({ text, size: 20, font: "Consolas", color: "333333" })],
+  });
+}
+
+const doc = new Document({
+  numbering: {
+    config: [
+      {
+        reference: "bullet-list",
+        levels: [
+          { level: 0, format: LevelFormat.BULLET, text: "\u2022", alignment: AlignmentType.LEFT,
+            style: { paragraph: { indent: { left: 450, hanging: 270 } } } },
+          { level: 1, format: LevelFormat.BULLET, text: "\u25E6", alignment: AlignmentType.LEFT,
+            style: { paragraph: { indent: { left: 810, hanging: 270 } } } },
+        ],
+      },
+    ],
+  },
+  sections: [
+    {
+      properties: { page: { size: US_LETTER, margin: { top: 1080, bottom: 1080, left: 1080, right: 1080 } } },
+      children: [
+        new Paragraph({
+          heading: HeadingLevel.TITLE,
+          alignment: AlignmentType.CENTER,
+          spacing: { after: 60 },
+          children: [new TextRun({ text: "AI Accelerator — Progress Report" })],
+        }),
+        new Paragraph({
+          alignment: AlignmentType.CENTER,
+          spacing: { after: 300 },
+          children: [new TextRun({ text: "RTL Design and Side-Channel Leakage Characterization", italics: true, color: "555555", size: 22 })],
+        }),
+
+        sectionHeading("1. RTL Architecture and Design"),
+        body(
+          "We have designed the essential building blocks of the AI accelerator architecture using an INT8 data format. The blocks completed so far include the multiplier, processing element (PE), systolic array, partial sum accumulators, activation unit, re-quantization block, max pooling unit (targeted at CNN workloads), memory interfaces, and the top-level integration."
+        ),
+        body(
+          "The PE's MAC operation is built around a Baugh-Wooley multiplier. A parameterized systolic array has been designed and is currently configured as a 5x5 array, with a weight-stationary dataflow implemented for data movement through the array."
+        ),
+        subHeading("Re-quantization Pipeline"),
+        body(
+          "The RTL follows the standard quantization ordering: bias is added to the INT32 accumulator before re-quantization, followed by multiplication with the quantization multiplier, right-shift scaling, and saturating conversion to INT8. The one deviation from the reference flow is in rounding — the current RTL uses a fixed positive half-LSB offset before the arithmetic right shift, rather than symmetric rounding away from zero."
+        ),
+        subHeading("Verification Status"),
+        body(
+          "RTL functional verification is complete using exhaustive and scenario-based testbenches. Verification against the Python golden model is still pending."
+        ),
+
+        sectionHeading("2. TVLA (Test Vector Leakage Assessment) Framework"),
+        body(
+          "We have built a TVLA framework in Python to statistically evaluate side-channel leakage across the RTL blocks. Dedicated testbenches are run for each block, generating a total of 2000 traces per block — 1000 from a fixed dataset and 1000 from random datasets."
+        ),
+        body(
+          "VCD files are processed cycle-by-cycle to extract three switching-activity power proxies:"
+        ),
+        bullet("Register Hamming distance (state switches, P_reg)"),
+        bullet("Combinational toggle count (P_comb)"),
+        bullet("Total switching activity (P_reg + P_comb)"),
+        body(
+          "Welch's t-test is then applied independently at every clock cycle, comparing the fixed and random trace populations. Across all blocks analyzed, leakage is observed across most of the capture window. The dominant proxy varies by block: combinational switching dominates in the multiplier and partial sum accumulator, while register Hamming distance dominates in the max pooling and re-quantization blocks."
+        ),
+
+        sectionHeading("3. ADLA — Anderson-Darling Leakage Assessment"),
+        body(
+          "ADLA is a distributional companion to TVLA, run on the exact same fixed-vs-random trace populations (P_reg, P_comb, P_tot) with no re-simulation required. Welch's t-test compares only means, so two populations with identical means but different variance, skew, or tail behavior can pass TVLA while still being distinguishable — a regime that first-order masked designs are specifically built to land in. ADLA instead compares the full empirical CDFs of the two populations using the Anderson-Darling statistic, which is weighted to be sensitive in the tails and therefore catches variance, bimodality, and tail differences that a mean-based test cannot see."
+        ),
+        subHeading("Tie-Corrected Statistic"),
+        body(
+          "Switching-activity toggle counts are small integers, so a capture window typically yields only 20–60 distinct values per cycle and the pooled sample is dominated by ties. The textbook Anderson-Darling formula assumes continuous data and is invalid under ties, so the framework implements the Scholz & Stephens (1987) midrank-corrected k-sample statistic (A\u00B2_akN), verified to agree with scipy.stats.anderson_ksamp(midrank=True) to within 1e-13 across tied, untied, and unbalanced samples. The raw statistic is converted to the Scholz-Stephens standardized form (null mean 0, null standard deviation 1) so results are comparable across DUTs with different trace counts."
+        ),
+        body(
+          "A correct, noiseless RTL null dataset produces a pooled sample with a single distinct value per cycle, which the closed-form A\u00B2 formula cannot evaluate (scipy raises ValueError on this input). The implementation treats this degenerate case as A\u00B2 = 0 by construction rather than an error, and flags it explicitly in the report as the ADLA counterpart of t = 0."
+        ),
+        subHeading("Empirical Threshold via Label Permutation"),
+        body(
+          "There is no ADLA equivalent of TVLA's universal |t| > 4.5 — the standardized statistic's null distribution is not normal, and published critical-value tables stop well short of the 1e-5 significance level TVLA uses. The threshold is instead derived per-dataset by permuting the fixed/random labels (default 500 permutations), recomputing the statistic under each shuffle, and taking the empirical alpha-percentile of the resulting null distribution. The null is built on the maximum statistic across the full capture window, which controls the family-wise error rate for an \"does this DUT leak anywhere\" claim. When the permutation count is too small to resolve the requested alpha directly, the upper tail of the permutation null is fit with a Gumbel distribution to extrapolate the threshold rather than silently returning the sample maximum."
+        ),
+        subHeading("Detection and Half-Split Confirmation"),
+        body(
+          "A cycle is flagged as leaking when its statistic exceeds the permutation threshold. Where enough traces are available, detections are confirmed by splitting the fixed and random populations in half, independently recomputing both the statistic and its own permutation threshold on each half (a threshold derived at one sample size cannot be reused at another), and requiring both halves to exceed threshold — the same half-split discipline used for TVLA. A dedicated null_check() runs the same pipeline on a fixed-vs-fixed dataset without half-splitting and reports pass/fail against the permutation threshold."
+        ),
+        subHeading("Traces-to-Detection and Agreement with TVLA"),
+        body(
+          "A traces-to-detection (TTD) sweep mirrors the TVLA TTD curve: at each of a grid of subset sizes, repeated random subsets are drawn, the permutation threshold is recomputed at that size, and the detection rate is recorded, optionally under injected Gaussian noise to produce a TTD-vs-SNR curve. Separately, ADLA and TVLA results on the same traces are cross-tabulated cycle-by-cycle into four categories — both, ADLA-only, TVLA-only, neither. The ADLA-only cycles are the diagnostically important ones: leakage that is distributional rather than mean-shifted. On unprotected hardware this category is normally near-empty since both tests see the same strong mean difference; it is expected to become the primary result once masking is applied."
+        ),
+        subHeading("Driver (run_adla.py)"),
+        body(
+          "The driver consumes the same .npz trace files as the TVLA driver. It supports a --null mode for the fixed-vs-fixed sanity check, a default fixed-vs-random detection mode, a --compare flag to run TVLA side-by-side and report agreement, and a --ttd flag to sweep traces-to-detection across a default SNR grid ({inf, 100, 10, 1, 0.1}). --plot generates the per-cycle A\u00B2 profile, an ADLA-vs-TVLA relative-detection-strength overlay, and the TTD-vs-SNR curve; --csv appends a summary row per proxy for cross-run aggregation."
+        ),
+
+        sectionHeading("4. QIF — Quantitative Information Flow Analysis"),
+        body(
+          "QIF quantifies leakage in bits rather than as a pass/fail statistical test, by building an explicit information-theoretic channel from the secret value to the observed power proxy and applying measures from quantitative information flow theory. The pipeline is split into four modules with a deliberately enforced boundary: qif_channel.py builds channels from enumerated traces, qif_measures.py implements exact measures over a channel with no estimation logic, qif_estimate.py holds all estimator and bias-correction machinery for channels that could not be exhaustively enumerated, and qif_validate.py is an analytic gate that must pass before any RTL data is trusted."
+        ),
+        subHeading("Channel Construction and the Exact/Sampled Distinction"),
+        body(
+          "Each channel matrix C[s,o] = p(o|s) is built by build() from paired (secret, observable) samples at one time sample, together with provenance metadata: the declared secret and observation value sets, an exact flag, trace count, cycle, and power proxy. The secret space is passed explicitly so that a secret which was enumerated but produced no trace shows up as a missing row rather than silently shrinking the space, and an incomplete enumeration raises an error rather than proceeding on a partial channel."
+        ),
+        body(
+          "The exact/sampled flag is the central bookkeeping device of the module. In zero-delay RTL the map from inputs to toggle count is deterministic, so a channel built from an exhaustively enumerated secret space is the true channel rather than an estimate of it, and any mutual information computed from it carries no estimator bias. A channel is instead marked sampled when the context space had to be subsampled, in which case p(o|s) is only an estimate and everything computed from it inherits estimator bias — which is exactly what qif_estimate.py exists to correct and bound. The two are never merged into one column without the flag, including in the CSV output."
+        ),
+        body(
+          "build_per_cycle() builds one channel per clock cycle from the full (N, T) power matrix, producing the per-cycle MI profile that is the direct QIF counterpart of the |t| and A\u00B2 profiles from TVLA and ADLA — literally the leaked-bits-per-cycle figure."
+        ),
+        subHeading("Threat Model: Marginal Only"),
+        body(
+          "The observable is modeled as O = f(S, K), where K is a public context the attacker is assumed not to know. The reported channel therefore marginalizes K out of p(o|s) rather than conditioning on it — context variation is treated as algorithmic noise, which is the conservative, weakest-attacker assumption. marginal_channel() implements this and is the function used in the reporting path. Marginalizing correctly still requires the context space to have been enumerated exhaustively during capture, since that is what makes the integration over K exact rather than sampled; for the current 5x5 array configuration it is not, so the marginal channel is marked sampled and routed through the bias-correction path. build_conditional(), which builds one exact channel per enumerated context value and describes a strictly stronger attacker who knows the context, is retained only for diagnostics and is not called anywhere in the reporting path."
+        ),
+        subHeading("Measures (Exact, Given a Channel)"),
+        body(
+          "Shannon mutual information I(S;O) is computed as H(O) − H(O|S) rather than from the joint distribution directly, because for a deterministic channel every row is a point mass, H(O|S) = 0, and I(S;O) collapses exactly to H(O) — the Tier 0 case for every exhaustively enumerated block."
+        ),
+        body(
+          "Because an average measure like Shannon MI can be identical for two channels where one hands an attacker the secret on the first guess and the other does not, the framework also reports Bayes-vulnerability-based measures: the prior vulnerability V1(\u03C0) = max_s \u03C0(s), the posterior vulnerability V1(\u03C0\u25B7C) = \u03A3_o max_s J[s,o], the min-entropy leakage L_min = log2(V1(\u03C0\u25B7C)/V1(\u03C0)), and the conditional min-entropy H_\u221E(S|O) = \u2212log2 V1(\u03C0\u25B7C), read as the effective bits of secret remaining after one observation. For a uniform prior, L_min also equals the channel's min-capacity — the worst case over all possible priors — so the uniform-prior figure is simultaneously a bound that cannot be argued down by assuming a more favorable weight distribution."
+        ),
+        subsubHeading("g-leakage and the neural-network IP measure"),
+        body(
+          "The framework generalizes to g-leakage, which scores an attacker on a chosen gain function g(w, s) rather than only exact recovery. gain_identity reproduces min-entropy leakage exactly. gain_tolerance(eps) scores a guess as successful whenever |w \u2212 s| \u2264 eps and is the measure most relevant to protecting model weights: an attacker who recovers every weight to within a few LSBs has a functionally equivalent clone of the network, so exact-match leakage alone understates the real threat. Sweeping eps produces a leakage-versus-tolerance curve that no mean-based test (TVLA or ADLA) can express. gain_bit(k) scores per-bit recovery, giving a figure directly comparable to CPA key-bit recovery rates, and gain_sign scores sign recovery only, corresponding to a one-bit ReLU-oracle attacker."
+        ),
+        subHeading("Bias Correction and Estimation (Sampled Channels Only)"),
+        body(
+          "Plug-in mutual information is biased upward by approximately (m_so \u2212 m_s \u2212 m_o + 1) / (2N ln 2). With a 256-value secret space, roughly 40 distinct toggle-count values, and 2000 traces, this bias is on the order of a full bit if left uncorrected — leakage that does not actually exist. The framework applies the Miller-Madow correction to each entropy term (H(S), H(O), H(S,O)) as the minimum defensible baseline, and separately reports the uncorrected plug-in value and the analytic bias estimate so the size of the correction is visible."
+        ),
+        body(
+          "Correction alone is not sufficient, since the correction itself is approximate, so a permutation null is used to make the corrected MI actionable: the secret labels are shuffled, MI is recomputed under Miller-Madow correction, and this is repeated (default 300 draws) to build an empirical null distribution. Measured MI is reported against the 99th percentile of this null rather than against any fixed threshold — the same discipline used for the TVLA and ADLA thresholds, and the direct answer to the fact that no universal critical value exists for mutual information either."
+        ),
+        subsubHeading("Semi-analytic MI under Gaussian noise"),
+        body(
+          "When additive Gaussian measurement noise of standard deviation sigma is introduced, p(o|s) becomes a finite mixture of Gaussians whose component means are the enumerated toggle-count values and whose weights are known exactly. Mutual information under noise is therefore computed by 1-D quadrature over the observable rather than by sampling, so the resulting MI-vs-SNR curve stays exact — with no estimator and no associated bias — for every block whose input space was enumerated exhaustively. The quadrature grid is sized adaptively to resolve each Gaussian component (at least four points per sigma) subject to a memory cap; if sigma is small enough that resolving it would require an impractically large grid, the noiseless channel is used directly since the noise is negligible relative to the observable's native resolution at that point. mi_vs_snr() sweeps a default SNR grid ({inf, 100, 10, 1, 0.1}) using the same SNR convention as the TVLA/ADLA noise injection — signal power defined as the across-trace variance of the noiseless observable — producing the reportable MI-vs-SNR curve, directly analogous to the TTD-vs-SNR curve on the statistical-test side."
+        ),
+        subHeading("Analytic Validation Gate"),
+        body(
+          "qif_validate.py checks every measure in qif_measures.py against channels with a closed-form known answer, and must pass before any RTL trace is trusted through the pipeline (and be re-run after any edit to qif_measures.py). The headline check is the Hamming-weight channel: for a uniform 8-bit secret, HW(S) is Binomial(8, 1/2), and since HW is a deterministic function of S, I(S;HW) = H(HW) = 2.5442127... bits exactly — if this check fails, nothing downstream is trustworthy. Additional closed-form cases cover the identity channel (everything leaks, MI = L_min = log2 n), the constant channel (nothing leaks), the binary symmetric channel (I = 1 \u2212 h(p)), and an LSB-drop channel (MI = L_min = width \u2212 drop bits exactly). The gate also checks g-leakage properties that must hold by construction — gain_identity reproduces L_min exactly, an unbounded tolerance gives zero leakage, and leakage is monotonically non-increasing as tolerance widens — and general structural invariants such as MI \u2264 H(S) and H(S|O) = H(S) \u2212 MI."
+        ),
+        subHeading("Driver (run_qif.py)"),
+        body(
+          "The driver loads a .npz file captured in QIF mode (it refuses files with no secret_val column, i.e. TVLA-mode captures) and groups traces by context_id rather than raw context value, since the latter is a signed field that can go negative. It reports, per power proxy, the per-cycle mutual information across the whole capture window with each cycle explicitly tagged EXACT or SAMPLED; a full measure bundle (MI, L_min, H_\u221E(S|O), observation-space size) at a chosen or automatically selected peak cycle; the MI-vs-SNR curve via the semi-analytic quadrature when requested; and the permutation-null summary (plug-in MI, corrected MI, analytic bias, null p99, significance) when requested. The threat model actually in effect — marginal, weakest-attacker — is stated explicitly in the console output, and every reported run carries a Tier 0 reminder that zero-delay RTL has no glitches, so the reported bounds are on the glitch-free channel and can only increase once SDF back-annotation (Tier 1) is added."
+        ),
+
+        figurePlaceholder("Figure 1"),
+        figureCaption("Figure 1: ADLA and QIF leakage summary across blocks (to be inserted)."),
+
+        sectionHeading("Next Steps"),
+        bullet("Complete RTL-vs-Python golden model verification for the re-quantization pipeline"),
+        bullet("Extend TVLA/ADLA/QIF analysis coverage as remaining blocks are integrated"),
+        bullet("Insert final figures once generated"),
+      ],
+    },
+  ],
+});
+
+Packer.toBuffer(doc).then((buf) => {
+  require("fs").writeFileSync("progress_report_v2.docx", buf);
+  console.log("done");
+});
