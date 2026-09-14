@@ -95,6 +95,12 @@ SRC_REQUANT := $(RTL)/requantization_block.$(RTL_EXT)
 SRC_ACT     := $(RTL)/activation_unit.$(RTL_EXT)
 SRC_MAXPOOL := $(RTL)/maxpool_unit.$(RTL_EXT)
 SRC_OUT     := $(SRC_REQUANT) $(SRC_ACT)
+SRC_GBUF    := $(RTL)/sram_2p.$(RTL_EXT) $(RTL)/global_buffer.$(RTL_EXT)
+SRC_SPAD    := $(RTL)/sram_2p.$(RTL_EXT) $(RTL)/scratchpad.$(RTL_EXT)
+SRC_ADDRGEN := $(SRC_SPAD) $(RTL)/address_generator.$(RTL_EXT)
+SRC_LOADCTRL:= $(RTL)/sram_2p.$(RTL_EXT) $(RTL)/global_buffer.$(RTL_EXT) \
+			   $(RTL)/scratchpad.$(RTL_EXT) $(RTL)/address_generator.$(RTL_EXT) \
+               $(RTL)/load_controller.$(RTL_EXT)
 
 # =====================================================================
 # TVLA / ADLA / second-order DUT selection
@@ -141,6 +147,22 @@ ifeq ($(DUT),maxpool)
   SRCS      := $(SRC_MAXPOOL)
   TBF       := $(TB)/tb_tvla_maxpool.$(TB_EXT)
   VVP_EXTRA := +WIN_LEN=$(WIN_LEN)
+endif
+ifeq ($(DUT),gbuf)
+  SRCS := $(SRC_GBUF)
+  TBF  := $(TB)/tb_tvla_gbuf.$(TB_EXT)
+endif
+ifeq ($(DUT),spad)
+  SRCS := $(SRC_SPAD)
+  TBF  := $(TB)/tb_tvla_spad.$(TB_EXT)
+endif
+ifeq ($(DUT),addrgen)
+  SRCS := $(SRC_ADDRGEN)
+  TBF  := $(TB)/tb_tvla_addrgen.$(TB_EXT)
+endif
+ifeq ($(DUT),loadctrl)
+  SRCS := $(SRC_LOADCTRL)
+  TBF  := $(TB)/tb_tvla_loadctrl.$(TB_EXT)
 endif
 
 ifeq ($(DUT),array)
@@ -249,7 +271,7 @@ tvla2_biv:
 	       --csv ../$(OUT_T2)/tvla2_summary.csv
 
 tvla2_all:
-	@for d in mult mac pe psum outstage requantize maxpool; do \
+	@for d in mult mac pe psum outstage requantize maxpool gbuf spad addrgen loadctrl; do \
 	  $(MAKE) --no-print-directory tvla2 DUT=$$d TARGET=$(TARGET) \
 	          REPEATS=$(REPEATS); \
 	done
@@ -292,14 +314,18 @@ act_all:
 # not a fixed/random split, so unlike ADLA and second-order TVLA it
 # cannot reuse the TVLA datasets.
 # =====================================================================
-QSRC_mult    := $(SRC_MULT)
-QSRC_mac     := $(SRC_PE)
-QSRC_pe      := $(SRC_PE)
-QSRC_array   := $(SRC_ARRAY)
-QSRC_act     := $(SRC_ACT)
-QSRC_requant := $(SRC_REQUANT)
-QSRC_psum    := $(SRC_PSUM)
-QSRC_maxpool := $(SRC_MAXPOOL)
+QSRC_mult     := $(SRC_MULT)
+QSRC_mac      := $(SRC_PE)
+QSRC_pe       := $(SRC_PE)
+QSRC_array    := $(SRC_ARRAY)
+QSRC_act      := $(SRC_ACT)
+QSRC_requant  := $(SRC_REQUANT)
+QSRC_psum     := $(SRC_PSUM)
+QSRC_maxpool  := $(SRC_MAXPOOL)
+QSRC_gbuf     := $(SRC_GBUF)
+QSRC_spad     := $(SRC_SPAD)
+QSRC_addrgen  := $(SRC_ADDRGEN)
+QSRC_loadctrl := $(SRC_LOADCTRL)
 
 QDUT ?= $(DUT)
 # otherwise a second run with a different secret definition silently
@@ -386,10 +412,15 @@ qif_all:
 	$(MAKE) --no-print-directory qif QDUT=psum    SECRET=psum ACC_STEP=1
 	$(MAKE) --no-print-directory qif QDUT=maxpool SECRET=win QWIN=2
 	$(MAKE) --no-print-directory qif QDUT=array   SECRET=wt  EXH=1
+	$(MAKE) --no-print-directory qif QDUT=gbuf    SECRET=data
+	$(MAKE) --no-print-directory qif QDUT=spad    SECRET=data
+	$(MAKE) --no-print-directory qif QDUT=addrgen SECRET=act
+	$(MAKE) --no-print-directory qif QDUT=loadctrl SECRET=act
+	$(MAKE) --no-print-directory qif QDUT=loadctrl SECRET=wt
 
 # =====================================================================
 all:
-	@for d in mult mac pe psum outstage requantize maxpool; do \
+	@for d in mult mac pe psum outstage requantize maxpool gbuf spad addrgen loadctrl; do \
 	  $(MAKE) --no-print-directory null DUT=$$d N=$(N) SEED=$(SEED); \
 	  $(MAKE) --no-print-directory tvla DUT=$$d N=$(N) SEED=$(SEED) TARGET=$(TARGET); \
 	done
