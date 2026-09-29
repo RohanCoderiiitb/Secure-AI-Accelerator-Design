@@ -24,6 +24,7 @@ import sys
 
 import numpy as np
 
+import qif_estimate as qe
 import qif_measures as qm
 
 TOL = 1e-9
@@ -133,6 +134,148 @@ def check_gain_functions():
     return rows
 
 
+def check_specific_information():
+    """
+    Five checks on qm.specific_information() / qm.mean_specific_information(),
+    matching the SI requirements: no-leakage gives SI=0 everywhere, a
+    perfectly revealing channel gives SI=log2|S| everywhere, the
+    prior-weighted mean of SI equals MI, pointwise terms may be negative
+    while SI itself stays non-negative, and a prior degenerate onto one
+    secret trivially zeroes that secret's SI (a prior artifact, not
+    evidence of zero physical leakage).
+    """
+    rows = []
+
+    # TEST 1 -- no leakage: P(O|W=w) = P(O) for every w => SI(w) = 0 for all w.
+    _, C, _ = case_constant(n=256)
+    si = qm.specific_information(C)
+    ok1 = bool(np.max(np.abs(si)) < 1e-9)
+    rows.append(("SI no-leakage: max|SI(w)|", float(np.max(np.abs(si))), 0.0, ok1))
+
+    # TEST 2 -- perfectly revealing channel: every secret -> unique
+    # observation => SI(w) = log2(|secret space|) for every w (uniform prior).
+    _, C, _ = case_identity(n=256)
+    si = qm.specific_information(C)
+    want = math.log2(256)
+    ok2 = bool(np.all(np.abs(si - want) < 1e-9))
+    rows.append(("SI perfectly-revealing: min SI(w)", float(np.min(si)), want, ok2))
+    rows.append(("SI perfectly-revealing: max SI(w)", float(np.max(si)), want, ok2))
+
+    # TEST 3 -- MI equivalence: sum_w pi(w) SI(w) == MI, on a generic channel.
+    rng = np.random.default_rng(3)
+    n = 64
+    Cr = qm.normalise_channel(rng.random((n, 20)) + 0.01)
+    mi = qm.shannon_mi(Cr)
+    mean_si = qm.mean_specific_information(Cr)
+    ok3 = abs(mean_si - mi) < 1e-9
+    rows.append(("SI mean == MI (random 64x20 channel)", mean_si, mi, ok3))
+
+    # TEST 4 -- pointwise information may be negative; SI(w) itself must not
+    # be. A row flatter than the marginal (e.g. near-uniform) necessarily
+    # produces negative log2(C[w,o]/P(o)) terms for the observations it
+    # under-weights relative to the marginal.
+    Csk = np.array([
+        [0.90, 0.05, 0.05],
+        [0.05, 0.90, 0.05],
+        [0.05, 0.05, 0.90],
+        [0.34, 0.33, 0.33],
+    ], dtype=np.float64)
+    pw = qm.pointwise_information(Csk)
+    finite = np.isfinite(pw)
+    has_negative = bool(np.any(pw[finite] < 0.0))
+    si4 = qm.specific_information(Csk)
+    all_nonneg = bool(np.all(si4 >= -1e-9))
+    rows.append(("SI pointwise terms include a negative value (not abs'd)",
+                float(has_negative), 1.0, has_negative))
+    rows.append(("SI(w) stays non-negative despite negative pointwise terms",
+                float(np.min(si4)), 0.0, all_nonneg))
+
+    # TEST 5 -- fixed-secret degeneracy: if P(O) is built with a prior
+    # concentrated on one secret w0, P(O) collapses to P(O|w0) and
+    # SI(w0) = 0. Documented as an artifact of a degenerate prior, NOT as
+    # evidence that w0 has no physical leakage -- P(O) must be built from
+    # the complete secret space (see marginal_observation()) for SI to be
+    # meaningful, which run_qif.py always does.
+    rng2 = np.random.default_rng(11)
+    Cd = qm.normalise_channel(rng2.random((8, 12)) + 0.01)
+    w0 = 3
+    prior_deg = np.zeros(8)
+    prior_deg[w0] = 1.0
+    si_deg = qm.specific_information(Cd, prior_deg)
+    ok5 = abs(si_deg[w0]) < 1e-9
+    rows.append(("SI fixed-secret degeneracy: SI(w0) under one-hot prior",
+                float(si_deg[w0]), 0.0, ok5))
+
+    return rows
+
+
+def check_bayes_success():
+    """
+    Two checks on qm.bayes_success():
+
+      1. Prior-weighted mean of succ(w) equals posterior_vulnerability(C, pi)
+         exactly, on a generic random channel -- the identity the function's
+         docstring claims (a tied group's mass splits evenly and sums back
+         to max_s J[s,o]).
+      2. On the closed-form Hamming-weight channel, succ(w) = 1/C(8, HW(w))
+         for every secret w: HW(w) has C(8,HW(w)) secrets tied on the same
+         observation and equal prior mass, and the true secret's channel row
+         is a point mass on that observation.
+    """
+    rows = []
+
+    rng = np.random.default_rng(13)
+    n = 40
+    C = qm.normalise_channel(rng.random((n, 15)) + 0.01)
+    succ = qm.bayes_success(C)
+    pi = qm.uniform_prior(n)
+    mean_succ = float(np.sum(pi * succ))
+    v_post = qm.posterior_vulnerability(C)
+    ok1 = abs(mean_succ - v_post) < 1e-9
+    rows.append(("mean succ(w) == posterior_vulnerability (random 40x15 channel)",
+                mean_succ, v_post, ok1))
+
+    width = 8
+    n8 = 1 << width
+    hw = np.array([bin(s).count("1") for s in range(n8)])
+    C_hw = _det_channel(hw, n_out=width + 1)
+    succ_hw = qm.bayes_success(C_hw)
+    want_hw = np.array([1.0 / math.comb(width, k) for k in hw], dtype=np.float64)
+    diff_hw = float(np.max(np.abs(succ_hw - want_hw)))
+    ok2 = bool(diff_hw < 1e-9)
+    rows.append(("HW channel: max |succ(w) - 1/C(8,HW(w))|", diff_hw, 0.0, ok2))
+
+    return rows
+
+
+def check_gaussian_mixture_si():
+    """
+    qe.gaussian_mixture_si() must average, under the prior, to
+    qe.gaussian_mixture_mi() -- both integrate the identical mixture
+    components, so this is the noisy-channel analogue of the SI/MI
+    consistency check above. Exercised at several SNRs on a small
+    synthetic multi-trace-per-secret dataset, matching the shape of a real
+    capture (many traces per secret at one cycle).
+    """
+    rows = []
+    rng = np.random.default_rng(5)
+    n_s, per = 12, 30
+    secret = np.repeat(np.arange(n_s), per)
+    obs = secret.astype(np.float64) * 2.0 + rng.integers(0, 3, size=secret.size)
+    pi = qm.uniform_prior(n_s)
+
+    for snr in (100.0, 10.0, 1.0, 0.1):
+        sp = float(np.var(obs, ddof=1))
+        sigma = float(np.sqrt(sp / snr))
+        si = qe.gaussian_mixture_si(secret, obs, sigma, pi)
+        mi = qe.gaussian_mixture_mi(secret, obs, sigma, pi)
+        mean_si = float(np.sum(pi * si))
+        ok = abs(mean_si - mi) < 1e-9
+        rows.append(("mean gaussian_mixture_si == gaussian_mixture_mi (SNR=%g)" % snr,
+                    mean_si, mi, ok))
+    return rows
+
+
 def check_invariants():
     """
     Structural properties that must hold for any channel:
@@ -176,6 +319,30 @@ def main():
             ok &= good
             print("  %-32s %-18s got %12.7f  want %12.7f  [%s]"
                   % (name, k, have, want, "OK" if good else "FAIL"))
+        # mean_SI must equal MI for every channel, not just the ones with an
+        # explicit expectation above -- this is the SI/MI consistency check.
+        good = abs(got["mean_SI"] - got["MI"]) < 1e-6
+        ok &= good
+        print("  %-32s %-18s got %12.7f  want %12.7f  [%s]"
+              % (name, "mean_SI==MI", got["mean_SI"], got["MI"], "OK" if good else "FAIL"))
+
+    print("\nSPECIFIC INFORMATION (SI)")
+    for name, have, want, good in check_specific_information():
+        ok &= good
+        print("  %-56s got %12.7f  ref %12.7f  [%s]"
+              % (name, have, want, "OK" if good else "FAIL"))
+
+    print("\nBAYES SUCCESS (IDENTIFIABILITY)")
+    for name, have, want, good in check_bayes_success():
+        ok &= good
+        print("  %-56s got %12.7f  ref %12.7f  [%s]"
+              % (name, have, want, "OK" if good else "FAIL"))
+
+    print("\nGAUSSIAN-NOISE SI (qif_estimate.gaussian_mixture_si)")
+    for name, have, want, good in check_gaussian_mixture_si():
+        ok &= good
+        print("  %-56s got %12.7f  ref %12.7f  [%s]"
+              % (name, have, want, "OK" if good else "FAIL"))
 
     print("\nGAIN FUNCTIONS")
     for name, have, want, good in check_gain_functions():

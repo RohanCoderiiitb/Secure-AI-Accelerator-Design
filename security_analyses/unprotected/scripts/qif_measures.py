@@ -156,6 +156,119 @@ def conditional_min_entropy(C, prior=None):
 
 
 # ---------------------------------------------------------------------
+# Specific information (per-secret KL divergence)
+# ---------------------------------------------------------------------
+def marginal_observation(C, prior=None):
+    """P(o) = sum_w pi(w) C[w,o], the attacker's reference/prior distribution
+    over observations when the secret is unknown."""
+    C = normalise_channel(C)
+    pi = uniform_prior(C.shape[0]) if prior is None else np.asarray(prior, float)
+    return pi @ C
+
+
+def pointwise_information(C, prior=None):
+    """
+    log2( P(o|w) / P(o) ) for every (w, o), the pointwise information that a
+    single observation o carries about a particular secret w.
+
+    These terms are signed -- they must NOT be abs()'d, and the caller must
+    not clip them. Two conventions apply at the boundary:
+
+      * P(o|w) == 0            -> nan (undefined; contributes 0 to SI, since
+                                   that observation never occurs given w).
+      * P(o|w) > 0, P(o) == 0  -> +inf, the mathematically correct KL
+                                   divergence at a point the reference
+                                   distribution assigns no mass. This can
+                                   only happen when pi(w) == 0 for some w
+                                   with C[w,o] > 0 (a degenerate/zero prior);
+                                   under any prior with full support this
+                                   cannot occur, since P(o) >= pi(w)*P(o|w).
+    """
+    C = normalise_channel(C)
+    pi = uniform_prior(C.shape[0]) if prior is None else np.asarray(prior, float)
+    p_o = marginal_observation(C, pi)
+    p_o_bcast = np.broadcast_to(p_o[None, :], C.shape)
+
+    out = np.full(C.shape, np.nan, dtype=np.float64)
+    pos = C > 0
+    finite = pos & (p_o_bcast > 0)
+    diverge = pos & (p_o_bcast <= 0)
+    out[finite] = np.log2(C[finite] / p_o_bcast[finite])
+    out[diverge] = np.inf
+    return out
+
+
+def specific_information(C, prior=None):
+    """
+    SI(w) = D_KL( P(O|W=w) || P(O) ) for every secret w, in bits.
+
+        SI(w) = sum_o P(o|w) * log2( P(o|w) / P(o) )
+
+    where P(o) = sum_w pi(w) P(o|w) is built from the SAME channel across
+    the complete secret space (never from a single fixed secret -- see
+    marginal_observation()). Individual pointwise terms may be negative;
+    SI(w) itself is a KL divergence and is >= 0 up to floating-point
+    precision (or +inf at a zero-prior degeneracy, see pointwise_information).
+    """
+    C = normalise_channel(C)
+    pi = uniform_prior(C.shape[0]) if prior is None else np.asarray(prior, float)
+    pw = pointwise_information(C, pi)
+    pos = C > 0
+    terms = np.zeros_like(C)
+    terms[pos] = C[pos] * pw[pos]
+    return np.sum(terms, axis=1)
+
+
+def mean_specific_information(C, prior=None):
+    """
+    E_{W~pi}[SI(W)] = sum_w pi(w) SI(w), in bits.
+
+    Algebraically identical to shannon_mi(C, prior) -- MI is the
+    prior-weighted average of the per-secret KL divergence to the marginal.
+    Comparing the two independently computed quantities is the standard
+    consistency check for this module (see qif_validate.py).
+    """
+    C = normalise_channel(C)
+    pi = uniform_prior(C.shape[0]) if prior is None else np.asarray(prior, float)
+    si = specific_information(C, pi)
+    # 0 * inf must read as 0 here: a secret the prior assigns no mass to
+    # contributes nothing to the average regardless of its (possibly
+    # infinite) individual SI.
+    contrib = np.where(pi > 0, pi * si, 0.0)
+    return float(np.sum(contrib))
+
+
+# ---------------------------------------------------------------------
+# Per-secret identifiability (Bayes success)
+# ---------------------------------------------------------------------
+def bayes_success(C, prior=None):
+    """
+    succ(w) = Pr[ MAP guess == w | S = w ], ties split evenly, bits in [0, 1].
+
+    The attacker's guessing strategy is fixed independently of the true
+    secret: at each observation o, guess uniformly among the s that
+    maximise the posterior mass J[s,o] = pi(s) P(o|s). succ(w) is then the
+    probability, conditioned on S=w, that this fixed strategy outputs w --
+    the per-secret refinement of posterior_vulnerability().
+
+    The prior-weighted mean of succ(w) equals posterior_vulnerability(C, pi)
+    exactly: a tied group of k secrets at observation o each take 1/k of
+    that group's (equal) posterior mass, and summing back over the group
+    recovers max_s J[s,o]; summing over o then gives V1(pi>C). Verified in
+    qif_validate.py, along with the closed-form Hamming-weight case
+    succ(w) = 1/C(8, HW(w)).
+    """
+    C = normalise_channel(C)
+    pi = uniform_prior(C.shape[0]) if prior is None else np.asarray(prior, float)
+    J = joint(C, pi)
+    col_max = np.max(J, axis=0)
+    is_argmax = np.isclose(J, col_max[None, :], rtol=1e-9, atol=1e-15)
+    ties = is_argmax.sum(axis=0).astype(np.float64)
+    weight = np.where(is_argmax, 1.0 / ties[None, :], 0.0)
+    return np.sum(C * weight, axis=1)
+
+
+# ---------------------------------------------------------------------
 # g-leakage
 # ---------------------------------------------------------------------
 def g_vulnerability(C, gain, prior=None):
@@ -238,6 +351,7 @@ def all_measures(C, prior=None, values=None, width=8, eps_grid=(0, 1, 2, 4, 8)):
         "n_observations": int(C.shape[1]),
         "H_prior": entropy(uniform_prior(n) if prior is None else prior),
         "MI": shannon_mi(C, prior),
+        "mean_SI": mean_specific_information(C, prior),
         "H_S_given_O": conditional_entropy_secret(C, prior),
         "L_min": min_entropy_leakage(C, prior),
         "H_inf_S_given_O": conditional_min_entropy(C, prior),

@@ -16,6 +16,9 @@
 # ADLA                      make adla DUT=pe          (reuses the dataset)
 # SECOND ORDER TVLA         make tvla2 DUT=pe         (reuses the dataset)
 # QIF                       make qif QDUT=pe          (needs its own capture)
+# SPECIFIC INFORMATION (SI) make si  QDUT=mult SECRET=wt   (reuses qif's capture,
+#                                                            outputs go to
+#                                                            out/specific_inf_outputs)
 #
 # Everything at once, one DUT:   make allorders DUT=pe
 # Everything, every DUT:         make all
@@ -37,6 +40,11 @@
 #   ACC_STEPS=1   MAC: 1 = exhaustive single step, 2 = accumulate on context
 #   ACC_STEP=1    requantize/psum sweep stride; 1 = true exhaustive
 #   RESUME= QLIMIT=   checkpoint a long enumeration into chunks
+#
+# SI (Specific Information) knobs
+#   SI_SNRS=      space-separated SNRs, e.g. SI_SNRS="100 10 1 0.1" --
+#                 per-secret SI under Gaussian noise, by quadrature (no
+#                 sampling). Omit for the noiseless SI report only.
 # =====================================================================
 
 IVERILOG ?= iverilog
@@ -60,6 +68,7 @@ OUT_T1   := $(OUT)/tvla_first_order_outputs
 OUT_T2   := $(OUT)/tvla_second_order_outputs
 OUT_AD   := $(OUT)/adla_outputs
 OUT_QIF  := $(OUT)/qif_outputs
+OUT_SI   := $(OUT)/specific_inf_outputs
 
 # --- knobs -----------------------------------------------------------
 N        ?= 2000
@@ -87,6 +96,7 @@ N_M0      ?= 1
 M0_CTX    ?= 256
 RESUME    ?= 0
 QLIMIT    ?= 0
+SI_SNRS   ?=
 SRC_MULT    := $(RTL)/multiplier.$(RTL_EXT)
 SRC_PE      := $(SRC_MULT) $(RTL)/processing_element.$(RTL_EXT)
 SRC_ARRAY   := $(SRC_PE) $(RTL)/systolic_array.$(RTL_EXT)
@@ -179,10 +189,11 @@ VVPF := $(BUILD)/tb_$(SUF).vvp
 .PHONY: dirs build null tvla adla adla_null tvla2 tvla2_null tvla2_biv \
         tvla2_selftest tvla2_all both allorders sweep act_all \
         qif qif_selftest qif_build qif_run qif_analyse qif_all \
+        si si_analyse si_all \
         all clean check
 
 dirs:
-	@mkdir -p $(BUILD) $(TR) $(OUT_T1) $(OUT_T2) $(OUT_AD) $(OUT_QIF)
+	@mkdir -p $(BUILD) $(TR) $(OUT_T1) $(OUT_T2) $(OUT_AD) $(OUT_QIF) $(OUT_SI)
 
 # Verify the layout before a long run, so a typo fails in a second
 # rather than after an hour of simulation.
@@ -390,6 +401,29 @@ qif_analyse:
 
 qif: qif_selftest qif_run qif_analyse
 
+# Specific Information (SI): per-secret D_KL(P(O|W=w) || P(O)) plus Bayes
+# success succ(w), reusing the same exhaustive capture as qif_run. Reads
+# $(TR)/$(QTAG).npz built above, so QDUT/SECRET select the block exactly
+# as they do for `make qif`. Outputs (JSON/NPZ/PNG, including the
+# all-cycle heatmap) go to $(OUT_SI), never $(OUT_QIF). Pass
+# SI_SNRS="100 10 1 0.1" to also report per-secret SI under Gaussian noise.
+si_analyse: dirs
+	cd $(SCRIPTS) && $(PY) run_qif.py --npz ../$(TR)/$(QTAG).npz \
+	    --secret-name "$(QSECRET_NAME)" \
+	    --si --si-out ../$(OUT_SI)/$(QTAG) \
+	    $(if $(SI_SNRS),--si-snrs $(SI_SNRS),)
+
+si: qif_selftest qif_run si_analyse
+
+# SI for every block validated so far (multiplier, PE): weight and
+# activation secrets, exhaustive.
+si_all:
+	$(MAKE) --no-print-directory qif_selftest
+	$(MAKE) --no-print-directory si QDUT=mult SECRET=wt
+	$(MAKE) --no-print-directory si QDUT=mult SECRET=act
+	$(MAKE) --no-print-directory si QDUT=pe   SECRET=wt
+	$(MAKE) --no-print-directory si QDUT=pe   SECRET=act
+
 # Every block, every valid secret definition, all exhaustive.
 #
 # The old version passed SECRET=$(SECRET) to every DUT, which mislabelled
@@ -429,4 +463,4 @@ all:
 	$(MAKE) --no-print-directory act_all N=$(N) SEED=$(SEED)
 
 clean:
-	rm -rf $(BUILD) $(TR) $(OUT_T1) $(OUT_T2) $(OUT_AD) $(OUT_QIF)
+	rm -rf $(BUILD) $(TR) $(OUT_T1) $(OUT_T2) $(OUT_AD) $(OUT_QIF) $(OUT_SI)

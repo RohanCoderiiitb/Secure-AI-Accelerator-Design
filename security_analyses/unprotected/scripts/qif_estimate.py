@@ -155,6 +155,63 @@ def null_summary(secret, obs, n_perm=300, seed=0, n_bins=None):
 # ---------------------------------------------------------------------
 # Noisy channel, computed rather than estimated
 # ---------------------------------------------------------------------
+def _mixture_p_o_given_s(obs, secret, s_vals, sigma, n_grid):
+    """
+    Shared quadrature setup for gaussian_mixture_mi / gaussian_mixture_si:
+    the grid, its spacing, and p(o|s) as a finite Gaussian mixture per
+    secret. Returns None when sigma is too small relative to the grid
+    budget to resolve (see MAX_CELLS below) -- callers fall back to the
+    noiseless exact channel in that case.
+    """
+    n_s = s_vals.size
+    # The quadrature grid must resolve the Gaussian components. With a
+    # fixed grid and a small sigma the components become needles that fall
+    # between grid points and the integral silently collapses toward zero.
+    # Require at least ~4 points per sigma; if that needs an unreasonable
+    # grid, sigma is negligible against the spacing of the discrete
+    # observable and the noiseless channel is the correct answer anyway.
+    lo = obs.min() - 6.0 * sigma
+    hi = obs.max() + 6.0 * sigma
+    # Resolve the components (>=4 points per sigma), but bound the grid:
+    # n_s * n_grid floats must stay in memory. When sigma is so small that
+    # resolving it would need a huge grid, the components no longer overlap
+    # and the noiseless channel is the correct answer anyway.
+    MAX_CELLS = 20_000_000
+    max_grid = max(4096, MAX_CELLS // max(n_s, 1))
+    need = int(np.ceil((hi - lo) / (sigma / 4.0))) + 1
+    if need > max_grid:
+        return None
+    n_grid = int(max(n_grid, need))
+
+    grid = np.linspace(lo, hi, n_grid)
+    dx = grid[1] - grid[0]
+    inv = 1.0 / (sigma * np.sqrt(2.0 * np.pi))
+
+    p_o_given_s = np.empty((n_s, n_grid), dtype=np.float64)
+    for i, s in enumerate(s_vals):
+        comp = obs[secret == s]
+        d = (grid[None, :] - comp[:, None]) / sigma
+        p_o_given_s[i] = inv * np.exp(-0.5 * d * d).mean(axis=0)
+    return grid, dx, p_o_given_s
+
+
+def _mixture_pointwise_integrand(p_o_given_s, pi):
+    """
+    log2(p(o|s)/p(o)) * p(o|s) per (s, o) cell, guarding the integrand: far
+    from every mixture component the Gaussians underflow to exactly zero,
+    so p(o) can be 0 there while an eager division would still produce
+    inf/nan before any where() runs. Divide only where the numerator is
+    positive.
+    """
+    p_o = pi @ p_o_given_s
+    mask = p_o_given_s > 0
+    ratio = np.ones_like(p_o_given_s)
+    np.divide(p_o_given_s, np.where(p_o > 0, p_o, 1.0)[None, :],
+              out=ratio, where=mask)
+    ratio = np.where(ratio > 0, ratio, 1.0)
+    return np.where(mask, p_o_given_s * np.log2(ratio), 0.0)
+
+
 def gaussian_mixture_mi(secret, obs, sigma, prior=None, n_grid=2048):
     """
     Exact I(S;O + N) for additive Gaussian noise of std sigma.
@@ -175,50 +232,48 @@ def gaussian_mixture_mi(secret, obs, sigma, prior=None, n_grid=2048):
     if sigma <= 0:
         return qm.shannon_mi(build(secret, obs).C, pi)
 
-    # The quadrature grid must resolve the Gaussian components. With a
-    # fixed grid and a small sigma the components become needles that fall
-    # between grid points and the integral silently collapses toward zero.
-    # Require at least ~4 points per sigma; if that needs an unreasonable
-    # grid, sigma is negligible against the spacing of the discrete
-    # observable and the noiseless channel is the correct answer anyway.
-    lo = obs.min() - 6.0 * sigma
-    hi = obs.max() + 6.0 * sigma
-    # Resolve the components (>=4 points per sigma), but bound the grid:
-    # n_s * n_grid floats must stay in memory. When sigma is so small that
-    # resolving it would need a huge grid, the components no longer overlap
-    # and the noiseless channel is the correct answer anyway.
-    MAX_CELLS = 20_000_000
-    max_grid = max(4096, MAX_CELLS // max(n_s, 1))
-    need = int(np.ceil((hi - lo) / (sigma / 4.0))) + 1
-    if need > max_grid:
+    built = _mixture_p_o_given_s(obs, secret, s_vals, sigma, n_grid)
+    if built is None:
         return qm.shannon_mi(build(secret, obs).C, pi)
-    n_grid = int(max(n_grid, need))
-
-    grid = np.linspace(lo, hi, n_grid)
-    dx = grid[1] - grid[0]
-    inv = 1.0 / (sigma * np.sqrt(2.0 * np.pi))
-
-    p_o_given_s = np.empty((n_s, n_grid), dtype=np.float64)
-    for i, s in enumerate(s_vals):
-        comp = obs[secret == s]
-        d = (grid[None, :] - comp[:, None]) / sigma
-        p_o_given_s[i] = inv * np.exp(-0.5 * d * d).mean(axis=0)
-
-    p_o = pi @ p_o_given_s
-    # Guard the integrand. Far from every mixture component the Gaussians
-    # underflow to exactly zero, so p_o can be 0 there while the eager
-    # numpy division would still produce inf/nan before any where() runs.
-    # Divide only where the numerator is positive.
-    mask = p_o_given_s > 0
-    ratio = np.ones_like(p_o_given_s)
-    np.divide(p_o_given_s, np.where(p_o > 0, p_o, 1.0)[None, :],
-              out=ratio, where=mask)
-    ratio = np.where(ratio > 0, ratio, 1.0)
-    integ = np.where(mask, p_o_given_s * np.log2(ratio), 0.0)
+    grid, dx, p_o_given_s = built
+    integ = _mixture_pointwise_integrand(p_o_given_s, pi)
     mi = float(np.sum(pi[:, None] * integ) * dx)
     if not np.isfinite(mi):
         return qm.shannon_mi(build(secret, obs).C, pi)
     return max(mi, 0.0)
+
+
+def gaussian_mixture_si(secret, obs, sigma, prior=None, n_grid=2048):
+    """
+    Per-secret SI(w) = D_KL(P(O|W=w) || P(O)) under the same additive
+    Gaussian noise model as gaussian_mixture_mi, by quadrature over the
+    identical mixture components (no sampling).
+
+    Because both functions integrate the same p_o_given_s array with the
+    same formula, sum_w pi(w) SI(w) reproduces gaussian_mixture_mi to
+    numerical quadrature precision (checked in qif_validate.py) -- this is
+    the noisy-channel analogue of qm.specific_information /
+    qm.mean_specific_information.
+    """
+    secret = np.asarray(secret)
+    obs = np.asarray(obs, dtype=np.float64)
+    s_vals = np.unique(secret)
+    n_s = s_vals.size
+    pi = np.full(n_s, 1.0 / n_s) if prior is None else np.asarray(prior, float)
+
+    from qif_channel import build
+    if sigma <= 0:
+        return qm.specific_information(build(secret, obs).C, pi)
+
+    built = _mixture_p_o_given_s(obs, secret, s_vals, sigma, n_grid)
+    if built is None:
+        return qm.specific_information(build(secret, obs).C, pi)
+    grid, dx, p_o_given_s = built
+    integ = _mixture_pointwise_integrand(p_o_given_s, pi)
+    si = np.sum(integ, axis=1) * dx
+    if not np.all(np.isfinite(si)):
+        return qm.specific_information(build(secret, obs).C, pi)
+    return np.maximum(si, 0.0)
 
 
 def mi_vs_snr(secret, obs, snrs, prior=None, n_grid=2048):

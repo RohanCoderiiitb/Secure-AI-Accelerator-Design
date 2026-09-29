@@ -1,4 +1,3 @@
-venv/
 security_analyses/unprotected/traces/
 security_analyses/unprotected/build/
 security_analyses/unprotected/scripts/run_tvla_second_order.py
