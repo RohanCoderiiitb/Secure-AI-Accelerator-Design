@@ -82,9 +82,38 @@ module tb_qif_loadctrl;
     wire [ARRAY_ROWS-1:0]         act_valid;
     wire [ARRAY_ROWS*N-1:0]       act_flat;
 
-    wire [ARRAY_COLS-1:0]         valid_sum_out  = {ARRAY_COLS{1'b0}};
+    wire [ARRAY_COLS-1:0]         valid_sum_out;
     wire [ARRAY_COLS-1:0]         out_wr_en;
     wire [ARRAY_COLS*WADDR_W-1:0] out_wr_addr_flat;
+
+    // ------------------------------------------------------------------
+    // Synthetic array-completion pulses.
+    //
+    // This testbench has no systolic array by design (load_controller and
+    // address_generator are under test in isolation) -- but
+    // address_generator's compute_done requires WAVES valid_sum_out
+    // pulses per column before it will ever fire. Tying valid_sum_out to
+    // a constant 0 means compute_done never fires, load_controller parks
+    // in STREAM_WAIT forever, and `done` never asserts: every trace was
+    // silently timing out at MAX_CYCLES. Drive WAVES synthetic pulses on
+    // every column simultaneously, a safe fixed delay after stream_start,
+    // so the handshake actually completes. The exact delay does not need
+    // to match a real array's latency -- address_generator has no
+    // internal timeout of its own, it simply waits for its out_cnt
+    // counters to reach WAVES on every column.
+    // ------------------------------------------------------------------
+    reg [ARRAY_COLS-1:0] valid_sum_out_r;
+    assign valid_sum_out = valid_sum_out_r;
+
+    integer vw;
+    initial valid_sum_out_r = {ARRAY_COLS{1'b0}};
+    always @(posedge stream_start) begin
+        repeat (ARRAY_ROWS + WAVES + 4) @(posedge clk);
+        for (vw = 0; vw < WAVES; vw = vw + 1) begin
+            @(negedge clk); valid_sum_out_r = {ARRAY_COLS{1'b1}};
+        end
+        @(negedge clk); valid_sum_out_r = {ARRAY_COLS{1'b0}};
+    end
     wire                          stream_busy;
 
     // ---- IF_GB ----

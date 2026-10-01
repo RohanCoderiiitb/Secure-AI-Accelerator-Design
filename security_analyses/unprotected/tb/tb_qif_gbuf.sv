@@ -11,9 +11,13 @@
 //   Total:  256 * GB_DEPTH traces (default 256*64 = 16,384, fast)
 //
 // Protocol per trace:
-//   1. Write the secret byte to address `context'.
-//   2. Perform one read of address `context'.  Capture window = 1 cycle
+//   1. Wash read of `context' (uncaptured) -- loads rd_data with the
+//      FIXED background value so the transition below is always
+//      background -> secret, never (previous trace's secret) -> secret.
+//   2. Write the secret byte to address `context'.
+//   3. Perform one read of address `context'.  Capture window = 1 cycle
 //      (the posedge that latches rd_data).
+//   4. Restore background at `context' for the next trace's wash read.
 //
 // Other addresses hold a fixed background pattern so the SRAM is in a
 // realistic state rather than all-zero.
@@ -104,8 +108,18 @@ module tb_qif_gbuf;
                 if (qif_in_slice(qif_idx)) begin
                     sv = si[GB_WORD_WIDTH-1:0];
 
-                    // Write the secret byte to the target address (untriggered)
+                    // Wash read: load rd_data with the FIXED background
+                    // value before the secret is written, so every trace's
+                    // captured transition is background -> secret, never
+                    // (previous trace's secret) -> secret. Uncaptured: no
+                    // trace_t0 is set here.
                     @(negedge clk);
+                    rd_en   = 1'b1;
+                    rd_addr = ki[GB_ADDR_WIDTH-1:0];
+                    @(posedge clk);
+                    @(negedge clk); rd_en = 1'b0;
+
+                    // Write the secret byte to the target address (untriggered)
                     wr_en   = 1'b1;
                     wr_addr = ki[GB_ADDR_WIDTH-1:0];
                     wr_data = sv;

@@ -143,7 +143,25 @@ module tb_tvla_addrgen;
 
         $dumpfile({OUTDIR, "/", TAG, ".vcd"});
         $dumpvars(0, u_dut);
-        // Also dump the spad mem arrays for full switching visibility
+
+        // BUG FIX: address_generator is control-only (its own counters are
+        // provably data-independent -- see header comment). The signal that
+        // actually carries the secret is act_flat, the read-data bus coming
+        // back out of the per-row scratchpads -- that lives in SIBLING
+        // instances (g_spad[r].u_spad), not under u_dut, so the recursive
+        // $dumpvars(0, u_dut) above never reaches it. Without this line the
+        // capture window contains only data-independent control state plus
+        // (below) memory contents that are already frozen by the time the
+        // window opens -- guaranteeing a ~0 Welch t regardless of any real
+        // leakage. act_flat is a plain packed wire (not an unpacked memory
+        // array), so a single dumpvars call covers all ARRAY_ROWS lanes.
+        $dumpvars(1, act_flat);
+
+        // Also dump the spad mem arrays for full switching visibility.
+        // NOTE: these cells are WRITTEN before the capture window opens and
+        // are only ever read (never rewritten) during it, so they show no
+        // transitions inside the window -- they're diagnostic bystander
+        // data, not a substitute for dumping act_flat above.
         for (r = 0; r < ARRAY_ROWS; r = r + 1)
             for (w = 0; w < WAVES; w = w + 1) begin
                 case (r)

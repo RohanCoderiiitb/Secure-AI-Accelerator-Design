@@ -98,3 +98,15 @@ npz,dut,mode,target,proxy,n_fixed,n_random,cycles,threshold,max_abs_t,argmax_cyc
 ../traces/loadctrl_act.npz,load_controller,tvla,act,P_reg,1000,1000,256,4.500,1.0000,9,0,0
 ../traces/loadctrl_act.npz,load_controller,tvla,act,P_comb,1000,1000,256,4.500,1.0000,34,0,0
 ../traces/loadctrl_act.npz,load_controller,tvla,act,P_tot,1000,1000,256,4.500,1.0000,32,0,0
+../traces/addrgen_act.npz,address_generator,tvla,act,P_reg,1000,1000,10,4.500,1.0000,4,0,0
+../traces/addrgen_act.npz,address_generator,tvla,act,P_comb,1000,1000,10,4.500,52.1995,6,5,5
+../traces/addrgen_act.npz,address_generator,tvla,act,P_tot,1000,1000,10,4.500,52.1995,6,5,5
+../traces/loadctrl_act.npz,load_controller,tvla,act,P_reg,1000,1000,256,4.500,1.0000,9,0,0
+../traces/loadctrl_act.npz,load_controller,tvla,act,P_comb,1000,1000,256,4.500,1.0000,11,0,0
+../traces/loadctrl_act.npz,load_controller,tvla,act,P_tot,1000,1000,256,4.500,1.0000,3,0,0
+../traces/loadctrl_act.npz,load_controller,tvla,act,P_reg,1000,1000,256,4.500,53.2350,14,17,17
+../traces/loadctrl_act.npz,load_controller,tvla,act,P_comb,1000,1000,256,4.500,68.1863,13,18,18
+../traces/loadctrl_act.npz,load_controller,tvla,act,P_tot,1000,1000,256,4.500,69.2991,14,22,22
+../traces/loadctrl_act.npz,load_controller,tvla,act,P_reg,1000,1000,256,4.500,53.8568,14,17,17
+../traces/loadctrl_act.npz,load_controller,tvla,act,P_comb,1000,1000,256,4.500,67.9967,13,18,18
+../traces/loadctrl_act.npz,load_controller,tvla,act,P_tot,1000,1000,256,4.500,72.4488,13,22,22

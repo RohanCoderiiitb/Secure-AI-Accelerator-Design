@@ -17,7 +17,12 @@
 //   u_fl_gb   -- global_buffer (filter / weight)
 //   g_spad[]  -- per-row activation scratchpads
 //   u_ag      -- address_generator (activation streaming)
-//   The systolic array is NOT instantiated; valid_sum_out is held low.
+//   The systolic array is NOT instantiated; valid_sum_out is instead
+//   driven by a small synthetic model (see its declaration below) that
+//   reproduces the real array's south-edge completion timing, since
+//   load_controller's own `done` is gated on address_generator's
+//   compute_done, which in turn is gated on valid_sum_out actually
+//   pulsing -- tying it to constant 0 hangs load_controller forever.
 //
 // TVLA contrast (TVLA_TARGET):
 //   "ifmap"  (default) -- activation bytes in IF_GB vary; weights fixed
@@ -94,8 +99,42 @@ module tb_tvla_loadctrl;
     wire [ARRAY_ROWS-1:0]         act_valid;
     wire [ARRAY_ROWS*N-1:0]       act_flat;
 
-    // Tie off: no downstream systolic array
-    wire [ARRAY_COLS-1:0]         valid_sum_out  = {ARRAY_COLS{1'b0}};
+    // BUG FIX: valid_sum_out was tied permanently to 0 with the comment
+    // "no downstream systolic array". But address_generator's compute_done
+    // -- which load_controller's S_STREAM_WAIT state blocks on to ever
+    // reach S_DONE/assert done -- only fires once out_cnt[ARRAY_COLS-1]
+    // reaches WAVES, which only increments on valid_sum_out[ARRAY_COLS-1]
+    // pulses. Tying valid_sum_out to constant 0 makes compute_done
+    // structurally unreachable, so load_controller hangs in S_STREAM_WAIT
+    // forever and every trace times out (the "did not assert done within
+    // 256 cycles" spam) -- this isn't a stats/capture issue, it's this
+    // testbench never supplying the handshake load_controller depends on.
+    //
+    // Fix: since correctness of the actual psum VALUES is irrelevant to
+    // this testbench (it targets load_controller/address_generator timing
+    // and leakage, not the array's arithmetic), emulate the completion
+    // handshake a real systolic_array + accumulator would produce, rather
+    // than instantiating the whole array. In the real array, column c's
+    // south-edge valid pulse for a given wave lands exactly c cycles after
+    // column 0's (one extra cycle per column of eastward activation
+    // travel), and column 0's own pulse train is identical in timing to
+    // act_valid[ARRAY_ROWS-1] (the bottom row's registered read-valid,
+    // already delayed 1 cycle from act_rd_en by address_generator) -- that
+    // is exactly when the last row's MAC result would reach the south edge
+    // of column 0. So: valid_sum_out[0] = act_valid[ARRAY_ROWS-1], and
+    // valid_sum_out[c] = that same pulse train shifted c cycles later.
+    reg  [ARRAY_COLS-1:0] valid_sum_out_r;
+    integer vsc;
+    always @(posedge clk) begin
+        if (!reset_n) begin
+            valid_sum_out_r <= {ARRAY_COLS{1'b0}};
+        end else begin
+            valid_sum_out_r[0] <= act_valid[ARRAY_ROWS-1];
+            for (vsc = 1; vsc < ARRAY_COLS; vsc = vsc + 1)
+                valid_sum_out_r[vsc] <= valid_sum_out_r[vsc-1];
+        end
+    end
+    wire [ARRAY_COLS-1:0]         valid_sum_out  = valid_sum_out_r;
     wire [ARRAY_COLS-1:0]         out_wr_en;
     wire [ARRAY_COLS*WADDR_W-1:0] out_wr_addr_flat;
     wire                          stream_busy;
@@ -262,6 +301,29 @@ module tb_tvla_loadctrl;
         // Dump all sub-modules; mem[] arrays dumped explicitly
         $dumpvars(0, u_lc);
         $dumpvars(0, u_ag);
+
+        // BUG FIX: u_lc/u_ag are the control FSMs. This file's own header
+        // comment names if_rd_data, fl_rd_data, wt_flat, row_wr_data and
+        // act_flat as the signals that actually carry data-dependent
+        // switching. wt_flat and row_wr_data are registered *inside* u_lc,
+        // so the two dumpvars(0, ...) calls above already capture them --
+        // but if_rd_data and fl_rd_data are outputs of u_if_gb/u_fl_gb, and
+        // act_flat comes from the g_spad[] scratchpads: all three live in
+        // SIBLING instances that neither dumpvars(0,...) call ever reaches.
+        // That silently drops the write-side read-data path (if_rd_data,
+        // fl_rd_data) and the entire STREAM_KICK/STREAM_WAIT phase's data
+        // path (act_flat) from the capture -- leaving those phases of the
+        // window with no data-dependent signal at all. All three are plain
+        // packed wires (not unpacked memory arrays), so plain dumpvars
+        // calls are enough; no per-word/per-lane workaround needed.
+        $dumpvars(1, if_rd_data);
+        $dumpvars(1, fl_rd_data);
+        $dumpvars(1, act_flat);
+
+        // mem[] arrays: frozen the moment the write phase ends (reads never
+        // rewrite them), so they show no transitions inside the capture
+        // window. Kept for diagnostic visibility only -- not a substitute
+        // for the three dumpvars calls above.
         for (i = 0; i < IF_DEPTH && i < 64; i = i + 1)
             $dumpvars(1, u_if_gb.u_mem.mem[i]);
         for (i = 0; i < FL_DEPTH && i < 64; i = i + 1)
@@ -289,17 +351,42 @@ module tb_tvla_loadctrl;
             grp = group_sched[t];
             eff = effective_random(grp);
 
-            // R5: draw fresh random data for both groups
-            for (i = 0; i < IF_DEPTH; i = i + 1) cur_if[i] = rand_i8(0);
-            for (i = 0; i < FL_DEPTH; i = i + 1) cur_fl[i] = rand_i8(0);
-
-            // Fixed group uses the constant vectors
-            if (!eff) begin
-                if (TVLA_TARGET == "wt") begin
+            // BUG FIX: only the TARGETED buffer should ever be randomized.
+            // The previous version drew fresh random data for BOTH IF_DEPTH
+            // and FL_DEPTH unconditionally every trial ("R5: fresh for both
+            // groups") and then overwrote only the buffer named by
+            // TVLA_TARGET with the fixed pattern for effectively-fixed
+            // trials. R5 only requires that the TARGETED variable's random
+            // population draw the same number of PRNG words regardless of
+            // label (so PRNG state doesn't depend on how many fixed trials
+            // preceded it) -- it does not call for re-randomizing the
+            // UNTARGETED buffer too. Because that untargeted buffer was
+            // never pinned, it stayed genuinely random every trial in BOTH
+            // groups AND in both MODE=null and MODE=tvla (effective_random
+            // forces grp=0 in null mode, but that only controls which
+            // vector the *targeted* overwrite below uses -- it never
+            // touched the untargeted buffer). Welch's t has no mean-bias
+            // from this (both groups see the identical uncontrolled random
+            // stream), but at finite NTRACES it still has real, non-zero
+            // sampling noise wherever genuine variance exists in BOTH
+            // groups -- i.e. at every cycle touched by the untargeted
+            // buffer's fetch phase. Since it's the same uncontrolled random
+            // stream driving both the null run and the tvla run, both show
+            // the identical noisy shape there. Fix: hold the untargeted
+            // buffer at ONE constant pattern for every trial, so it
+            // contributes zero variance (and hence zero jitter) anywhere,
+            // in either mode; only ever randomize the buffer actually under
+            // test, and only draw fresh PRNG words for that one (R5).
+            if (TVLA_TARGET == "wt") begin
+                for (i = 0; i < IF_DEPTH; i = i + 1) cur_if[i] = fix_if[i];  // untargeted: pinned every trial
+                for (i = 0; i < FL_DEPTH; i = i + 1) cur_fl[i] = rand_i8(0); // R5: targeted, fresh for both groups
+                if (!eff)
                     for (i = 0; i < FL_DEPTH; i = i + 1) cur_fl[i] = fix_fl[i];
-                end else begin   // default "ifmap"
+            end else begin   // default "ifmap"/"act"
+                for (i = 0; i < FL_DEPTH; i = i + 1) cur_fl[i] = fix_fl[i];  // untargeted: pinned every trial
+                for (i = 0; i < IF_DEPTH; i = i + 1) cur_if[i] = rand_i8(0); // R5: targeted, fresh for both groups
+                if (!eff)
                     for (i = 0; i < IF_DEPTH; i = i + 1) cur_if[i] = fix_if[i];
-                end
             end
 
             // ---- setup: write memories, untriggered (R4) ----

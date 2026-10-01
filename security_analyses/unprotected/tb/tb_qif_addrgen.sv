@@ -126,16 +126,25 @@ module tb_qif_addrgen;
 
         $dumpfile({OUTDIR, "/", TAG, ".vcd"});
         $dumpvars(0, u_dut);
-        for (r = 0; r < ARRAY_ROWS; r = r + 1)
-            for (w = 0; w < WAVES; w = w + 1) begin
-                case (r)
-                    0: $dumpvars(1, g_spad[0].u_spad.u_mem.mem[w]);
-                    1: $dumpvars(1, g_spad[1].u_spad.u_mem.mem[w]);
-                    2: $dumpvars(1, g_spad[2].u_spad.u_mem.mem[w]);
-                    3: $dumpvars(1, g_spad[3].u_spad.u_mem.mem[w]);
-                    default: ;
-                endcase
-            end
+        // NOTE: u_dut (address_generator) is a pure address/control
+        // sequencer -- it has no data port at all (act_flat is wired
+        // directly from the scratchpads to the systolic array in the
+        // full design, bypassing address_generator entirely). Dumping
+        // only u_dut plus the raw mem[] storage cells (which change only
+        // on writes, and writes are untriggered/outside the capture
+        // window) captures ZERO data-dependent switching. The signal
+        // that actually carries the secret is each scratchpad's rd_data
+        // port, so dump the whole scratchpad instance (which includes
+        // rd_data) rather than just its internal storage array.
+        for (r = 0; r < ARRAY_ROWS; r = r + 1) begin
+            case (r)
+                0: $dumpvars(0, g_spad[0].u_spad);
+                1: $dumpvars(0, g_spad[1].u_spad);
+                2: $dumpvars(0, g_spad[2].u_spad);
+                3: $dumpvars(0, g_spad[3].u_spad);
+                default: ;
+            endcase
+        end
 
         qif_open_meta("address_generator", CLK_NS, CAPTURE, qif_total);
         $display("[QIF] addrgen exhaustive: 256 secrets x %0d contexts = %0d traces",
