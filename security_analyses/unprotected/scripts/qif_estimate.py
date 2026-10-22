@@ -294,3 +294,67 @@ def mi_vs_snr(secret, obs, snrs, prior=None, n_grid=2048):
                     "mi": gaussian_mixture_mi(secret, obs, sigma, prior,
                                               n_grid)})
     return out
+
+
+# ---------------------------------------------------------------------
+# Centre-PE estimator for the 5x5 array
+# ---------------------------------------------------------------------
+# The full array cannot be enumerated (25 INT8 weights = 2^200), so the
+# centre PE is analysed from sampled traces:
+#
+#   leakage L(t) at one cycle
+#     -> equal-frequency binning into B bins     (qif_channel)
+#     -> joint count matrix  P(S, L_binned)
+#     -> MI                  I(S;L) = H(S) + H(L) - H(S,L)
+#
+# Convergence curve: shuffle the traces, compute MI on 10%, 20%, ...
+# 100% of them; the curve flattening shows the trace count is enough.
+#
+# Null test (PI): shuffle the secret labels against the traces and
+# recompute MI. A correct estimator returns approximately zero; whatever
+# it returns is the bias floor against which real figures are reported.
+# ---------------------------------------------------------------------
+def binned_joint_counts(secret, obs, n_bins, rng=None):
+    """Joint count matrix J[s, b] after equal-frequency binning of obs."""
+    from qif_channel import equal_frequency_bins
+    b_idx = equal_frequency_bins(obs, n_bins, rng)
+    s_vals, s_idx = np.unique(np.asarray(secret), return_inverse=True)
+    J = np.zeros((s_vals.size, n_bins), dtype=np.float64)
+    np.add.at(J, (s_idx, b_idx), 1.0)
+    return J, s_idx, b_idx, s_vals
+
+
+def binned_mi(secret, obs, n_bins, seed=0):
+    """MI in bits from the equal-frequency-binned joint matrix."""
+    J, _, _, _ = binned_joint_counts(secret, obs, n_bins,
+                                     np.random.default_rng(seed))
+    return mi_plugin(J)
+
+
+def null_test(secret, obs, n_bins, seed=0):
+    """
+    PI's null test: shuffle the secret labels against the traces and
+    recompute MI. The result is the bias floor.
+    """
+    rng = np.random.default_rng(seed)
+    shuffled = rng.permutation(np.asarray(secret))
+    return binned_mi(shuffled, obs, n_bins, seed=seed)
+
+
+def convergence_curve(secret, obs, n_bins, fractions, seed=0):
+    """
+    1. shuffle the whole dataset of traces,
+    2. compute MI on the first 10% (fractions[0]),
+    3. recompute on 20%, 30%, ... 100%.
+    Returns a list of (fraction, n_traces, MI).
+    """
+    secret = np.asarray(secret)
+    obs = np.asarray(obs, dtype=np.float64)
+    order = np.random.default_rng(seed).permutation(secret.size)
+    out = []
+    for f in fractions:
+        n = max(int(round(f * secret.size)), n_bins)
+        sel = order[:n]
+        out.append((float(f), n, binned_mi(secret[sel], obs[sel], n_bins,
+                                           seed=seed)))
+    return out

@@ -1,0 +1,10 @@
+npz,dut,secret,proxy,cycle,exact,bins,n_traces,n_secrets,min_traces_per_bin_class,MI,null_floor,excess_over_floor
+../traces/qif_centre_wt_b32.npz,systolic_array_5x5_centre_pe,Weight,P_reg,3,0,32,819200,256,100.0,0.006810,0.006977,-0.000167
+../traces/qif_centre_wt_b32.npz,systolic_array_5x5_centre_pe,Weight,P_comb,3,0,32,819200,256,100.0,0.400781,0.007006,0.393775
+../traces/qif_centre_wt_b32.npz,systolic_array_5x5_centre_pe,Weight,P_tot,3,0,32,819200,256,100.0,0.400781,0.007006,0.393775
+../traces/qif_centre_act_b32.npz,systolic_array_5x5_centre_pe,Activation,P_reg,3,0,32,819200,256,100.0,0.006810,0.006977,-0.000167
+../traces/qif_centre_act_b32.npz,systolic_array_5x5_centre_pe,Activation,P_comb,3,0,32,819200,256,100.0,0.503454,0.006944,0.496510
+../traces/qif_centre_act_b32.npz,systolic_array_5x5_centre_pe,Activation,P_tot,3,0,32,819200,256,100.0,0.503454,0.006944,0.496510
+../traces/qif_centre_psum_b32.npz,systolic_array_5x5_centre_pe,Partial Sum,P_reg,5,32,982496,61406,0.5,1.755698,1.429815
+../traces/qif_centre_psum_b32.npz,systolic_array_5x5_centre_pe,Partial Sum,P_comb,5,32,982496,61406,0.5,1.429625,1.429467
+../traces/qif_centre_psum_b32.npz,systolic_array_5x5_centre_pe,Partial Sum,P_tot,5,32,982496,61406,0.5,1.755698,1.429815

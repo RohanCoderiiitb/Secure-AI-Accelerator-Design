@@ -16,6 +16,7 @@
 # ADLA                      make adla DUT=pe          (reuses the dataset)
 # SECOND ORDER TVLA         make tvla2 DUT=pe         (reuses the dataset)
 # QIF                       make qif QDUT=pe          (needs its own capture)
+# QIF, 5x5 CENTRE PE        make qif_centre SECRET=wt (sampled; wt | act | psum)
 # SPECIFIC INFORMATION (SI) make si  QDUT=mult SECRET=wt   (reuses qif's capture,
 #                                                            outputs go to
 #                                                            out/specific_inf_outputs)
@@ -40,6 +41,17 @@
 #   ACC_STEPS=1   MAC: 1 = exhaustive single step, 2 = accumulate on context
 #   ACC_STEP=1    requantize/psum sweep stride; 1 = true exhaustive
 #   RESUME= QLIMIT=   checkpoint a long enumeration into chunks
+#
+# Centre-PE QIF knobs (5x5 array, sampled, equal-frequency binning)
+#   SECRET=wt     wt | act | psum -- which centre-PE input is the raw
+#                 secret (psum = partial sum ENTERING the centre PE); the
+#                 other inputs and all other PEs are random plaintext
+#   QBINS=32      equal-frequency bins B (32 or 64)
+#   QTPB=100      target traces per bin per secret class (rule: 100-200)
+#   QN=           traces for wt/act; default 256 x QBINS x QTPB (819,200 at B=32)
+#   QREP=16       psum only: traces per secret value. psum walks all 61,406
+#                 reachable values, so N = 61,406 x QREP (982,496 at 16)
+#   QCAP=8        capture window, cycles from the first activation injection
 #
 # SI (Specific Information) knobs
 #   SI_SNRS=      space-separated SNRs, e.g. SI_SNRS="100 10 1 0.1" --
@@ -97,6 +109,11 @@ M0_CTX    ?= 256
 RESUME    ?= 0
 QLIMIT    ?= 0
 SI_SNRS   ?=
+QBINS     ?= 32
+QTPB      ?= 100
+QN        ?= $(shell echo $$((256 * $(QBINS) * $(QTPB))))
+QCAP      ?= 8
+QREP      ?= 16
 SRC_MULT    := $(RTL)/multiplier.$(RTL_EXT)
 SRC_PE      := $(SRC_MULT) $(RTL)/processing_element.$(RTL_EXT)
 SRC_ARRAY   := $(SRC_PE) $(RTL)/systolic_array.$(RTL_EXT)
@@ -190,6 +207,8 @@ VVPF := $(BUILD)/tb_$(SUF).vvp
         tvla2_selftest tvla2_all both allorders sweep act_all \
         qif qif_selftest qif_build qif_run qif_analyse qif_all \
         si si_analyse si_all \
+        qif_centre qif_centre_build qif_centre_run qif_centre_analyse \
+        qif_centre_all \
         all clean check
 
 dirs:
@@ -451,6 +470,53 @@ qif_all:
 	$(MAKE) --no-print-directory qif QDUT=addrgen SECRET=act
 	$(MAKE) --no-print-directory qif QDUT=loadctrl SECRET=act
 	$(MAKE) --no-print-directory qif QDUT=loadctrl SECRET=wt
+
+# =====================================================================
+# QIF on the CENTRE PE of the 5x5 array. The full array cannot be
+# enumerated (25 INT8 weights = 2^200), so the centre PE -- which takes
+# its activation from the west neighbour and its partial sum from the
+# north neighbour -- is analysed from random samples:
+#   * one centre-PE input is the raw secret (SECRET=wt|act|psum), every
+#     other input in the array is random plaintext
+#   * only the centre PE is dumped, so L(t) is that PE's per-cycle proxy
+#   * equal-frequency binning into QBINS bins, plug-in MI per cycle
+#   * convergence curve: shuffle the traces, MI on 10%..100% of them
+#   * null test (PI): secret labels shuffled against the traces, MI
+#     recomputed; the result is the bias floor reported next to the MI
+# Results go to $(OUT_QIF), next to the other QIF results.
+# =====================================================================
+QCTAG := qif_centre_$(SECRET)_b$(QBINS)
+
+qif_centre_build: dirs
+	$(IVERILOG) $(IVFLAGS) -o $(BUILD)/tb_qif_array_centre.vvp \
+	    $(SRC_ARRAY) $(TB)/tb_qif_array_centre.$(TB_EXT)
+
+# SECRET=psum: the exhaustive list of reachable incoming partial sums is
+# generated first and read by the testbench.
+qif_centre_run: qif_centre_build
+ifeq ($(SECRET),psum)
+	$(PY) $(SCRIPTS)/gen_psum_space.py --rows-above 2 --out $(BUILD)/psum_space.hex
+endif
+	$(VVP) $(BUILD)/tb_qif_array_centre.vvp +TAG=$(QCTAG) +SECRET=$(SECRET) \
+	    +QN=$(QN) +QCAP=$(QCAP) +SEED=$(SEED) \
+	    +PSUM_SPACE=$(BUILD)/psum_space.hex +QREP=$(QREP)
+	$(PY) $(SCRIPTS)/vcd_power.py --vcd $(TR)/$(QCTAG).vcd \
+	    --meta $(TR)/$(QCTAG).meta.csv --out $(TR)/$(QCTAG).npz
+
+qif_centre_analyse: dirs
+	cd $(SCRIPTS) && $(PY) run_qif_centre.py --npz ../$(TR)/$(QCTAG).npz \
+	    --bins $(QBINS) --secret-name "$(QSECRET_NAME)" \
+	    --plot ../$(OUT_QIF)/$(QCTAG) \
+	    --csv ../$(OUT_QIF)/qif_centre_summary.csv
+
+qif_centre: qif_selftest qif_centre_run qif_centre_analyse
+
+# All three secrets at the current QBINS.
+qif_centre_all:
+	$(MAKE) --no-print-directory qif_selftest
+	$(MAKE) --no-print-directory qif_centre_run qif_centre_analyse SECRET=wt   QBINS=$(QBINS)
+	$(MAKE) --no-print-directory qif_centre_run qif_centre_analyse SECRET=act  QBINS=$(QBINS)
+	$(MAKE) --no-print-directory qif_centre_run qif_centre_analyse SECRET=psum QBINS=$(QBINS) QREP=$(QREP)
 
 # =====================================================================
 all:
