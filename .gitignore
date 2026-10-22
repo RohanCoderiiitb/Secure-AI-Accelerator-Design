@@ -3,4 +3,7 @@ security_analyses/unprotected/build/
 security_analyses/unprotected/scripts/run_tvla_second_order.py
 security_analyses/unprotected/scripts/tvla_second_order.py
 security_analyses/unprotected/out/tvla_second_order_outputs
+__pycache__/
+*.py[cod]
 .DS_Store
+/venv

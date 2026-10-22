@@ -93,6 +93,35 @@ def quantise(obs, n_bins=None):
     return idx, centres
 
 
+def equal_frequency_bins(obs, n_bins, rng=None):
+    """
+    Equal-frequency (quantile) binning for SAMPLED channels -- centre-PE
+    QIF on the 5x5 array.
+
+    Sorts the leakage samples and cuts them into n_bins bins that each hold
+    the same number of traces (sizes differ by at most one when N is not a
+    multiple of n_bins). No bin is ever empty, which is the point: empty
+    bins are the "zero-frequency problem" that inflates the entropy terms.
+
+    Toggle counts are integers, so many traces share the same value. To
+    keep every bin exactly the same size, traces with equal values are
+    ordered randomly before cutting. That ordering is independent of the
+    secret, so it cannot create leakage -- it can only blur it slightly.
+
+    Returns idx, an integer bin index in [0, n_bins) per trace.
+    """
+    obs = np.asarray(obs, dtype=np.float64)
+    n = obs.size
+    if n_bins < 1 or n_bins > n:
+        raise ValueError("need 1 <= n_bins <= N, got n_bins=%d, N=%d"
+                         % (n_bins, n))
+    rng = np.random.default_rng(0) if rng is None else rng
+    order = np.lexsort((rng.random(n), obs))      # sort by obs, ties random
+    rank = np.empty(n, dtype=np.int64)
+    rank[order] = np.arange(n)
+    return (rank * n_bins) // n
+
+
 # ---------------------------------------------------------------------
 # Channel construction
 # ---------------------------------------------------------------------
