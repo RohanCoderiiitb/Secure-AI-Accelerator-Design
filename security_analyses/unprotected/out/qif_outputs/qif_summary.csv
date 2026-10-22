@@ -62,3 +62,6 @@ npz,dut,proxy,cycle,exact,n_secrets,n_obs,H_S,MI,L_min,H_inf_S_given_O
 ../traces/qif_spad_data.npz,scratchpad,P_reg,0,1,256,9,8.0000,1.005288,2.087463,5.912537
 ../traces/qif_spad_data.npz,scratchpad,P_comb,0,1,256,9,8.0000,1.005288,2.087463,5.912537
 ../traces/qif_spad_data.npz,scratchpad,P_tot,0,1,256,9,8.0000,1.005288,2.087463,5.912537
+traces/systolic_100k.npz,systolic_array,P_reg,3,0,256,297,8.0000,0.411844,1.854628,6.145372
+traces/systolic_100k.npz,systolic_array,P_comb,3,0,256,1562,8.0000,1.665527,3.184970,4.815030
+traces/systolic_100k.npz,systolic_array,P_tot,3,0,256,1711,8.0000,1.765772,3.272337,4.727663
