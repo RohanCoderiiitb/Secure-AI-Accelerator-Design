@@ -7,3 +7,5 @@ __pycache__/
 *.py[cod]
 .DS_Store
 /venv
+security_analyses/protected/traces/
+security_analyses/protected/build/
