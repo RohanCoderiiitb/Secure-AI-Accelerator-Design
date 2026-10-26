@@ -1,0 +1,7 @@
+npz,dut,mode,target,proxy,n_fixed,n_random,cycles,alpha,threshold,max_A2,argmax_cycle,n_leaking,n_confirmed,degenerate
+/Users/rohankamath/Desktop/IIIT-Bangalore/Projects/Research-Projects/Secure-AI-Accelerator-Design/security_analyses/protected/traces/masked_act_pe_act.npz,masked_act_pe,tvla,act,P_reg,1000,1000,4,1e-05,15.0256,0.5132,3,0,0,0
+/Users/rohankamath/Desktop/IIIT-Bangalore/Projects/Research-Projects/Secure-AI-Accelerator-Design/security_analyses/protected/traces/masked_act_pe_act.npz,masked_act_pe,tvla,act,P_comb,1000,1000,4,1e-05,15.1011,0.9146,2,0,0,0
+/Users/rohankamath/Desktop/IIIT-Bangalore/Projects/Research-Projects/Secure-AI-Accelerator-Design/security_analyses/protected/traces/masked_act_pe_act.npz,masked_act_pe,tvla,act,P_tot,1000,1000,4,1e-05,14.4744,0.8840,2,0,0,0
+/Users/rohankamath/Desktop/IIIT-Bangalore/Projects/Research-Projects/Secure-AI-Accelerator-Design/security_analyses/protected/traces/masked_act_array5x5_act.npz,systolic_array_masked_act,tvla,act,P_reg,50,50,14,1e-05,9.7028,5.3924,10,0,0,0
+/Users/rohankamath/Desktop/IIIT-Bangalore/Projects/Research-Projects/Secure-AI-Accelerator-Design/security_analyses/protected/traces/masked_act_array5x5_act.npz,systolic_array_masked_act,tvla,act,P_comb,50,50,14,1e-05,15.5900,4.8108,2,0,0,0
+/Users/rohankamath/Desktop/IIIT-Bangalore/Projects/Research-Projects/Secure-AI-Accelerator-Design/security_analyses/protected/traces/masked_act_array5x5_act.npz,systolic_array_masked_act,tvla,act,P_tot,50,50,14,1e-05,14.9616,4.7680,2,0,0,0
