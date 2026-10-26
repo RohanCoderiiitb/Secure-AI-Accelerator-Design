@@ -1,0 +1,1315 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.69+75 (git sha1 f0b945f63, Release, GNU /usr/bin/c++ 11.4.0)
+[TCL: yosys -import] Command name collision: found pre-existing command `cd' -> skip.
+[TCL: yosys -import] Command name collision: found pre-existing command `eval' -> skip.
+[TCL: yosys -import] Command name collision: found pre-existing command `exec' -> skip.
+[TCL: yosys -import] Command name collision: found pre-existing command `read' -> skip.
+[TCL: yosys -import] Command name collision: found pre-existing command `trace' -> skip.
+
+1. Executing Liberty frontend: /home/ihs24/OpenROAD-flow-scripts/flow/platforms/nangate45/lib/NangateOpenCellLibrary_typical.lib
+Imported 135 cell types from liberty file.
+
+2. Executing Verilog-2005 frontend: /home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv
+Parsing SystemVerilog input from `/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv' to AST representation.
+Generating RTLIL representation for module `\half_adder'.
+Generating RTLIL representation for module `\full_adder'.
+Generating RTLIL representation for module `\partial_product_generator'.
+Generating RTLIL representation for module `\baugh_wooley_multiplier'.
+Successfully finished Verilog frontend.
+Parameter \N = 8
+
+3. Executing AST frontend in derive mode using pre-parsed AST for module `\baugh_wooley_multiplier'.
+Parameter \N = 8
+Generating RTLIL representation for module `$paramod\baugh_wooley_multiplier\N=s32'00000000000000000000000000001000'.
+
+4. Executing HIERARCHY pass (managing design hierarchy).
+
+4.1. Analyzing design hierarchy..
+Top module:  \baugh_wooley_multiplier
+Used module:     \partial_product_generator
+Used module:     \full_adder
+Used module:     \half_adder
+Parameter \N = 8
+
+4.2. Executing AST frontend in derive mode using pre-parsed AST for module `\partial_product_generator'.
+Parameter \N = 8
+Generating RTLIL representation for module `$paramod\partial_product_generator\N=s32'00000000000000000000000000001000'.
+
+4.3. Analyzing design hierarchy..
+Top module:  \baugh_wooley_multiplier
+Used module:     $paramod\partial_product_generator\N=s32'00000000000000000000000000001000
+Used module:     \full_adder
+Used module:     \half_adder
+
+4.4. Analyzing design hierarchy..
+Top module:  \baugh_wooley_multiplier
+Used module:     $paramod\partial_product_generator\N=s32'00000000000000000000000000001000
+Used module:     \full_adder
+Used module:     \half_adder
+Removing unused module `\partial_product_generator'.
+Removed 1 unused modules.
+
+5. Executing SYNTH pass.
+
+5.1. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1.1. Analyzing design hierarchy..
+Top module:  \baugh_wooley_multiplier
+Used module:     $paramod\partial_product_generator\N=s32'00000000000000000000000000001000
+Used module:     \full_adder
+Used module:     \half_adder
+
+5.1.2. Analyzing design hierarchy..
+Top module:  \baugh_wooley_multiplier
+Used module:     $paramod\partial_product_generator\N=s32'00000000000000000000000000001000
+Used module:     \full_adder
+Used module:     \half_adder
+Removed 0 unused modules.
+
+5.2. Executing PROC pass (convert processes to netlists).
+
+5.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+5.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+5.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 178 assignments to connections.
+
+5.2.4. Executing PROC_INIT pass (extract init attributes).
+
+5.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+5.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+5.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:71$816'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:72$817'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$818'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$819'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$820'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$821'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$822'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$823'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$824'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$825'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$826'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$827'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$828'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$829'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$830'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$831'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$832'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$833'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$834'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$835'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$836'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$837'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$838'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$839'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$840'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$841'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$842'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$843'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$844'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$845'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$846'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$847'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$848'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$849'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$850'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$851'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$852'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$853'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$854'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$855'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$856'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$857'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$858'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$859'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$860'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$861'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$862'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$863'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$864'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$865'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$866'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$867'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$868'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$869'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$870'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$871'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$872'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$873'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$874'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$875'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$876'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$877'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$878'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$879'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$880'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$881'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$882'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$883'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$884'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$885'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$886'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$887'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$888'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$889'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$890'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$891'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$892'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$893'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$894'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$895'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:89$896'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:90$897'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$898'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$899'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$900'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$901'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$902'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$903'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$904'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$905'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$906'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$907'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$908'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$909'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$910'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$911'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:89$912'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:90$913'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$914'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$915'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$916'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$917'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$918'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$919'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$920'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$921'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$922'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$923'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$924'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$925'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$926'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$927'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:89$928'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:90$929'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$930'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$931'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$932'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$933'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$934'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$935'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$936'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$937'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$938'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$939'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$940'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$941'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$942'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$943'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:89$944'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:90$945'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$946'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$947'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$948'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$949'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$950'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$951'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$952'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$953'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$954'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$955'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$956'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$957'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$958'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$959'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:89$960'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:90$961'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$962'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$963'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$964'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$965'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$966'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$967'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$968'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$969'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$970'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$971'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$972'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$973'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$974'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$975'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:89$976'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:90$977'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$978'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$979'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$980'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$981'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$982'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$983'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$984'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$985'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$986'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$987'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$988'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$989'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$990'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$991'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:89$992'.
+Creating decoders for process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:90$993'.
+
+5.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\baugh_wooley_multiplier.\s[0]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:71$816'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[0]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:72$817'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[0] [0]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$818'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[0] [1]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$819'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[0] [2]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$820'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[0] [3]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$821'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[0] [4]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$822'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[0] [5]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$823'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[0] [6]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$824'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[0] [7]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$825'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[1] [0]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$826'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[1] [1]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$827'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[1] [2]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$828'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[1] [3]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$829'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[1] [4]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$830'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[1] [5]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$831'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[1] [6]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$832'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[1] [7]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$833'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[2] [0]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$834'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[2] [1]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$835'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[2] [2]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$836'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[2] [3]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$837'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[2] [4]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$838'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[2] [5]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$839'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[2] [6]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$840'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[2] [7]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$841'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[3] [0]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$842'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[3] [1]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$843'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[3] [2]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$844'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[3] [3]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$845'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[3] [4]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$846'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[3] [5]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$847'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[3] [6]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$848'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[3] [7]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$849'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[4] [0]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$850'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[4] [1]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$851'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[4] [2]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$852'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[4] [3]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$853'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[4] [4]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$854'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[4] [5]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$855'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[4] [6]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$856'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[4] [7]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$857'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[5] [0]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$858'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[5] [1]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$859'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[5] [2]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$860'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[5] [3]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$861'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[5] [4]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$862'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[5] [5]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$863'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[5] [6]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$864'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[5] [7]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$865'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[6] [0]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$866'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[6] [1]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$867'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[6] [2]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$868'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[6] [3]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$869'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[6] [4]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$870'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[6] [5]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$871'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[6] [6]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$872'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[6] [7]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$873'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[7] [0]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$874'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[7] [1]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$875'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[7] [2]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$876'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[7] [3]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$877'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[7] [4]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$878'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[7] [5]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$879'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[7] [6]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$880'.
+No latch inferred for signal `\baugh_wooley_multiplier.\pp[7] [7]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$881'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[1] [0]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$882'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[1] [0]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$883'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[1] [1]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$884'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[1] [1]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$885'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[1] [2]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$886'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[1] [2]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$887'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[1] [3]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$888'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[1] [3]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$889'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[1] [4]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$890'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[1] [4]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$891'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[1] [5]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$892'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[1] [5]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$893'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[1] [6]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$894'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[1] [6]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$895'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[1] [7]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:89$896'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[1] [7]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:90$897'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[2] [0]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$898'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[2] [0]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$899'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[2] [1]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$900'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[2] [1]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$901'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[2] [2]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$902'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[2] [2]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$903'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[2] [3]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$904'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[2] [3]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$905'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[2] [4]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$906'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[2] [4]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$907'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[2] [5]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$908'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[2] [5]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$909'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[2] [6]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$910'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[2] [6]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$911'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[2] [7]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:89$912'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[2] [7]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:90$913'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[3] [0]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$914'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[3] [0]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$915'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[3] [1]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$916'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[3] [1]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$917'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[3] [2]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$918'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[3] [2]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$919'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[3] [3]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$920'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[3] [3]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$921'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[3] [4]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$922'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[3] [4]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$923'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[3] [5]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$924'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[3] [5]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$925'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[3] [6]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$926'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[3] [6]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$927'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[3] [7]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:89$928'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[3] [7]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:90$929'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[4] [0]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$930'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[4] [0]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$931'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[4] [1]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$932'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[4] [1]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$933'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[4] [2]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$934'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[4] [2]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$935'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[4] [3]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$936'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[4] [3]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$937'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[4] [4]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$938'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[4] [4]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$939'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[4] [5]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$940'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[4] [5]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$941'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[4] [6]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$942'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[4] [6]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$943'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[4] [7]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:89$944'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[4] [7]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:90$945'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[5] [0]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$946'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[5] [0]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$947'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[5] [1]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$948'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[5] [1]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$949'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[5] [2]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$950'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[5] [2]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$951'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[5] [3]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$952'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[5] [3]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$953'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[5] [4]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$954'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[5] [4]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$955'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[5] [5]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$956'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[5] [5]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$957'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[5] [6]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$958'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[5] [6]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$959'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[5] [7]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:89$960'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[5] [7]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:90$961'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[6] [0]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$962'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[6] [0]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$963'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[6] [1]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$964'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[6] [1]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$965'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[6] [2]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$966'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[6] [2]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$967'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[6] [3]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$968'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[6] [3]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$969'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[6] [4]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$970'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[6] [4]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$971'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[6] [5]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$972'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[6] [5]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$973'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[6] [6]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$974'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[6] [6]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$975'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[6] [7]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:89$976'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[6] [7]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:90$977'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[7] [0]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$978'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[7] [0]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$979'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[7] [1]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$980'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[7] [1]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$981'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[7] [2]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$982'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[7] [2]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$983'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[7] [3]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$984'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[7] [3]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$985'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[7] [4]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$986'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[7] [4]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$987'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[7] [5]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$988'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[7] [5]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$989'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[7] [6]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$990'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[7] [6]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$991'.
+No latch inferred for signal `\baugh_wooley_multiplier.\s[7] [7]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:89$992'.
+No latch inferred for signal `\baugh_wooley_multiplier.\c[7] [7]' from process `\baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:90$993'.
+
+5.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+5.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+5.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:71$816'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:72$817'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$818'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$819'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$820'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$821'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$822'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$823'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$824'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$825'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$826'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$827'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$828'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$829'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$830'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$831'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$832'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$833'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$834'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$835'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$836'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$837'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$838'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$839'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$840'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$841'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$842'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$843'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$844'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$845'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$846'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$847'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$848'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$849'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$850'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$851'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$852'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$853'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$854'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$855'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$856'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$857'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$858'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$859'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$860'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$861'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$862'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$863'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$864'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$865'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$866'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$867'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$868'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$869'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$870'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$871'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$872'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$873'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$874'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$875'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$876'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$877'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$878'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$879'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$880'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:63$881'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$882'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$883'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$884'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$885'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$886'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$887'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$888'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$889'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$890'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$891'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$892'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$893'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$894'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$895'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:89$896'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:90$897'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$898'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$899'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$900'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$901'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$902'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$903'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$904'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$905'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$906'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$907'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$908'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$909'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$910'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$911'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:89$912'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:90$913'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$914'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$915'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$916'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$917'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$918'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$919'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$920'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$921'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$922'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$923'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$924'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$925'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$926'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$927'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:89$928'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:90$929'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$930'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$931'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$932'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$933'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$934'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$935'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$936'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$937'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$938'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$939'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$940'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$941'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$942'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$943'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:89$944'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:90$945'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$946'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$947'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$948'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$949'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$950'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$951'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$952'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$953'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$954'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$955'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$956'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$957'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$958'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$959'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:89$960'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:90$961'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$962'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$963'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$964'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$965'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$966'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$967'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$968'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$969'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$970'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$971'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$972'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$973'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$974'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$975'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:89$976'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:90$977'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$978'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$979'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$980'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$981'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$982'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$983'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$984'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$985'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$986'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$987'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$988'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$989'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:82$990'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:83$991'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:89$992'.
+Removing empty process `baugh_wooley_multiplier.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv:90$993'.
+Cleaned up 0 empty switches.
+
+5.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module baugh_wooley_multiplier.
+<suppressed ~1 debug messages>
+Optimizing module $paramod\partial_product_generator\N=s32'00000000000000000000000000001000.
+Optimizing module full_adder.
+Optimizing module half_adder.
+
+5.3. Executing CHECK pass (checking for obvious problems).
+Checking module baugh_wooley_multiplier...
+Checking module $paramod\partial_product_generator\N=s32'00000000000000000000000000001000...
+Checking module full_adder...
+Checking module half_adder...
+Found and reported 0 problems.
+
+5.4. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod\partial_product_generator\N=s32'00000000000000000000000000001000.
+Deleting now unused module full_adder.
+Deleting now unused module half_adder.
+<suppressed ~64 debug messages>
+
+5.5. Executing OPT_EXPR pass (perform const folding).
+Optimizing module baugh_wooley_multiplier.
+<suppressed ~53 debug messages>
+
+5.6. Executing CHECK pass (checking for obvious problems).
+Checking module baugh_wooley_multiplier...
+Found and reported 0 problems.
+
+5.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \baugh_wooley_multiplier..
+Removed 0 unused cells and 682 unused wires.
+<suppressed ~1 debug messages>
+
+5.8. Executing OPT pass (performing simple optimizations).
+
+5.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module baugh_wooley_multiplier.
+
+5.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\baugh_wooley_multiplier'.
+Computing hashes of 498 cells of `\baugh_wooley_multiplier'.
+Finding duplicate cells in `\baugh_wooley_multiplier'.
+Removed a total of 0 cells.
+
+5.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \baugh_wooley_multiplier..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+5.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \baugh_wooley_multiplier.
+Performed a total of 0 changes.
+
+5.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\baugh_wooley_multiplier'.
+Computing hashes of 498 cells of `\baugh_wooley_multiplier'.
+Finding duplicate cells in `\baugh_wooley_multiplier'.
+Removed a total of 0 cells.
+
+5.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \baugh_wooley_multiplier..
+
+5.8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module baugh_wooley_multiplier.
+
+5.8.9. Finished fast OPT passes. (There is nothing left to do.)
+
+5.9. Executing FSM pass (extract and optimize FSM).
+
+5.9.1. Executing FSM_DETECT pass (finding FSMs in design).
+
+5.9.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+5.9.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+5.9.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \baugh_wooley_multiplier..
+
+5.9.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+5.9.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+5.9.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+5.9.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+5.10. Executing OPT pass (performing simple optimizations).
+
+5.10.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module baugh_wooley_multiplier.
+
+5.10.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\baugh_wooley_multiplier'.
+Computing hashes of 498 cells of `\baugh_wooley_multiplier'.
+Finding duplicate cells in `\baugh_wooley_multiplier'.
+Removed a total of 0 cells.
+
+5.10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \baugh_wooley_multiplier..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+5.10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \baugh_wooley_multiplier.
+Performed a total of 0 changes.
+
+5.10.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\baugh_wooley_multiplier'.
+Computing hashes of 498 cells of `\baugh_wooley_multiplier'.
+Finding duplicate cells in `\baugh_wooley_multiplier'.
+Removed a total of 0 cells.
+
+5.10.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.10.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \baugh_wooley_multiplier..
+
+5.10.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module baugh_wooley_multiplier.
+
+5.10.9. Finished fast OPT passes. (There is nothing left to do.)
+
+5.11. Executing WREDUCE pass (reducing word size of cells).
+Removed top 1 bits (of 8) from wire baugh_wooley_multiplier.c[1].
+Removed top 1 bits (of 8) from wire baugh_wooley_multiplier.c[2].
+Removed top 1 bits (of 8) from wire baugh_wooley_multiplier.c[3].
+Removed top 1 bits (of 8) from wire baugh_wooley_multiplier.c[4].
+Removed top 1 bits (of 8) from wire baugh_wooley_multiplier.c[5].
+Removed top 1 bits (of 8) from wire baugh_wooley_multiplier.c[6].
+
+5.12. Executing PEEPOPT pass (run peephole optimizers).
+
+5.13. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \baugh_wooley_multiplier..
+Removed 0 unused cells and 6 unused wires.
+<suppressed ~1 debug messages>
+
+5.14. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module baugh_wooley_multiplier:
+  created 0 $alu and 0 $macc cells.
+
+5.15. Executing SHARE pass (SAT-based resource sharing).
+
+5.16. Executing OPT pass (performing simple optimizations).
+
+5.16.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module baugh_wooley_multiplier.
+
+5.16.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\baugh_wooley_multiplier'.
+Computing hashes of 498 cells of `\baugh_wooley_multiplier'.
+Finding duplicate cells in `\baugh_wooley_multiplier'.
+Removed a total of 0 cells.
+
+5.16.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \baugh_wooley_multiplier..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+5.16.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \baugh_wooley_multiplier.
+Performed a total of 0 changes.
+
+5.16.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\baugh_wooley_multiplier'.
+Computing hashes of 498 cells of `\baugh_wooley_multiplier'.
+Finding duplicate cells in `\baugh_wooley_multiplier'.
+Removed a total of 0 cells.
+
+5.16.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.16.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \baugh_wooley_multiplier..
+
+5.16.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module baugh_wooley_multiplier.
+
+5.16.9. Finished fast OPT passes. (There is nothing left to do.)
+
+5.17. Executing MEMORY pass.
+
+5.17.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+5.17.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+5.17.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+5.17.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+5.17.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+5.17.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \baugh_wooley_multiplier..
+
+5.17.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+5.17.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+5.17.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \baugh_wooley_multiplier..
+
+5.17.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+5.18. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \baugh_wooley_multiplier..
+
+5.19. Executing OPT pass (performing simple optimizations).
+
+5.19.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module baugh_wooley_multiplier.
+
+5.19.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\baugh_wooley_multiplier'.
+Computing hashes of 498 cells of `\baugh_wooley_multiplier'.
+Finding duplicate cells in `\baugh_wooley_multiplier'.
+Removed a total of 0 cells.
+
+5.19.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.19.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \baugh_wooley_multiplier..
+
+5.19.5. Finished fast OPT passes.
+
+5.20. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+5.21. Executing OPT pass (performing simple optimizations).
+
+5.21.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module baugh_wooley_multiplier.
+
+5.21.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\baugh_wooley_multiplier'.
+Computing hashes of 498 cells of `\baugh_wooley_multiplier'.
+Finding duplicate cells in `\baugh_wooley_multiplier'.
+Removed a total of 0 cells.
+
+5.21.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \baugh_wooley_multiplier..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+5.21.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \baugh_wooley_multiplier.
+Performed a total of 0 changes.
+
+5.21.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\baugh_wooley_multiplier'.
+Computing hashes of 498 cells of `\baugh_wooley_multiplier'.
+Finding duplicate cells in `\baugh_wooley_multiplier'.
+Removed a total of 0 cells.
+
+5.21.6. Executing OPT_SHARE pass.
+
+5.21.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.21.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \baugh_wooley_multiplier..
+
+5.21.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module baugh_wooley_multiplier.
+
+5.21.10. Finished fast OPT passes. (There is nothing left to do.)
+
+5.22. Executing TECHMAP pass (map to technology primitives).
+
+5.22.1. Executing Verilog-2005 frontend: /usr/local/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/usr/local/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+5.22.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $not.
+Using extmapper simplemap for cells of type $or.
+Using extmapper simplemap for cells of type $and.
+Using extmapper simplemap for cells of type $xor.
+No more expansions possible.
+<suppressed ~511 debug messages>
+
+5.23. Executing OPT pass (performing simple optimizations).
+
+5.23.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module baugh_wooley_multiplier.
+
+5.23.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\baugh_wooley_multiplier'.
+Computing hashes of 498 cells of `\baugh_wooley_multiplier'.
+Finding duplicate cells in `\baugh_wooley_multiplier'.
+Removed a total of 0 cells.
+
+5.23.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.23.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \baugh_wooley_multiplier..
+
+5.23.5. Finished fast OPT passes.
+
+5.24. Executing ABC pass (technology mapping using ABC).
+
+5.24.1. Summary of detected clock domains:
+  498 cells in clk={ }, en={ }, arst={ }, srst={ }
+
+5.24.2. Extracting gate netlist of module `\baugh_wooley_multiplier' to `<abc-temp-dir>/input.blif'..
+No matching clock domain found. Not extracting any FF cells.
+
+5.24.2.1. Executed ABC.
+Extracted 434 gates and 450 wires to a netlist network with 16 inputs and 16 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled Sep 18 2026 19:37:19)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_library <abc-temp-dir>/stdcells.genlib 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+5.24.2.2. Re-integrating ABC results.
+ABC RESULTS:               AND cells:       73
+ABC RESULTS:            ANDNOT cells:        7
+ABC RESULTS:               MUX cells:        7
+ABC RESULTS:              NAND cells:      172
+ABC RESULTS:               NOR cells:        5
+ABC RESULTS:                OR cells:       40
+ABC RESULTS:             ORNOT cells:        5
+ABC RESULTS:              XNOR cells:       46
+ABC RESULTS:               XOR cells:       12
+ABC RESULTS:        internal signals:      418
+ABC RESULTS:           input signals:       16
+ABC RESULTS:          output signals:       16
+Removing temp directory.
+Removing global temp directory.
+
+5.25. Executing OPT pass (performing simple optimizations).
+
+5.25.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module baugh_wooley_multiplier.
+
+5.25.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\baugh_wooley_multiplier'.
+Computing hashes of 431 cells of `\baugh_wooley_multiplier'.
+Finding duplicate cells in `\baugh_wooley_multiplier'.
+Removed a total of 0 cells.
+
+5.25.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.25.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \baugh_wooley_multiplier..
+Removed 0 unused cells and 561 unused wires.
+<suppressed ~273 debug messages>
+
+5.25.5. Finished fast OPT passes.
+
+5.26. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `baugh_wooley_multiplier'. Setting top module to baugh_wooley_multiplier.
+
+5.26.1. Analyzing design hierarchy..
+Top module:  \baugh_wooley_multiplier
+
+5.26.2. Analyzing design hierarchy..
+Top module:  \baugh_wooley_multiplier
+Removed 0 unused modules.
+
+5.27. Printing statistics.
+
+=== baugh_wooley_multiplier ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      422 wires
+      687 wire bits
+       71 public wires
+      336 public wire bits
+        3 ports
+       32 port bits
+      431 cells
+        7   $_ANDNOT_
+       73   $_AND_
+        7   $_MUX_
+      172   $_NAND_
+        5   $_NOR_
+        5   $_ORNOT_
+       40   $_OR_
+       46   $_XNOR_
+       12   $_XOR_
+       64   $scopeinfo
+
+5.28. Executing CHECK pass (checking for obvious problems).
+Checking module baugh_wooley_multiplier...
+Found and reported 0 problems.
+
+6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \baugh_wooley_multiplier..
+Removed 64 unused cells and 54 unused wires.
+<suppressed ~118 debug messages>
+
+7. Executing DFFLIBMAP pass (mapping DFF/DLATCH cells to sequential cells from liberty file).
+  cell DFF_X1 (noninv, pins=4, area=4.52) is a direct match for cell type $_DFF_P_.
+  cell DFFR_X1 (noninv, pins=5, area=5.32) is a direct match for cell type $_DFF_PN0_.
+  cell DFFS_X1 (noninv, pins=5, area=5.32) is a direct match for cell type $_DFF_PN1_.
+  cell DFFRS_X1 (noninv, pins=6, area=6.38) is a direct match for cell type $_DFFSR_PNN_.
+  cell DLL_X1 (noninv, pins=3, area=2.66) is a direct match for cell type $_DLATCH_N_.
+  cell DLH_X1 (noninv, pins=3, area=2.66) is a direct match for cell type $_DLATCH_P_.
+  final dff/dlatch cell mappings:
+    unmapped dff/dlatch cell: $_DFF_N_
+    \DFF_X1 _DFF_P_ (.CK( C), .D( D), .Q( Q), .QN(~Q));
+    unmapped dff/dlatch cell: $_DFF_NN0_
+    unmapped dff/dlatch cell: $_DFF_NN1_
+    unmapped dff/dlatch cell: $_DFF_NP0_
+    unmapped dff/dlatch cell: $_DFF_NP1_
+    \DFFR_X1 _DFF_PN0_ (.CK( C), .D( D), .Q( Q), .QN(~Q), .RN( R));
+    \DFFS_X1 _DFF_PN1_ (.CK( C), .D( D), .Q( Q), .QN(~Q), .SN( R));
+    unmapped dff/dlatch cell: $_DFF_PP0_
+    unmapped dff/dlatch cell: $_DFF_PP1_
+    unmapped dff/dlatch cell: $_DFFE_NN_
+    unmapped dff/dlatch cell: $_DFFE_NP_
+    unmapped dff/dlatch cell: $_DFFE_PN_
+    unmapped dff/dlatch cell: $_DFFE_PP_
+    unmapped dff/dlatch cell: $_DFFSR_NNN_
+    unmapped dff/dlatch cell: $_DFFSR_NNP_
+    unmapped dff/dlatch cell: $_DFFSR_NPN_
+    unmapped dff/dlatch cell: $_DFFSR_NPP_
+    \DFFRS_X1 _DFFSR_PNN_ (.CK( C), .D( D), .Q( Q), .QN(~Q), .RN( R), .SN( S));
+    unmapped dff/dlatch cell: $_DFFSR_PNP_
+    unmapped dff/dlatch cell: $_DFFSR_PPN_
+    unmapped dff/dlatch cell: $_DFFSR_PPP_
+    \DLL_X1 _DLATCH_N_ (.D( D), .GN( E), .Q( Q));
+    \DLH_X1 _DLATCH_P_ (.D( D), .G( E), .Q( Q));
+    unmapped dff/dlatch cell: $_DLATCH_NN0_
+    unmapped dff/dlatch cell: $_DLATCH_NN1_
+    unmapped dff/dlatch cell: $_DLATCH_NP0_
+    unmapped dff/dlatch cell: $_DLATCH_NP1_
+    unmapped dff/dlatch cell: $_DLATCH_PN0_
+    unmapped dff/dlatch cell: $_DLATCH_PN1_
+    unmapped dff/dlatch cell: $_DLATCH_PP0_
+    unmapped dff/dlatch cell: $_DLATCH_PP1_
+    unmapped dff/dlatch cell: $_DLATCHSR_NNN_
+    unmapped dff/dlatch cell: $_DLATCHSR_NNP_
+    unmapped dff/dlatch cell: $_DLATCHSR_NPN_
+    unmapped dff/dlatch cell: $_DLATCHSR_NPP_
+    unmapped dff/dlatch cell: $_DLATCHSR_PNN_
+    unmapped dff/dlatch cell: $_DLATCHSR_PNP_
+    unmapped dff/dlatch cell: $_DLATCHSR_PPN_
+    unmapped dff/dlatch cell: $_DLATCHSR_PPP_
+
+7.1. Executing DFFLEGALIZE pass (convert FFs and LATCHes to types supported by the target).
+<suppressed ~8 debug messages>
+Mapping DFF/DLATCH cells in module `\baugh_wooley_multiplier':
+
+8. Executing OPT pass (performing simple optimizations).
+
+8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module baugh_wooley_multiplier.
+
+8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\baugh_wooley_multiplier'.
+Computing hashes of 367 cells of `\baugh_wooley_multiplier'.
+Finding duplicate cells in `\baugh_wooley_multiplier'.
+Removed a total of 0 cells.
+
+8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \baugh_wooley_multiplier..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \baugh_wooley_multiplier.
+Performed a total of 0 changes.
+
+8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\baugh_wooley_multiplier'.
+Computing hashes of 367 cells of `\baugh_wooley_multiplier'.
+Finding duplicate cells in `\baugh_wooley_multiplier'.
+Removed a total of 0 cells.
+
+8.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \baugh_wooley_multiplier..
+
+8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module baugh_wooley_multiplier.
+
+8.9. Finished fast OPT passes. (There is nothing left to do.)
+
+9. Executing ABC pass (technology mapping using ABC).
+
+9.1. Summary of detected clock domains:
+  367 cells in clk={ }, en={ }, arst={ }, srst={ }
+
+9.2. Extracting gate netlist of module `\baugh_wooley_multiplier' to `<abc-temp-dir>/input.blif'..
+ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache-1000/yosys_merged_4c2f18a6.scl (1 files)
+No matching clock domain found. Not extracting any FF cells.
+
+9.2.1. Executed ABC.
+Extracted 367 gates and 383 wires to a netlist network with 16 inputs and 16 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled Sep 18 2026 19:37:19)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache-1000/yosys_merged_4c2f18a6.scl 
+ABC: Warning: Detected 2 multi-output cells (for example, "FA_X1").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + retime -o -D 10000 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf -D 10000 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+9.2.2. Re-integrating ABC results.
+ABC RESULTS:           AND2_X1 cells:       20
+ABC RESULTS:           AND3_X1 cells:        7
+ABC RESULTS:           AND4_X1 cells:        8
+ABC RESULTS:         AOI211_X2 cells:        9
+ABC RESULTS:          AOI21_X1 cells:       20
+ABC RESULTS:         AOI221_X1 cells:        4
+ABC RESULTS:          AOI22_X1 cells:        9
+ABC RESULTS:            INV_X1 cells:       15
+ABC RESULTS:           MUX2_X1 cells:        6
+ABC RESULTS:          NAND2_X1 cells:       60
+ABC RESULTS:          NAND3_X1 cells:        5
+ABC RESULTS:          NAND4_X1 cells:       10
+ABC RESULTS:           NOR2_X1 cells:       44
+ABC RESULTS:           NOR3_X1 cells:       12
+ABC RESULTS:          OAI21_X1 cells:       23
+ABC RESULTS:         OAI221_X1 cells:        2
+ABC RESULTS:          OAI22_X1 cells:        3
+ABC RESULTS:          OAI33_X1 cells:        7
+ABC RESULTS:            OR2_X1 cells:       11
+ABC RESULTS:            OR3_X1 cells:        8
+ABC RESULTS:          XNOR2_X1 cells:       46
+ABC RESULTS:           XOR2_X1 cells:       24
+ABC RESULTS:        internal signals:      351
+ABC RESULTS:           input signals:       16
+ABC RESULTS:          output signals:       16
+Removing temp directory.
+Removing global temp directory.
+
+10. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \baugh_wooley_multiplier..
+Removed 0 unused cells and 383 unused wires.
+<suppressed ~1 debug messages>
+
+11. Executing HILOMAP pass (mapping to constant drivers).
+
+12. Executing SETUNDEF pass (replace undef values with defined constants).
+
+13. Executing SPLITNETS pass (splitting up multi-bit signals).
+
+14. Executing INSBUF pass (insert buffer cells for connected wires).
+Add baugh_wooley_multiplier/$auto$insbuf.cc:97:execute$1653: \g_arr_row[1].g_arr_col[0].g_fa.u_fa.s -> \p [1]
+Add baugh_wooley_multiplier/$auto$insbuf.cc:97:execute$1654: \g_arr_row[2].g_arr_col[0].g_fa.u_fa.s -> \p [2]
+Add baugh_wooley_multiplier/$auto$insbuf.cc:97:execute$1655: \g_arr_row[3].g_arr_col[0].g_fa.u_fa.s -> \p [3]
+Add baugh_wooley_multiplier/$auto$insbuf.cc:97:execute$1656: \g_arr_row[4].g_arr_col[0].g_fa.u_fa.s -> \p [4]
+Add baugh_wooley_multiplier/$auto$insbuf.cc:97:execute$1657: \g_arr_row[5].g_arr_col[0].g_fa.u_fa.s -> \p [5]
+Add baugh_wooley_multiplier/$auto$insbuf.cc:97:execute$1658: \g_arr_row[6].g_arr_col[0].g_fa.u_fa.s -> \p [6]
+Add baugh_wooley_multiplier/$auto$insbuf.cc:97:execute$1659: \g_arr_row[7].g_arr_col[0].g_fa.u_fa.s -> \p [7]
+Add baugh_wooley_multiplier/$auto$insbuf.cc:97:execute$1660: \g_vma[0].u_vma.s -> \p [8]
+Add baugh_wooley_multiplier/$auto$insbuf.cc:97:execute$1661: \g_vma[1].u_vma.s -> \p [9]
+Add baugh_wooley_multiplier/$auto$insbuf.cc:97:execute$1662: \g_vma[2].u_vma.s -> \p [10]
+Add baugh_wooley_multiplier/$auto$insbuf.cc:97:execute$1663: \g_vma[3].u_vma.s -> \p [11]
+Add baugh_wooley_multiplier/$auto$insbuf.cc:97:execute$1664: \g_vma[4].u_vma.s -> \p [12]
+Add baugh_wooley_multiplier/$auto$insbuf.cc:97:execute$1665: \g_vma[5].u_vma.s -> \p [13]
+Add baugh_wooley_multiplier/$auto$insbuf.cc:97:execute$1666: \g_vma[6].u_vma.s -> \p [14]
+
+15. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \baugh_wooley_multiplier..
+
+16. Executing CHECK pass (checking for obvious problems).
+Checking module baugh_wooley_multiplier...
+Found and reported 0 problems.
+
+17. Printing statistics.
+
+=== baugh_wooley_multiplier ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+      354        - wires
+      383        - wire bits
+       17        - public wires
+       46        - public wire bits
+        3        - ports
+       32        - port bits
+      367  427.994 cells
+       20    21.28   AND2_X1
+        7     9.31   AND3_X1
+        8   12.768   AND4_X1
+        9   21.546   AOI211_X2
+       20    21.28   AOI21_X1
+        4    6.384   AOI221_X1
+        9    11.97   AOI22_X1
+       14   11.172   BUF_X1
+       15     7.98   INV_X1
+        6   11.172   MUX2_X1
+       60    47.88   NAND2_X1
+        5     5.32   NAND3_X1
+       10     13.3   NAND4_X1
+       44   35.112   NOR2_X1
+       12   12.768   NOR3_X1
+       23   24.472   OAI21_X1
+        2    3.192   OAI221_X1
+        3     3.99   OAI22_X1
+        7   13.034   OAI33_X1
+       11   11.704   OR2_X1
+        8    10.64   OR3_X1
+       46   73.416   XNOR2_X1
+       24   38.304   XOR2_X1
+
+   Chip area for module '\baugh_wooley_multiplier': 427.994000
+     of which used for sequential elements: 0.000000 (0.00%)
+
+18. Executing Verilog backend.
+Dumping module `\baugh_wooley_multiplier'.
+
+End of script. Logfile hash: f86e3438cb, time: 0.95s, user: 0.32s, system: 0.18s, MEM: 31.25 MB peak
+Yosys 0.69+75 (git sha1 f0b945f63, Release, GNU /usr/bin/c++ 11.4.0)
+Time spent: 42% 2x abc (0 sec), 9% 17x opt_clean (0 sec), ...

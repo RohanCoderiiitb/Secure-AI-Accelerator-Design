@@ -1,0 +1,48 @@
+
+18. Printing statistics.
+
+=== systolic_array_masked ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+    83524        - wires
+    84568        - wire bits
+     3079        - public wires
+     4123        - public wire bits
+       14        - ports
+     1058        - port bits
+    80455 1.01E+05 cells
+     2073 2.21E+03   AND2_X1
+     2108  2803.64   AND3_X1
+      811 1.29E+03   AND4_X1
+      709  1.7E+03   AOI211_X2
+     8259 8.79E+03   AOI21_X1
+      263  419.748   AOI221_X1
+        1    2.128   AOI222_X1
+     1162  1545.46   AOI22_X1
+       10     7.98   BUF_X1
+     3425 1.55E+04   DFF_X1
+     4233 2.25E+03   INV_X1
+      283  526.946   MUX2_X1
+    16058 1.28E+04   NAND2_X1
+     2594 2.76E+03   NAND3_X1
+      693   921.69   NAND4_X1
+     9204 7.34E+03   NOR2_X1
+     1140  1212.96   NOR3_X1
+      315   418.95   NOR4_X1
+       35    83.79   OAI211_X2
+     6350   6756.4   OAI21_X1
+      164  261.744   OAI221_X1
+        7   14.896   OAI222_X1
+     1369  1820.77   OAI22_X1
+      617 1.15E+03   OAI33_X1
+     2258  2.4E+03   OR2_X1
+     1744  2319.52   OR3_X1
+       57   90.972   OR4_X1
+     8996 1.44E+04   XNOR2_X1
+     5517 8.81E+03   XOR2_X1
+
+   Chip area for module '\systolic_array_masked': 100565.556000
+     of which used for sequential elements: 15487.850000 (15.40%)
+

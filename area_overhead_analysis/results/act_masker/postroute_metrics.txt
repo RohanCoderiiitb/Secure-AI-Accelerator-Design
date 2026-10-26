@@ -1,0 +1,22 @@
+design act_masker
+area_seq 1447.0400
+count_seq 320
+area_comb 3030.2720
+count_comb 2346
+area_bufinv 229.5580
+count_bufinv 384
+area_clkbuf 65.9680
+count_clkbuf 50
+area_tap 36.1760
+count_tap 136
+area_tie 0.0000
+count_tie 0
+area_fill 4361.6020
+count_fill 3159
+stdcell_area 4809.0140
+stdcell_count 3236
+core_area 9170.6160
+die_area 10098.2401
+die_wh 100.490 100.490
+core_util 0.5244
+route_drc_violations 0

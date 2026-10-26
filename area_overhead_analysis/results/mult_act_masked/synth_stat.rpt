@@ -1,0 +1,114 @@
+
+19. Printing statistics.
+
+=== $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+      545        - wires
+      582        - wire bits
+       19        - public wires
+       56        - public wire bits
+        3        - ports
+       40        - port bits
+      558  632.016 cells
+       24   25.536   AND2_X1
+       14    18.62   AND3_X1
+       11   17.556   AND4_X1
+        9   21.546   AOI211_X2
+       34   36.176   AOI21_X1
+        4    6.384   AOI221_X1
+       14    18.62   AOI22_X1
+       16   12.768   BUF_X1
+       20    10.64   INV_X1
+        6   11.172   MUX2_X1
+      119   94.962   NAND2_X1
+       22   23.408   NAND3_X1
+        6     7.98   NAND4_X1
+       65    51.87   NOR2_X1
+       14   14.896   NOR3_X1
+       30    31.92   OAI21_X1
+        3    4.788   OAI221_X1
+        6     7.98   OAI22_X1
+        6   11.172   OAI33_X1
+       15    15.96   OR2_X1
+       13    17.29   OR3_X1
+       75    119.7   XNOR2_X1
+       32   51.072   XOR2_X1
+
+   Chip area for module '$paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier': 632.016000
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== masked_act_multiplier ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+       40        - wires
+      107        - wire bits
+       16        - public wires
+       83        - public wire bits
+        8        - ports
+       75        - port bits
+       24   59.584 cells
+        8    8.512   AND2_X1
+        8   36.176   DFF_X1
+        8   14.896   MUX2_X1
+        2        - submodules
+        2        -   $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier
+
+   Chip area for module '\masked_act_multiplier': 59.584000
+     of which used for sequential elements: 36.176000 (60.71%)
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        |        +-Area including submodules.
+        |        | 
+     1140 1.32E+03 masked_act_multiplier
+      558  632.016 $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier
+
+        +----------Count including submodules.
+        |        +-Area including submodules.
+        |        | 
+     1130        - wires
+     1271        - wire bits
+       54        - public wires
+      195        - public wire bits
+       14        - ports
+      155        - port bits
+        -        - memories
+        -        - memory bits
+        -        - processes
+     1140 1.32E+03 cells
+       56   59.584   AND2_X1
+       28    37.24   AND3_X1
+       22   35.112   AND4_X1
+       18   43.092   AOI211_X2
+       68   72.352   AOI21_X1
+        8   12.768   AOI221_X1
+       28    37.24   AOI22_X1
+       32   25.536   BUF_X1
+        8   36.176   DFF_X1
+       40    21.28   INV_X1
+       20    37.24   MUX2_X1
+      238  189.924   NAND2_X1
+       44   46.816   NAND3_X1
+       12    15.96   NAND4_X1
+      130   103.74   NOR2_X1
+       28   29.792   NOR3_X1
+       60    63.84   OAI21_X1
+        6    9.576   OAI221_X1
+       12    15.96   OAI22_X1
+       12   22.344   OAI33_X1
+       30    31.92   OR2_X1
+       26    34.58   OR3_X1
+      150    239.4   XNOR2_X1
+       64  102.144   XOR2_X1
+        2 1.26E+03 submodules
+        2 1.26E+03   $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier
+
+   Chip area for top module '\masked_act_multiplier': 1323.616000
+     of which used for sequential elements: 36.176000 (2.73%)
+

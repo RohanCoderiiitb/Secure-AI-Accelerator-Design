@@ -1,0 +1,50 @@
+Startpoint: a[0] (input port clocked by clk)
+Endpoint: p1[14] (output port clocked by clk)
+Path Group: clk
+Path Type: max
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock clk (rise edge)
+   0.000    0.000   clock network delay (propagated)
+   2.000    2.000 ^ input external delay
+   0.033    2.033 ^ a[0] (in)
+   0.139    2.173 ^ fanout3/Z (BUF_X2)
+   0.121    2.293 ^ u_dom1/_0558_/ZN (AND4_X1)
+   0.046    2.340 ^ u_dom1/_0559_/ZN (OR2_X1)
+   0.069    2.409 ^ u_dom1/_0560_/Z (XOR2_X1)
+   0.025    2.433 v u_dom1/_0565_/ZN (AOI21_X1)
+   0.134    2.568 ^ u_dom1/_0580_/ZN (OAI33_X1)
+   0.057    2.625 ^ u_dom1/_0585_/ZN (XNOR2_X1)
+   0.014    2.639 v u_dom1/_0611_/ZN (NOR2_X1)
+   0.127    2.767 ^ u_dom1/_0613_/ZN (OAI33_X1)
+   0.063    2.830 ^ u_dom1/_0615_/Z (XOR2_X1)
+   0.058    2.888 ^ u_dom1/_0659_/ZN (XNOR2_X1)
+   0.031    2.919 v u_dom1/_0717_/ZN (AOI21_X1)
+   0.096    3.015 ^ u_dom1/_0768_/ZN (AOI221_X1)
+   0.046    3.061 v u_dom1/_0773_/ZN (OAI33_X1)
+   0.052    3.113 ^ u_dom1/_0821_/ZN (AOI21_X1)
+   0.019    3.132 v u_dom1/_0870_/ZN (NOR3_X1)
+   0.072    3.204 ^ u_dom1/_0925_/ZN (AOI211_X2)
+   0.019    3.222 v u_dom1/_0932_/ZN (NOR2_X1)
+   0.080    3.302 v u_dom1/_0976_/ZN (OR3_X1)
+   0.019    3.321 ^ u_dom1/_0978_/ZN (NAND2_X1)
+   0.043    3.364 ^ u_dom1/_0980_/ZN (XNOR2_X1)
+   0.029    3.392 ^ u_dom1/_1082_/Z (BUF_X1)
+   0.000    3.392 ^ p1[14] (out)
+            3.392   data arrival time
+
+  10.000   10.000   clock clk (rise edge)
+   0.000   10.000   clock network delay (propagated)
+   0.000   10.000   clock reconvergence pessimism
+  -2.000    8.000   output external delay
+            8.000   data required time
+-----------------------------------------------------------
+            8.000   data required time
+           -3.392   data arrival time
+-----------------------------------------------------------
+            4.608   slack (MET)
+
+
+wns max 0.00
+tns max 0.00

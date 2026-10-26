@@ -1,0 +1,22 @@
+design systolic_array_masked
+area_seq 15494.7660
+count_seq 3425
+area_comb 82850.4880
+count_comb 72787
+area_bufinv 3555.8880
+count_bufinv 5222
+area_clkbuf 567.6440
+count_clkbuf 437
+area_tap 297.6540
+count_tap 1119
+area_tie 0.0000
+count_tie 0
+area_fill 97404.1460
+count_fill 84042
+stdcell_area 102766.4400
+stdcell_count 82990
+core_area 200170.5860
+die_area 204733.6256
+die_wh 452.475 452.475
+core_util 0.5134
+route_drc_violations 0

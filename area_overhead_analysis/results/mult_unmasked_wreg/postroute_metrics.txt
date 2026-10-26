@@ -1,0 +1,22 @@
+design bw_multiplier_wreg
+area_seq 36.1760
+count_seq 8
+area_comb 441.2940
+count_comb 366
+area_bufinv 20.7480
+count_bufinv 32
+area_clkbuf 3.9900
+count_clkbuf 3
+area_tap 11.1720
+count_tap 42
+area_tie 0.0000
+count_tie 0
+area_fill 408.3100
+count_fill 426
+stdcell_area 513.3800
+stdcell_count 451
+core_area 921.6900
+die_area 1264.8692
+die_wh 35.565 35.565
+core_util 0.5570
+route_drc_violations 0

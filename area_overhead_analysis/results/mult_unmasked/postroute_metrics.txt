@@ -1,0 +1,22 @@
+design baugh_wooley_multiplier
+area_seq 0.0000
+count_seq 0
+area_comb 408.8420
+count_comb 338
+area_bufinv 19.1520
+count_bufinv 29
+area_clkbuf 0.0000
+count_clkbuf 0
+area_tap 10.6400
+count_tap 40
+area_tie 0.0000
+count_tie 0
+area_fill 375.3260
+count_fill 384
+stdcell_area 438.6340
+stdcell_count 407
+core_area 813.9600
+die_area 1105.8950
+die_wh 33.255 33.255
+core_util 0.5389
+route_drc_violations 0

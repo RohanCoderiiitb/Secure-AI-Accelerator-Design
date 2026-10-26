@@ -1,0 +1,6 @@
+# Regenerable physical-design databases (large). Reports, metrics, netlists
+# and plots under results/ are kept.
+results/*/*.odb
+results/*/*.def
+results/*/*.spef
+results/*/modules.lst

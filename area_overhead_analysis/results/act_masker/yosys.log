@@ -1,0 +1,1117 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.69+75 (git sha1 f0b945f63, Release, GNU /usr/bin/c++ 11.4.0)
+[TCL: yosys -import] Command name collision: found pre-existing command `cd' -> skip.
+[TCL: yosys -import] Command name collision: found pre-existing command `eval' -> skip.
+[TCL: yosys -import] Command name collision: found pre-existing command `exec' -> skip.
+[TCL: yosys -import] Command name collision: found pre-existing command `read' -> skip.
+[TCL: yosys -import] Command name collision: found pre-existing command `trace' -> skip.
+
+1. Executing Liberty frontend: /home/ihs24/OpenROAD-flow-scripts/flow/platforms/nangate45/lib/NangateOpenCellLibrary_typical.lib
+Imported 135 cell types from liberty file.
+
+2. Executing Verilog-2005 frontend: /home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv
+Parsing SystemVerilog input from `/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv' to AST representation.
+Generating RTLIL representation for module `\act_mask_rng'.
+Generating RTLIL representation for module `\act_splitter'.
+Generating RTLIL representation for module `\act_masker'.
+Successfully finished Verilog frontend.
+Parameter \N = 8
+
+3. Executing AST frontend in derive mode using pre-parsed AST for module `\act_masker'.
+Parameter \N = 8
+Generating RTLIL representation for module `$paramod\act_masker\N=s32'00000000000000000000000000001000'.
+Parameter \SHARE_W = 32
+
+4. Executing AST frontend in derive mode using pre-parsed AST for module `\act_masker'.
+Parameter \SHARE_W = 32
+Generating RTLIL representation for module `$paramod\act_masker\SHARE_W=s32'00000000000000000000000000100000'.
+Parameter \ROWS = 5
+
+5. Executing AST frontend in derive mode using pre-parsed AST for module `\act_masker'.
+Parameter \ROWS = 5
+Generating RTLIL representation for module `$paramod\act_masker\ROWS=s32'00000000000000000000000000000101'.
+
+6. Executing HIERARCHY pass (managing design hierarchy).
+
+6.1. Analyzing design hierarchy..
+Top module:  \act_masker
+Used module:     \act_splitter
+Used module:     \act_mask_rng
+Parameter \N = 8
+Parameter \SHARE_W = 32
+Parameter \ROWS = 5
+
+6.2. Executing AST frontend in derive mode using pre-parsed AST for module `\act_splitter'.
+Parameter \N = 8
+Parameter \SHARE_W = 32
+Parameter \ROWS = 5
+Generating RTLIL representation for module `$paramod$39988b9ac83fdbe513ec5c55b3e92b4e1ebc6098\act_splitter'.
+Parameter \W = 32
+Parameter \SEED = 64'1110100111111101011000000100100111010110010110101111001000011110
+
+6.3. Executing AST frontend in derive mode using pre-parsed AST for module `\act_mask_rng'.
+Parameter \W = 32
+Parameter \SEED = 64'1110100111111101011000000100100111010110010110101111001000011110
+Generating RTLIL representation for module `$paramod$dba2ebc5d341346df454d9cde55a4d0bfa846076\act_mask_rng'.
+Parameter \W = 32
+Parameter \SEED = 64'1110000001101101110100000100001100110010100010111101001010000101
+
+6.4. Executing AST frontend in derive mode using pre-parsed AST for module `\act_mask_rng'.
+Parameter \W = 32
+Parameter \SEED = 64'1110000001101101110100000100001100110010100010111101001010000101
+Generating RTLIL representation for module `$paramod$0fcb4fc8687251fbad80cb80343b256ed75b9d3b\act_mask_rng'.
+Parameter \W = 32
+Parameter \SEED = 64'1110110001001100010110111110111001100010011100000001000110110011
+
+6.5. Executing AST frontend in derive mode using pre-parsed AST for module `\act_mask_rng'.
+Parameter \W = 32
+Parameter \SEED = 64'1110110001001100010110111110111001100010011100000001000110110011
+Generating RTLIL representation for module `$paramod$38db057ee43d44119101f376a1c12b5adc0673d9\act_mask_rng'.
+Parameter \W = 32
+Parameter \SEED = 64'1011100110111001110111000101100100110000000011111001101000100111
+
+6.6. Executing AST frontend in derive mode using pre-parsed AST for module `\act_mask_rng'.
+Parameter \W = 32
+Parameter \SEED = 64'1011100110111001110111000101100100110000000011111001101000100111
+Generating RTLIL representation for module `$paramod$c855f98e706f532d80eaf2487264ca3b0ee6e70e\act_mask_rng'.
+Parameter \W = 32
+Parameter \SEED = 64'1110000101111011011011010001010001111101101000011000001011011010
+
+6.7. Executing AST frontend in derive mode using pre-parsed AST for module `\act_mask_rng'.
+Parameter \W = 32
+Parameter \SEED = 64'1110000101111011011011010001010001111101101000011000001011011010
+Generating RTLIL representation for module `$paramod$8fb49d93878db3ffb5f754ab8e7e8ec8e0a06ee0\act_mask_rng'.
+
+6.8. Analyzing design hierarchy..
+Top module:  \act_masker
+Used module:     $paramod$39988b9ac83fdbe513ec5c55b3e92b4e1ebc6098\act_splitter
+Used module:     $paramod$dba2ebc5d341346df454d9cde55a4d0bfa846076\act_mask_rng
+Used module:     $paramod$0fcb4fc8687251fbad80cb80343b256ed75b9d3b\act_mask_rng
+Used module:     $paramod$38db057ee43d44119101f376a1c12b5adc0673d9\act_mask_rng
+Used module:     $paramod$c855f98e706f532d80eaf2487264ca3b0ee6e70e\act_mask_rng
+Used module:     $paramod$8fb49d93878db3ffb5f754ab8e7e8ec8e0a06ee0\act_mask_rng
+
+6.9. Analyzing design hierarchy..
+Top module:  \act_masker
+Used module:     $paramod$39988b9ac83fdbe513ec5c55b3e92b4e1ebc6098\act_splitter
+Used module:     $paramod$dba2ebc5d341346df454d9cde55a4d0bfa846076\act_mask_rng
+Used module:     $paramod$0fcb4fc8687251fbad80cb80343b256ed75b9d3b\act_mask_rng
+Used module:     $paramod$38db057ee43d44119101f376a1c12b5adc0673d9\act_mask_rng
+Used module:     $paramod$c855f98e706f532d80eaf2487264ca3b0ee6e70e\act_mask_rng
+Used module:     $paramod$8fb49d93878db3ffb5f754ab8e7e8ec8e0a06ee0\act_mask_rng
+Removing unused module `\act_splitter'.
+Removing unused module `\act_mask_rng'.
+Removed 2 unused modules.
+
+7. Executing SYNTH pass.
+
+7.1. Executing HIERARCHY pass (managing design hierarchy).
+
+7.1.1. Analyzing design hierarchy..
+Top module:  \act_masker
+Used module:     $paramod$39988b9ac83fdbe513ec5c55b3e92b4e1ebc6098\act_splitter
+Used module:     $paramod$dba2ebc5d341346df454d9cde55a4d0bfa846076\act_mask_rng
+Used module:     $paramod$0fcb4fc8687251fbad80cb80343b256ed75b9d3b\act_mask_rng
+Used module:     $paramod$38db057ee43d44119101f376a1c12b5adc0673d9\act_mask_rng
+Used module:     $paramod$c855f98e706f532d80eaf2487264ca3b0ee6e70e\act_mask_rng
+Used module:     $paramod$8fb49d93878db3ffb5f754ab8e7e8ec8e0a06ee0\act_mask_rng
+
+7.1.2. Analyzing design hierarchy..
+Top module:  \act_masker
+Used module:     $paramod$39988b9ac83fdbe513ec5c55b3e92b4e1ebc6098\act_splitter
+Used module:     $paramod$dba2ebc5d341346df454d9cde55a4d0bfa846076\act_mask_rng
+Used module:     $paramod$0fcb4fc8687251fbad80cb80343b256ed75b9d3b\act_mask_rng
+Used module:     $paramod$38db057ee43d44119101f376a1c12b5adc0673d9\act_mask_rng
+Used module:     $paramod$c855f98e706f532d80eaf2487264ca3b0ee6e70e\act_mask_rng
+Used module:     $paramod$8fb49d93878db3ffb5f754ab8e7e8ec8e0a06ee0\act_mask_rng
+Removed 0 unused modules.
+
+7.2. Executing PROC pass (convert processes to netlists).
+
+7.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+7.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:38$83 in module $paramod$38db057ee43d44119101f376a1c12b5adc0673d9\act_mask_rng.
+Marked 1 switch rules as full_case in process $proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:38$75 in module $paramod$0fcb4fc8687251fbad80cb80343b256ed75b9d3b\act_mask_rng.
+Marked 1 switch rules as full_case in process $proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:38$67 in module $paramod$dba2ebc5d341346df454d9cde55a4d0bfa846076\act_mask_rng.
+Marked 1 switch rules as full_case in process $proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:38$99 in module $paramod$8fb49d93878db3ffb5f754ab8e7e8ec8e0a06ee0\act_mask_rng.
+Marked 1 switch rules as full_case in process $proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:38$91 in module $paramod$c855f98e706f532d80eaf2487264ca3b0ee6e70e\act_mask_rng.
+Removed a total of 0 dead cases.
+
+7.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+7.2.4. Executing PROC_INIT pass (extract init attributes).
+
+7.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+7.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~10 debug messages>
+
+7.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod$38db057ee43d44119101f376a1c12b5adc0673d9\act_mask_rng.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:38$83'.
+     1/1: $0\st[63:0]
+Creating decoders for process `$paramod$0fcb4fc8687251fbad80cb80343b256ed75b9d3b\act_mask_rng.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:38$75'.
+     1/1: $0\st[63:0]
+Creating decoders for process `$paramod$dba2ebc5d341346df454d9cde55a4d0bfa846076\act_mask_rng.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:38$67'.
+     1/1: $0\st[63:0]
+Creating decoders for process `$paramod$8fb49d93878db3ffb5f754ab8e7e8ec8e0a06ee0\act_mask_rng.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:38$99'.
+     1/1: $0\st[63:0]
+Creating decoders for process `$paramod$c855f98e706f532d80eaf2487264ca3b0ee6e70e\act_mask_rng.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:38$91'.
+     1/1: $0\st[63:0]
+
+7.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+7.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod$38db057ee43d44119101f376a1c12b5adc0673d9\act_mask_rng.\st' using process `$paramod$38db057ee43d44119101f376a1c12b5adc0673d9\act_mask_rng.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:38$83'.
+  created $dff cell `$procdff$126' with positive edge clock.
+Creating register for signal `$paramod$0fcb4fc8687251fbad80cb80343b256ed75b9d3b\act_mask_rng.\st' using process `$paramod$0fcb4fc8687251fbad80cb80343b256ed75b9d3b\act_mask_rng.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:38$75'.
+  created $dff cell `$procdff$127' with positive edge clock.
+Creating register for signal `$paramod$dba2ebc5d341346df454d9cde55a4d0bfa846076\act_mask_rng.\st' using process `$paramod$dba2ebc5d341346df454d9cde55a4d0bfa846076\act_mask_rng.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:38$67'.
+  created $dff cell `$procdff$128' with positive edge clock.
+Creating register for signal `$paramod$8fb49d93878db3ffb5f754ab8e7e8ec8e0a06ee0\act_mask_rng.\st' using process `$paramod$8fb49d93878db3ffb5f754ab8e7e8ec8e0a06ee0\act_mask_rng.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:38$99'.
+  created $dff cell `$procdff$129' with positive edge clock.
+Creating register for signal `$paramod$c855f98e706f532d80eaf2487264ca3b0ee6e70e\act_mask_rng.\st' using process `$paramod$c855f98e706f532d80eaf2487264ca3b0ee6e70e\act_mask_rng.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:38$91'.
+  created $dff cell `$procdff$130' with positive edge clock.
+
+7.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+7.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 2 empty switches in `$paramod$38db057ee43d44119101f376a1c12b5adc0673d9\act_mask_rng.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:38$83'.
+Removing empty process `$paramod$38db057ee43d44119101f376a1c12b5adc0673d9\act_mask_rng.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:38$83'.
+Found and cleaned up 2 empty switches in `$paramod$0fcb4fc8687251fbad80cb80343b256ed75b9d3b\act_mask_rng.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:38$75'.
+Removing empty process `$paramod$0fcb4fc8687251fbad80cb80343b256ed75b9d3b\act_mask_rng.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:38$75'.
+Found and cleaned up 2 empty switches in `$paramod$dba2ebc5d341346df454d9cde55a4d0bfa846076\act_mask_rng.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:38$67'.
+Removing empty process `$paramod$dba2ebc5d341346df454d9cde55a4d0bfa846076\act_mask_rng.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:38$67'.
+Found and cleaned up 2 empty switches in `$paramod$8fb49d93878db3ffb5f754ab8e7e8ec8e0a06ee0\act_mask_rng.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:38$99'.
+Removing empty process `$paramod$8fb49d93878db3ffb5f754ab8e7e8ec8e0a06ee0\act_mask_rng.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:38$99'.
+Found and cleaned up 2 empty switches in `$paramod$c855f98e706f532d80eaf2487264ca3b0ee6e70e\act_mask_rng.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:38$91'.
+Removing empty process `$paramod$c855f98e706f532d80eaf2487264ca3b0ee6e70e\act_mask_rng.$proc$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:38$91'.
+Cleaned up 10 empty switches.
+
+7.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$38db057ee43d44119101f376a1c12b5adc0673d9\act_mask_rng.
+<suppressed ~4 debug messages>
+Optimizing module $paramod$0fcb4fc8687251fbad80cb80343b256ed75b9d3b\act_mask_rng.
+<suppressed ~4 debug messages>
+Optimizing module $paramod$dba2ebc5d341346df454d9cde55a4d0bfa846076\act_mask_rng.
+<suppressed ~4 debug messages>
+Optimizing module $paramod$39988b9ac83fdbe513ec5c55b3e92b4e1ebc6098\act_splitter.
+Optimizing module act_masker.
+Optimizing module $paramod$8fb49d93878db3ffb5f754ab8e7e8ec8e0a06ee0\act_mask_rng.
+<suppressed ~4 debug messages>
+Optimizing module $paramod$c855f98e706f532d80eaf2487264ca3b0ee6e70e\act_mask_rng.
+<suppressed ~4 debug messages>
+
+7.3. Executing CHECK pass (checking for obvious problems).
+Checking module $paramod$38db057ee43d44119101f376a1c12b5adc0673d9\act_mask_rng...
+Checking module $paramod$0fcb4fc8687251fbad80cb80343b256ed75b9d3b\act_mask_rng...
+Checking module $paramod$dba2ebc5d341346df454d9cde55a4d0bfa846076\act_mask_rng...
+Checking module $paramod$39988b9ac83fdbe513ec5c55b3e92b4e1ebc6098\act_splitter...
+Checking module act_masker...
+Checking module $paramod$8fb49d93878db3ffb5f754ab8e7e8ec8e0a06ee0\act_mask_rng...
+Checking module $paramod$c855f98e706f532d80eaf2487264ca3b0ee6e70e\act_mask_rng...
+Found and reported 0 problems.
+
+7.4. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod$38db057ee43d44119101f376a1c12b5adc0673d9\act_mask_rng.
+Deleting now unused module $paramod$0fcb4fc8687251fbad80cb80343b256ed75b9d3b\act_mask_rng.
+Deleting now unused module $paramod$dba2ebc5d341346df454d9cde55a4d0bfa846076\act_mask_rng.
+Deleting now unused module $paramod$39988b9ac83fdbe513ec5c55b3e92b4e1ebc6098\act_splitter.
+Deleting now unused module $paramod$8fb49d93878db3ffb5f754ab8e7e8ec8e0a06ee0\act_mask_rng.
+Deleting now unused module $paramod$c855f98e706f532d80eaf2487264ca3b0ee6e70e\act_mask_rng.
+<suppressed ~6 debug messages>
+
+7.5. Executing OPT_EXPR pass (perform const folding).
+Optimizing module act_masker.
+
+7.6. Executing CHECK pass (checking for obvious problems).
+Checking module act_masker...
+Found and reported 0 problems.
+
+7.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \act_masker..
+Removed 5 unused cells and 60 unused wires.
+<suppressed ~6 debug messages>
+
+7.8. Executing OPT pass (performing simple optimizations).
+
+7.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module act_masker.
+
+7.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\act_masker'.
+Computing hashes of 46 cells of `\act_masker'.
+Finding duplicate cells in `\act_masker'.
+Removed a total of 0 cells.
+
+7.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \act_masker..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~25 debug messages>
+
+7.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \act_masker.
+Performed a total of 0 changes.
+
+7.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\act_masker'.
+Computing hashes of 46 cells of `\act_masker'.
+Finding duplicate cells in `\act_masker'.
+Removed a total of 0 cells.
+
+7.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \act_masker..
+
+7.8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module act_masker.
+
+7.8.9. Finished fast OPT passes. (There is nothing left to do.)
+
+7.9. Executing FSM pass (extract and optimize FSM).
+
+7.9.1. Executing FSM_DETECT pass (finding FSMs in design).
+
+7.9.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+7.9.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+7.9.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \act_masker..
+
+7.9.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+7.9.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+7.9.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+7.9.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+7.10. Executing OPT pass (performing simple optimizations).
+
+7.10.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module act_masker.
+
+7.10.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\act_masker'.
+Computing hashes of 46 cells of `\act_masker'.
+Finding duplicate cells in `\act_masker'.
+Removed a total of 0 cells.
+
+7.10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \act_masker..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~25 debug messages>
+
+7.10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \act_masker.
+Performed a total of 0 changes.
+
+7.10.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\act_masker'.
+Computing hashes of 46 cells of `\act_masker'.
+Finding duplicate cells in `\act_masker'.
+Removed a total of 0 cells.
+
+7.10.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding SRST signal on $flatten\g_rng[4].u_rng.$procdff$129 ($dff) from module act_masker (D = $flatten\g_rng[4].u_rng.$procmux$116_Y, Q = \g_rng[4].u_rng.st, rval = 64'1110000101111011011011010001010001111101101000011000001011011010).
+Adding EN signal on $auto$ff.cc:337:slice$137 ($sdff) from module act_masker (D = \g_rng[4].u_rng.x3, Q = \g_rng[4].u_rng.st).
+Adding SRST signal on $flatten\g_rng[3].u_rng.$procdff$130 ($dff) from module act_masker (D = $flatten\g_rng[3].u_rng.$procmux$121_Y, Q = \g_rng[3].u_rng.st, rval = 64'1011100110111001110111000101100100110000000011111001101000100111).
+Adding EN signal on $auto$ff.cc:337:slice$139 ($sdff) from module act_masker (D = \g_rng[3].u_rng.x3, Q = \g_rng[3].u_rng.st).
+Adding SRST signal on $flatten\g_rng[2].u_rng.$procdff$126 ($dff) from module act_masker (D = $flatten\g_rng[2].u_rng.$procmux$101_Y, Q = \g_rng[2].u_rng.st, rval = 64'1110110001001100010110111110111001100010011100000001000110110011).
+Adding EN signal on $auto$ff.cc:337:slice$141 ($sdff) from module act_masker (D = \g_rng[2].u_rng.x3, Q = \g_rng[2].u_rng.st).
+Adding SRST signal on $flatten\g_rng[1].u_rng.$procdff$127 ($dff) from module act_masker (D = $flatten\g_rng[1].u_rng.$procmux$106_Y, Q = \g_rng[1].u_rng.st, rval = 64'1110000001101101110100000100001100110010100010111101001010000101).
+Adding EN signal on $auto$ff.cc:337:slice$143 ($sdff) from module act_masker (D = \g_rng[1].u_rng.x3, Q = \g_rng[1].u_rng.st).
+Adding SRST signal on $flatten\g_rng[0].u_rng.$procdff$128 ($dff) from module act_masker (D = $flatten\g_rng[0].u_rng.$procmux$111_Y, Q = \g_rng[0].u_rng.st, rval = 64'1110100111111101011000000100100111010110010110101111001000011110).
+Adding EN signal on $auto$ff.cc:337:slice$145 ($sdff) from module act_masker (D = \g_rng[0].u_rng.x3, Q = \g_rng[0].u_rng.st).
+
+7.10.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \act_masker..
+Removed 10 unused cells and 10 unused wires.
+<suppressed ~11 debug messages>
+
+7.10.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module act_masker.
+
+7.10.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+7.10.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \act_masker..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~10 debug messages>
+
+7.10.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \act_masker.
+Performed a total of 0 changes.
+
+7.10.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\act_masker'.
+Computing hashes of 36 cells of `\act_masker'.
+Finding duplicate cells in `\act_masker'.
+Removed a total of 0 cells.
+
+7.10.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.10.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \act_masker..
+
+7.10.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module act_masker.
+
+7.10.16. Finished fast OPT passes. (There is nothing left to do.)
+
+7.11. Executing WREDUCE pass (reducing word size of cells).
+Removed top 7 bits (of 64) from port B of cell act_masker.$flatten\g_rng[4].u_rng.$xor$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:35$96 ($xor).
+Removed top 7 bits (of 64) from port B of cell act_masker.$flatten\g_rng[3].u_rng.$xor$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:35$88 ($xor).
+Removed top 7 bits (of 64) from port B of cell act_masker.$flatten\g_rng[2].u_rng.$xor$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:35$80 ($xor).
+Removed top 7 bits (of 64) from port B of cell act_masker.$flatten\g_rng[1].u_rng.$xor$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:35$72 ($xor).
+Removed top 7 bits (of 64) from port B of cell act_masker.$flatten\g_rng[0].u_rng.$xor$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:35$64 ($xor).
+
+7.12. Executing PEEPOPT pass (run peephole optimizers).
+
+7.13. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \act_masker..
+
+7.14. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module act_masker:
+  creating $macc model for $flatten\u_split.$sub$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:64$54 ($sub).
+  creating $macc model for $flatten\u_split.$sub$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:64$60 ($sub).
+  creating $macc model for $flatten\u_split.$sub$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:64$58 ($sub).
+  creating $macc model for $flatten\u_split.$sub$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:64$52 ($sub).
+  creating $macc model for $flatten\u_split.$sub$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:64$56 ($sub).
+  creating $alu model for $macc $flatten\u_split.$sub$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:64$56.
+  creating $alu model for $macc $flatten\u_split.$sub$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:64$52.
+  creating $alu model for $macc $flatten\u_split.$sub$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:64$58.
+  creating $alu model for $macc $flatten\u_split.$sub$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:64$60.
+  creating $alu model for $macc $flatten\u_split.$sub$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:64$54.
+  creating $alu cell for $flatten\u_split.$sub$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:64$54: $auto$alumacc.cc:548:replace_alu$147
+  creating $alu cell for $flatten\u_split.$sub$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:64$60: $auto$alumacc.cc:548:replace_alu$150
+  creating $alu cell for $flatten\u_split.$sub$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:64$58: $auto$alumacc.cc:548:replace_alu$153
+  creating $alu cell for $flatten\u_split.$sub$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:64$52: $auto$alumacc.cc:548:replace_alu$156
+  creating $alu cell for $flatten\u_split.$sub$/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv:64$56: $auto$alumacc.cc:548:replace_alu$159
+  created 5 $alu and 0 $macc cells.
+
+7.15. Executing SHARE pass (SAT-based resource sharing).
+
+7.16. Executing OPT pass (performing simple optimizations).
+
+7.16.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module act_masker.
+
+7.16.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\act_masker'.
+Computing hashes of 36 cells of `\act_masker'.
+Finding duplicate cells in `\act_masker'.
+Removed a total of 0 cells.
+
+7.16.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \act_masker..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~10 debug messages>
+
+7.16.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \act_masker.
+Performed a total of 0 changes.
+
+7.16.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\act_masker'.
+Computing hashes of 36 cells of `\act_masker'.
+Finding duplicate cells in `\act_masker'.
+Removed a total of 0 cells.
+
+7.16.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.16.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \act_masker..
+
+7.16.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module act_masker.
+
+7.16.9. Finished fast OPT passes. (There is nothing left to do.)
+
+7.17. Executing MEMORY pass.
+
+7.17.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+7.17.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+7.17.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+7.17.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+7.17.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+7.17.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \act_masker..
+
+7.17.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+7.17.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+7.17.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \act_masker..
+
+7.17.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+7.18. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \act_masker..
+
+7.19. Executing OPT pass (performing simple optimizations).
+
+7.19.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module act_masker.
+<suppressed ~75 debug messages>
+
+7.19.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\act_masker'.
+Computing hashes of 36 cells of `\act_masker'.
+Finding duplicate cells in `\act_masker'.
+Removed a total of 0 cells.
+
+7.19.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.19.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \act_masker..
+Removed 0 unused cells and 30 unused wires.
+<suppressed ~1 debug messages>
+
+7.19.5. Finished fast OPT passes.
+
+7.20. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+7.21. Executing OPT pass (performing simple optimizations).
+
+7.21.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module act_masker.
+
+7.21.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\act_masker'.
+Computing hashes of 36 cells of `\act_masker'.
+Finding duplicate cells in `\act_masker'.
+Removed a total of 0 cells.
+
+7.21.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \act_masker..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~10 debug messages>
+
+7.21.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \act_masker.
+Performed a total of 0 changes.
+
+7.21.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\act_masker'.
+Computing hashes of 36 cells of `\act_masker'.
+Finding duplicate cells in `\act_masker'.
+Removed a total of 0 cells.
+
+7.21.6. Executing OPT_SHARE pass.
+
+7.21.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.21.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \act_masker..
+
+7.21.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module act_masker.
+
+7.21.10. Finished fast OPT passes. (There is nothing left to do.)
+
+7.22. Executing TECHMAP pass (map to technology primitives).
+
+7.22.1. Executing Verilog-2005 frontend: /usr/local/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/usr/local/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+7.22.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $xor.
+Using template $paramod$fbc7873bff55778c0b3173955b7e4bce1d9d6834\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $sdffe.
+Using extmapper simplemap for cells of type $mux.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000100000 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000100000 for cells of type $lcu.
+Using extmapper simplemap for cells of type $not.
+Using extmapper simplemap for cells of type $pos.
+Using extmapper simplemap for cells of type $or.
+Using extmapper simplemap for cells of type $and.
+No more expansions possible.
+<suppressed ~1021 debug messages>
+
+7.23. Executing OPT pass (performing simple optimizations).
+
+7.23.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module act_masker.
+<suppressed ~655 debug messages>
+
+7.23.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\act_masker'.
+Computing hashes of 2606 cells of `\act_masker'.
+Finding duplicate cells in `\act_masker'.
+Removed a total of 0 cells.
+
+7.23.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.23.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \act_masker..
+Removed 75 unused cells and 260 unused wires.
+<suppressed ~76 debug messages>
+
+7.23.5. Finished fast OPT passes.
+
+7.24. Executing ABC pass (technology mapping using ABC).
+
+7.24.1. Summary of detected clock domains:
+  6 cells in clk={ }, en={ }, arst={ }, srst={ }
+  2525 cells in clk=\clk, en=\advance, arst={ }, srst=!\reset_n
+
+7.24.2. Extracting gate netlist of module `\act_masker' to `<abc-temp-dir>/input.blif'..
+No matching clock domain found. Not extracting any FF cells.
+
+7.24.3. Extracting gate netlist of module `\act_masker' to `<abc-temp-dir>/input.blif'..
+Found matching posedge clock domain: \clk, enabled by \advance, synchronously reset by !\reset_n
+
+7.24.3.1. Executed ABC.
+Extracted 0 gates and 0 wires to a netlist network with 0 inputs and 0 outputs.
+Don't call ABC as there is nothing to map.
+Removing temp directory.
+
+7.24.3.1. Executed ABC.
+Extracted 2205 gates and 2567 wires to a netlist network with 361 inputs and 640 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled Sep 18 2026 19:37:19)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_library <abc-temp-dir>/stdcells.genlib 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+7.24.3.2. Re-integrating ABC results.
+ABC RESULTS:               AND cells:      228
+ABC RESULTS:            ANDNOT cells:       55
+ABC RESULTS:              NAND cells:      315
+ABC RESULTS:               NOR cells:       10
+ABC RESULTS:               NOT cells:       18
+ABC RESULTS:                OR cells:       23
+ABC RESULTS:             ORNOT cells:       83
+ABC RESULTS:              XNOR cells:      786
+ABC RESULTS:               XOR cells:      281
+ABC RESULTS:        internal signals:     1566
+ABC RESULTS:           input signals:      361
+ABC RESULTS:          output signals:      640
+Removing temp directory.
+Removing global temp directory.
+
+7.25. Executing OPT pass (performing simple optimizations).
+
+7.25.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module act_masker.
+
+7.25.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\act_masker'.
+Computing hashes of 2125 cells of `\act_masker'.
+Finding duplicate cells in `\act_masker'.
+Removed a total of 0 cells.
+
+7.25.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.25.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \act_masker..
+Removed 0 unused cells and 1501 unused wires.
+<suppressed ~1 debug messages>
+
+7.25.5. Finished fast OPT passes.
+
+7.26. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `act_masker'. Setting top module to act_masker.
+
+7.26.1. Analyzing design hierarchy..
+Top module:  \act_masker
+
+7.26.2. Analyzing design hierarchy..
+Top module:  \act_masker
+Removed 0 unused modules.
+
+7.27. Printing statistics.
+
+=== act_masker ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     1227 wires
+     4019 wire bits
+       68 public wires
+     2860 public wire bits
+        7 ports
+      364 port bits
+     2125 cells
+       55   $_ANDNOT_
+      228   $_AND_
+      315   $_NAND_
+       10   $_NOR_
+       18   $_NOT_
+       83   $_ORNOT_
+       23   $_OR_
+      159   $_SDFFE_PN0P_
+      161   $_SDFFE_PN1P_
+      786   $_XNOR_
+      281   $_XOR_
+        6   $scopeinfo
+
+7.28. Executing CHECK pass (checking for obvious problems).
+Checking module act_masker...
+Found and reported 0 problems.
+
+8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \act_masker..
+Removed 6 unused cells and 41 unused wires.
+<suppressed ~47 debug messages>
+
+9. Executing DFFLIBMAP pass (mapping DFF/DLATCH cells to sequential cells from liberty file).
+  cell DFF_X1 (noninv, pins=4, area=4.52) is a direct match for cell type $_DFF_P_.
+  cell DFFR_X1 (noninv, pins=5, area=5.32) is a direct match for cell type $_DFF_PN0_.
+  cell DFFS_X1 (noninv, pins=5, area=5.32) is a direct match for cell type $_DFF_PN1_.
+  cell DFFRS_X1 (noninv, pins=6, area=6.38) is a direct match for cell type $_DFFSR_PNN_.
+  cell DLL_X1 (noninv, pins=3, area=2.66) is a direct match for cell type $_DLATCH_N_.
+  cell DLH_X1 (noninv, pins=3, area=2.66) is a direct match for cell type $_DLATCH_P_.
+  final dff/dlatch cell mappings:
+    unmapped dff/dlatch cell: $_DFF_N_
+    \DFF_X1 _DFF_P_ (.CK( C), .D( D), .Q( Q), .QN(~Q));
+    unmapped dff/dlatch cell: $_DFF_NN0_
+    unmapped dff/dlatch cell: $_DFF_NN1_
+    unmapped dff/dlatch cell: $_DFF_NP0_
+    unmapped dff/dlatch cell: $_DFF_NP1_
+    \DFFR_X1 _DFF_PN0_ (.CK( C), .D( D), .Q( Q), .QN(~Q), .RN( R));
+    \DFFS_X1 _DFF_PN1_ (.CK( C), .D( D), .Q( Q), .QN(~Q), .SN( R));
+    unmapped dff/dlatch cell: $_DFF_PP0_
+    unmapped dff/dlatch cell: $_DFF_PP1_
+    unmapped dff/dlatch cell: $_DFFE_NN_
+    unmapped dff/dlatch cell: $_DFFE_NP_
+    unmapped dff/dlatch cell: $_DFFE_PN_
+    unmapped dff/dlatch cell: $_DFFE_PP_
+    unmapped dff/dlatch cell: $_DFFSR_NNN_
+    unmapped dff/dlatch cell: $_DFFSR_NNP_
+    unmapped dff/dlatch cell: $_DFFSR_NPN_
+    unmapped dff/dlatch cell: $_DFFSR_NPP_
+    \DFFRS_X1 _DFFSR_PNN_ (.CK( C), .D( D), .Q( Q), .QN(~Q), .RN( R), .SN( S));
+    unmapped dff/dlatch cell: $_DFFSR_PNP_
+    unmapped dff/dlatch cell: $_DFFSR_PPN_
+    unmapped dff/dlatch cell: $_DFFSR_PPP_
+    \DLL_X1 _DLATCH_N_ (.D( D), .GN( E), .Q( Q));
+    \DLH_X1 _DLATCH_P_ (.D( D), .G( E), .Q( Q));
+    unmapped dff/dlatch cell: $_DLATCH_NN0_
+    unmapped dff/dlatch cell: $_DLATCH_NN1_
+    unmapped dff/dlatch cell: $_DLATCH_NP0_
+    unmapped dff/dlatch cell: $_DLATCH_NP1_
+    unmapped dff/dlatch cell: $_DLATCH_PN0_
+    unmapped dff/dlatch cell: $_DLATCH_PN1_
+    unmapped dff/dlatch cell: $_DLATCH_PP0_
+    unmapped dff/dlatch cell: $_DLATCH_PP1_
+    unmapped dff/dlatch cell: $_DLATCHSR_NNN_
+    unmapped dff/dlatch cell: $_DLATCHSR_NNP_
+    unmapped dff/dlatch cell: $_DLATCHSR_NPN_
+    unmapped dff/dlatch cell: $_DLATCHSR_NPP_
+    unmapped dff/dlatch cell: $_DLATCHSR_PNN_
+    unmapped dff/dlatch cell: $_DLATCHSR_PNP_
+    unmapped dff/dlatch cell: $_DLATCHSR_PPN_
+    unmapped dff/dlatch cell: $_DLATCHSR_PPP_
+
+9.1. Executing DFFLEGALIZE pass (convert FFs and LATCHes to types supported by the target).
+<suppressed ~8 debug messages>
+Mapping DFF/DLATCH cells in module `\act_masker':
+  mapped 320 $_DFF_P_ cells to \DFF_X1 cells.
+
+10. Executing OPT pass (performing simple optimizations).
+
+10.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module act_masker.
+
+10.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\act_masker'.
+Computing hashes of 2759 cells of `\act_masker'.
+Finding duplicate cells in `\act_masker'.
+Removed a total of 0 cells.
+
+10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \act_masker..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \act_masker.
+Performed a total of 0 changes.
+
+10.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\act_masker'.
+Computing hashes of 2759 cells of `\act_masker'.
+Finding duplicate cells in `\act_masker'.
+Removed a total of 0 cells.
+
+10.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+10.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \act_masker..
+
+10.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module act_masker.
+
+10.9. Finished fast OPT passes. (There is nothing left to do.)
+
+11. Executing ABC pass (technology mapping using ABC).
+
+11.1. Summary of detected clock domains:
+  2759 cells in clk={ }, en={ }, arst={ }, srst={ }
+
+11.2. Extracting gate netlist of module `\act_masker' to `<abc-temp-dir>/input.blif'..
+ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache-1000/yosys_merged_4c2f18a6.scl (1 files)
+No matching clock domain found. Not extracting any FF cells.
+
+11.2.1. Executed ABC.
+Extracted 2439 gates and 2804 wires to a netlist network with 363 inputs and 640 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled Sep 18 2026 19:37:19)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache-1000/yosys_merged_4c2f18a6.scl 
+ABC: Warning: Detected 2 multi-output cells (for example, "FA_X1").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + retime -o -D 10000 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf -D 10000 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+11.2.2. Re-integrating ABC results.
+ABC RESULTS:           AND2_X1 cells:       56
+ABC RESULTS:           AND3_X1 cells:       10
+ABC RESULTS:         AOI211_X2 cells:       25
+ABC RESULTS:          AOI21_X1 cells:      374
+ABC RESULTS:         AOI221_X1 cells:       42
+ABC RESULTS:          AOI22_X1 cells:        4
+ABC RESULTS:            INV_X1 cells:      334
+ABC RESULTS:           MUX2_X1 cells:        1
+ABC RESULTS:          NAND2_X1 cells:      258
+ABC RESULTS:          NAND3_X1 cells:       24
+ABC RESULTS:           NOR2_X1 cells:      111
+ABC RESULTS:           NOR3_X1 cells:        6
+ABC RESULTS:         OAI211_X2 cells:       25
+ABC RESULTS:          OAI21_X1 cells:      337
+ABC RESULTS:         OAI221_X1 cells:       17
+ABC RESULTS:            OR2_X1 cells:       55
+ABC RESULTS:            OR3_X1 cells:       10
+ABC RESULTS:            OR4_X1 cells:        5
+ABC RESULTS:          XNOR2_X1 cells:      619
+ABC RESULTS:           XOR2_X1 cells:      367
+ABC RESULTS:        internal signals:     1801
+ABC RESULTS:           input signals:      363
+ABC RESULTS:          output signals:      640
+Removing temp directory.
+Removing global temp directory.
+
+12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \act_masker..
+Removed 0 unused cells and 2492 unused wires.
+<suppressed ~11 debug messages>
+
+13. Executing HILOMAP pass (mapping to constant drivers).
+
+14. Executing SETUNDEF pass (replace undef values with defined constants).
+
+15. Executing SPLITNETS pass (splitting up multi-bit signals).
+
+16. Executing INSBUF pass (insert buffer cells for connected wires).
+Add act_masker/$auto$insbuf.cc:97:execute$5323: \g_rng[2].u_rng.r[0] -> \g_rng[2].u_rng.st[0]
+Add act_masker/$auto$insbuf.cc:97:execute$5324: \g_rng[2].u_rng.r[1] -> \g_rng[2].u_rng.st[1]
+Add act_masker/$auto$insbuf.cc:97:execute$5325: \g_rng[2].u_rng.r[2] -> \g_rng[2].u_rng.st[2]
+Add act_masker/$auto$insbuf.cc:97:execute$5326: \g_rng[2].u_rng.r[3] -> \g_rng[2].u_rng.st[3]
+Add act_masker/$auto$insbuf.cc:97:execute$5327: \g_rng[2].u_rng.r[4] -> \g_rng[2].u_rng.st[4]
+Add act_masker/$auto$insbuf.cc:97:execute$5328: \g_rng[2].u_rng.r[5] -> \g_rng[2].u_rng.st[5]
+Add act_masker/$auto$insbuf.cc:97:execute$5329: \g_rng[2].u_rng.r[6] -> \g_rng[2].u_rng.st[6]
+Add act_masker/$auto$insbuf.cc:97:execute$5330: \g_rng[2].u_rng.r[7] -> \g_rng[2].u_rng.st[7]
+Add act_masker/$auto$insbuf.cc:97:execute$5331: \g_rng[2].u_rng.r[8] -> \g_rng[2].u_rng.st[8]
+Add act_masker/$auto$insbuf.cc:97:execute$5332: \g_rng[2].u_rng.r[9] -> \g_rng[2].u_rng.st[9]
+Add act_masker/$auto$insbuf.cc:97:execute$5333: \g_rng[2].u_rng.r[10] -> \g_rng[2].u_rng.st[10]
+Add act_masker/$auto$insbuf.cc:97:execute$5334: \g_rng[2].u_rng.r[11] -> \g_rng[2].u_rng.st[11]
+Add act_masker/$auto$insbuf.cc:97:execute$5335: \g_rng[2].u_rng.r[12] -> \g_rng[2].u_rng.st[12]
+Add act_masker/$auto$insbuf.cc:97:execute$5336: \g_rng[2].u_rng.r[13] -> \g_rng[2].u_rng.st[13]
+Add act_masker/$auto$insbuf.cc:97:execute$5337: \g_rng[2].u_rng.r[14] -> \g_rng[2].u_rng.st[14]
+Add act_masker/$auto$insbuf.cc:97:execute$5338: \g_rng[2].u_rng.r[15] -> \g_rng[2].u_rng.st[15]
+Add act_masker/$auto$insbuf.cc:97:execute$5339: \g_rng[2].u_rng.r[16] -> \g_rng[2].u_rng.st[16]
+Add act_masker/$auto$insbuf.cc:97:execute$5340: \g_rng[2].u_rng.r[17] -> \g_rng[2].u_rng.st[17]
+Add act_masker/$auto$insbuf.cc:97:execute$5341: \g_rng[2].u_rng.r[18] -> \g_rng[2].u_rng.st[18]
+Add act_masker/$auto$insbuf.cc:97:execute$5342: \g_rng[2].u_rng.r[19] -> \g_rng[2].u_rng.st[19]
+Add act_masker/$auto$insbuf.cc:97:execute$5343: \g_rng[2].u_rng.r[20] -> \g_rng[2].u_rng.st[20]
+Add act_masker/$auto$insbuf.cc:97:execute$5344: \g_rng[2].u_rng.r[21] -> \g_rng[2].u_rng.st[21]
+Add act_masker/$auto$insbuf.cc:97:execute$5345: \g_rng[2].u_rng.r[22] -> \g_rng[2].u_rng.st[22]
+Add act_masker/$auto$insbuf.cc:97:execute$5346: \g_rng[2].u_rng.r[23] -> \g_rng[2].u_rng.st[23]
+Add act_masker/$auto$insbuf.cc:97:execute$5347: \g_rng[2].u_rng.r[24] -> \g_rng[2].u_rng.st[24]
+Add act_masker/$auto$insbuf.cc:97:execute$5348: \g_rng[2].u_rng.r[25] -> \g_rng[2].u_rng.st[25]
+Add act_masker/$auto$insbuf.cc:97:execute$5349: \g_rng[2].u_rng.r[26] -> \g_rng[2].u_rng.st[26]
+Add act_masker/$auto$insbuf.cc:97:execute$5350: \g_rng[2].u_rng.r[27] -> \g_rng[2].u_rng.st[27]
+Add act_masker/$auto$insbuf.cc:97:execute$5351: \g_rng[2].u_rng.r[28] -> \g_rng[2].u_rng.st[28]
+Add act_masker/$auto$insbuf.cc:97:execute$5352: \g_rng[2].u_rng.r[29] -> \g_rng[2].u_rng.st[29]
+Add act_masker/$auto$insbuf.cc:97:execute$5353: \g_rng[2].u_rng.r[30] -> \g_rng[2].u_rng.st[30]
+Add act_masker/$auto$insbuf.cc:97:execute$5354: \g_rng[2].u_rng.r[31] -> \g_rng[2].u_rng.st[31]
+Add act_masker/$auto$insbuf.cc:97:execute$5355: \g_rng[1].u_rng.r[0] -> \g_rng[1].u_rng.st[0]
+Add act_masker/$auto$insbuf.cc:97:execute$5356: \g_rng[1].u_rng.r[1] -> \g_rng[1].u_rng.st[1]
+Add act_masker/$auto$insbuf.cc:97:execute$5357: \g_rng[1].u_rng.r[2] -> \g_rng[1].u_rng.st[2]
+Add act_masker/$auto$insbuf.cc:97:execute$5358: \g_rng[1].u_rng.r[3] -> \g_rng[1].u_rng.st[3]
+Add act_masker/$auto$insbuf.cc:97:execute$5359: \g_rng[1].u_rng.r[4] -> \g_rng[1].u_rng.st[4]
+Add act_masker/$auto$insbuf.cc:97:execute$5360: \g_rng[1].u_rng.r[5] -> \g_rng[1].u_rng.st[5]
+Add act_masker/$auto$insbuf.cc:97:execute$5361: \g_rng[1].u_rng.r[6] -> \g_rng[1].u_rng.st[6]
+Add act_masker/$auto$insbuf.cc:97:execute$5362: \g_rng[1].u_rng.r[7] -> \g_rng[1].u_rng.st[7]
+Add act_masker/$auto$insbuf.cc:97:execute$5363: \g_rng[1].u_rng.r[8] -> \g_rng[1].u_rng.st[8]
+Add act_masker/$auto$insbuf.cc:97:execute$5364: \g_rng[1].u_rng.r[9] -> \g_rng[1].u_rng.st[9]
+Add act_masker/$auto$insbuf.cc:97:execute$5365: \g_rng[1].u_rng.r[10] -> \g_rng[1].u_rng.st[10]
+Add act_masker/$auto$insbuf.cc:97:execute$5366: \g_rng[1].u_rng.r[11] -> \g_rng[1].u_rng.st[11]
+Add act_masker/$auto$insbuf.cc:97:execute$5367: \g_rng[1].u_rng.r[12] -> \g_rng[1].u_rng.st[12]
+Add act_masker/$auto$insbuf.cc:97:execute$5368: \g_rng[1].u_rng.r[13] -> \g_rng[1].u_rng.st[13]
+Add act_masker/$auto$insbuf.cc:97:execute$5369: \g_rng[1].u_rng.r[14] -> \g_rng[1].u_rng.st[14]
+Add act_masker/$auto$insbuf.cc:97:execute$5370: \g_rng[1].u_rng.r[15] -> \g_rng[1].u_rng.st[15]
+Add act_masker/$auto$insbuf.cc:97:execute$5371: \g_rng[1].u_rng.r[16] -> \g_rng[1].u_rng.st[16]
+Add act_masker/$auto$insbuf.cc:97:execute$5372: \g_rng[1].u_rng.r[17] -> \g_rng[1].u_rng.st[17]
+Add act_masker/$auto$insbuf.cc:97:execute$5373: \g_rng[1].u_rng.r[18] -> \g_rng[1].u_rng.st[18]
+Add act_masker/$auto$insbuf.cc:97:execute$5374: \g_rng[1].u_rng.r[19] -> \g_rng[1].u_rng.st[19]
+Add act_masker/$auto$insbuf.cc:97:execute$5375: \g_rng[1].u_rng.r[20] -> \g_rng[1].u_rng.st[20]
+Add act_masker/$auto$insbuf.cc:97:execute$5376: \g_rng[1].u_rng.r[21] -> \g_rng[1].u_rng.st[21]
+Add act_masker/$auto$insbuf.cc:97:execute$5377: \g_rng[1].u_rng.r[22] -> \g_rng[1].u_rng.st[22]
+Add act_masker/$auto$insbuf.cc:97:execute$5378: \g_rng[1].u_rng.r[23] -> \g_rng[1].u_rng.st[23]
+Add act_masker/$auto$insbuf.cc:97:execute$5379: \g_rng[1].u_rng.r[24] -> \g_rng[1].u_rng.st[24]
+Add act_masker/$auto$insbuf.cc:97:execute$5380: \g_rng[1].u_rng.r[25] -> \g_rng[1].u_rng.st[25]
+Add act_masker/$auto$insbuf.cc:97:execute$5381: \g_rng[1].u_rng.r[26] -> \g_rng[1].u_rng.st[26]
+Add act_masker/$auto$insbuf.cc:97:execute$5382: \g_rng[1].u_rng.r[27] -> \g_rng[1].u_rng.st[27]
+Add act_masker/$auto$insbuf.cc:97:execute$5383: \g_rng[1].u_rng.r[28] -> \g_rng[1].u_rng.st[28]
+Add act_masker/$auto$insbuf.cc:97:execute$5384: \g_rng[1].u_rng.r[29] -> \g_rng[1].u_rng.st[29]
+Add act_masker/$auto$insbuf.cc:97:execute$5385: \g_rng[1].u_rng.r[30] -> \g_rng[1].u_rng.st[30]
+Add act_masker/$auto$insbuf.cc:97:execute$5386: \g_rng[1].u_rng.r[31] -> \g_rng[1].u_rng.st[31]
+Add act_masker/$auto$insbuf.cc:97:execute$5387: \g_rng[3].u_rng.r[0] -> \g_rng[3].u_rng.st[0]
+Add act_masker/$auto$insbuf.cc:97:execute$5388: \g_rng[3].u_rng.r[1] -> \g_rng[3].u_rng.st[1]
+Add act_masker/$auto$insbuf.cc:97:execute$5389: \g_rng[3].u_rng.r[2] -> \g_rng[3].u_rng.st[2]
+Add act_masker/$auto$insbuf.cc:97:execute$5390: \g_rng[3].u_rng.r[3] -> \g_rng[3].u_rng.st[3]
+Add act_masker/$auto$insbuf.cc:97:execute$5391: \g_rng[3].u_rng.r[4] -> \g_rng[3].u_rng.st[4]
+Add act_masker/$auto$insbuf.cc:97:execute$5392: \g_rng[3].u_rng.r[5] -> \g_rng[3].u_rng.st[5]
+Add act_masker/$auto$insbuf.cc:97:execute$5393: \g_rng[3].u_rng.r[6] -> \g_rng[3].u_rng.st[6]
+Add act_masker/$auto$insbuf.cc:97:execute$5394: \g_rng[3].u_rng.r[7] -> \g_rng[3].u_rng.st[7]
+Add act_masker/$auto$insbuf.cc:97:execute$5395: \g_rng[3].u_rng.r[8] -> \g_rng[3].u_rng.st[8]
+Add act_masker/$auto$insbuf.cc:97:execute$5396: \g_rng[3].u_rng.r[9] -> \g_rng[3].u_rng.st[9]
+Add act_masker/$auto$insbuf.cc:97:execute$5397: \g_rng[3].u_rng.r[10] -> \g_rng[3].u_rng.st[10]
+Add act_masker/$auto$insbuf.cc:97:execute$5398: \g_rng[3].u_rng.r[11] -> \g_rng[3].u_rng.st[11]
+Add act_masker/$auto$insbuf.cc:97:execute$5399: \g_rng[3].u_rng.r[12] -> \g_rng[3].u_rng.st[12]
+Add act_masker/$auto$insbuf.cc:97:execute$5400: \g_rng[3].u_rng.r[13] -> \g_rng[3].u_rng.st[13]
+Add act_masker/$auto$insbuf.cc:97:execute$5401: \g_rng[3].u_rng.r[14] -> \g_rng[3].u_rng.st[14]
+Add act_masker/$auto$insbuf.cc:97:execute$5402: \g_rng[3].u_rng.r[15] -> \g_rng[3].u_rng.st[15]
+Add act_masker/$auto$insbuf.cc:97:execute$5403: \g_rng[3].u_rng.r[16] -> \g_rng[3].u_rng.st[16]
+Add act_masker/$auto$insbuf.cc:97:execute$5404: \g_rng[3].u_rng.r[17] -> \g_rng[3].u_rng.st[17]
+Add act_masker/$auto$insbuf.cc:97:execute$5405: \g_rng[3].u_rng.r[18] -> \g_rng[3].u_rng.st[18]
+Add act_masker/$auto$insbuf.cc:97:execute$5406: \g_rng[3].u_rng.r[19] -> \g_rng[3].u_rng.st[19]
+Add act_masker/$auto$insbuf.cc:97:execute$5407: \g_rng[3].u_rng.r[20] -> \g_rng[3].u_rng.st[20]
+Add act_masker/$auto$insbuf.cc:97:execute$5408: \g_rng[3].u_rng.r[21] -> \g_rng[3].u_rng.st[21]
+Add act_masker/$auto$insbuf.cc:97:execute$5409: \g_rng[3].u_rng.r[22] -> \g_rng[3].u_rng.st[22]
+Add act_masker/$auto$insbuf.cc:97:execute$5410: \g_rng[3].u_rng.r[23] -> \g_rng[3].u_rng.st[23]
+Add act_masker/$auto$insbuf.cc:97:execute$5411: \g_rng[3].u_rng.r[24] -> \g_rng[3].u_rng.st[24]
+Add act_masker/$auto$insbuf.cc:97:execute$5412: \g_rng[3].u_rng.r[25] -> \g_rng[3].u_rng.st[25]
+Add act_masker/$auto$insbuf.cc:97:execute$5413: \g_rng[3].u_rng.r[26] -> \g_rng[3].u_rng.st[26]
+Add act_masker/$auto$insbuf.cc:97:execute$5414: \g_rng[3].u_rng.r[27] -> \g_rng[3].u_rng.st[27]
+Add act_masker/$auto$insbuf.cc:97:execute$5415: \g_rng[3].u_rng.r[28] -> \g_rng[3].u_rng.st[28]
+Add act_masker/$auto$insbuf.cc:97:execute$5416: \g_rng[3].u_rng.r[29] -> \g_rng[3].u_rng.st[29]
+Add act_masker/$auto$insbuf.cc:97:execute$5417: \g_rng[3].u_rng.r[30] -> \g_rng[3].u_rng.st[30]
+Add act_masker/$auto$insbuf.cc:97:execute$5418: \g_rng[3].u_rng.r[31] -> \g_rng[3].u_rng.st[31]
+Add act_masker/$auto$insbuf.cc:97:execute$5419: \g_rng[0].u_rng.r[0] -> \g_rng[0].u_rng.st[0]
+Add act_masker/$auto$insbuf.cc:97:execute$5420: \g_rng[0].u_rng.r[1] -> \g_rng[0].u_rng.st[1]
+Add act_masker/$auto$insbuf.cc:97:execute$5421: \g_rng[0].u_rng.r[2] -> \g_rng[0].u_rng.st[2]
+Add act_masker/$auto$insbuf.cc:97:execute$5422: \g_rng[0].u_rng.r[3] -> \g_rng[0].u_rng.st[3]
+Add act_masker/$auto$insbuf.cc:97:execute$5423: \g_rng[0].u_rng.r[4] -> \g_rng[0].u_rng.st[4]
+Add act_masker/$auto$insbuf.cc:97:execute$5424: \g_rng[0].u_rng.r[5] -> \g_rng[0].u_rng.st[5]
+Add act_masker/$auto$insbuf.cc:97:execute$5425: \g_rng[0].u_rng.r[6] -> \g_rng[0].u_rng.st[6]
+Add act_masker/$auto$insbuf.cc:97:execute$5426: \g_rng[0].u_rng.r[7] -> \g_rng[0].u_rng.st[7]
+Add act_masker/$auto$insbuf.cc:97:execute$5427: \g_rng[0].u_rng.r[8] -> \g_rng[0].u_rng.st[8]
+Add act_masker/$auto$insbuf.cc:97:execute$5428: \g_rng[0].u_rng.r[9] -> \g_rng[0].u_rng.st[9]
+Add act_masker/$auto$insbuf.cc:97:execute$5429: \g_rng[0].u_rng.r[10] -> \g_rng[0].u_rng.st[10]
+Add act_masker/$auto$insbuf.cc:97:execute$5430: \g_rng[0].u_rng.r[11] -> \g_rng[0].u_rng.st[11]
+Add act_masker/$auto$insbuf.cc:97:execute$5431: \g_rng[0].u_rng.r[12] -> \g_rng[0].u_rng.st[12]
+Add act_masker/$auto$insbuf.cc:97:execute$5432: \g_rng[0].u_rng.r[13] -> \g_rng[0].u_rng.st[13]
+Add act_masker/$auto$insbuf.cc:97:execute$5433: \g_rng[0].u_rng.r[14] -> \g_rng[0].u_rng.st[14]
+Add act_masker/$auto$insbuf.cc:97:execute$5434: \g_rng[0].u_rng.r[15] -> \g_rng[0].u_rng.st[15]
+Add act_masker/$auto$insbuf.cc:97:execute$5435: \g_rng[0].u_rng.r[16] -> \g_rng[0].u_rng.st[16]
+Add act_masker/$auto$insbuf.cc:97:execute$5436: \g_rng[0].u_rng.r[17] -> \g_rng[0].u_rng.st[17]
+Add act_masker/$auto$insbuf.cc:97:execute$5437: \g_rng[0].u_rng.r[18] -> \g_rng[0].u_rng.st[18]
+Add act_masker/$auto$insbuf.cc:97:execute$5438: \g_rng[0].u_rng.r[19] -> \g_rng[0].u_rng.st[19]
+Add act_masker/$auto$insbuf.cc:97:execute$5439: \g_rng[0].u_rng.r[20] -> \g_rng[0].u_rng.st[20]
+Add act_masker/$auto$insbuf.cc:97:execute$5440: \g_rng[0].u_rng.r[21] -> \g_rng[0].u_rng.st[21]
+Add act_masker/$auto$insbuf.cc:97:execute$5441: \g_rng[0].u_rng.r[22] -> \g_rng[0].u_rng.st[22]
+Add act_masker/$auto$insbuf.cc:97:execute$5442: \g_rng[0].u_rng.r[23] -> \g_rng[0].u_rng.st[23]
+Add act_masker/$auto$insbuf.cc:97:execute$5443: \g_rng[0].u_rng.r[24] -> \g_rng[0].u_rng.st[24]
+Add act_masker/$auto$insbuf.cc:97:execute$5444: \g_rng[0].u_rng.r[25] -> \g_rng[0].u_rng.st[25]
+Add act_masker/$auto$insbuf.cc:97:execute$5445: \g_rng[0].u_rng.r[26] -> \g_rng[0].u_rng.st[26]
+Add act_masker/$auto$insbuf.cc:97:execute$5446: \g_rng[0].u_rng.r[27] -> \g_rng[0].u_rng.st[27]
+Add act_masker/$auto$insbuf.cc:97:execute$5447: \g_rng[0].u_rng.r[28] -> \g_rng[0].u_rng.st[28]
+Add act_masker/$auto$insbuf.cc:97:execute$5448: \g_rng[0].u_rng.r[29] -> \g_rng[0].u_rng.st[29]
+Add act_masker/$auto$insbuf.cc:97:execute$5449: \g_rng[0].u_rng.r[30] -> \g_rng[0].u_rng.st[30]
+Add act_masker/$auto$insbuf.cc:97:execute$5450: \g_rng[0].u_rng.r[31] -> \g_rng[0].u_rng.st[31]
+Add act_masker/$auto$insbuf.cc:97:execute$5451: \g_rng[4].u_rng.r[0] -> \g_rng[4].u_rng.st[0]
+Add act_masker/$auto$insbuf.cc:97:execute$5452: \g_rng[4].u_rng.r[1] -> \g_rng[4].u_rng.st[1]
+Add act_masker/$auto$insbuf.cc:97:execute$5453: \g_rng[4].u_rng.r[2] -> \g_rng[4].u_rng.st[2]
+Add act_masker/$auto$insbuf.cc:97:execute$5454: \g_rng[4].u_rng.r[3] -> \g_rng[4].u_rng.st[3]
+Add act_masker/$auto$insbuf.cc:97:execute$5455: \g_rng[4].u_rng.r[4] -> \g_rng[4].u_rng.st[4]
+Add act_masker/$auto$insbuf.cc:97:execute$5456: \g_rng[4].u_rng.r[5] -> \g_rng[4].u_rng.st[5]
+Add act_masker/$auto$insbuf.cc:97:execute$5457: \g_rng[4].u_rng.r[6] -> \g_rng[4].u_rng.st[6]
+Add act_masker/$auto$insbuf.cc:97:execute$5458: \g_rng[4].u_rng.r[7] -> \g_rng[4].u_rng.st[7]
+Add act_masker/$auto$insbuf.cc:97:execute$5459: \g_rng[4].u_rng.r[8] -> \g_rng[4].u_rng.st[8]
+Add act_masker/$auto$insbuf.cc:97:execute$5460: \g_rng[4].u_rng.r[9] -> \g_rng[4].u_rng.st[9]
+Add act_masker/$auto$insbuf.cc:97:execute$5461: \g_rng[4].u_rng.r[10] -> \g_rng[4].u_rng.st[10]
+Add act_masker/$auto$insbuf.cc:97:execute$5462: \g_rng[4].u_rng.r[11] -> \g_rng[4].u_rng.st[11]
+Add act_masker/$auto$insbuf.cc:97:execute$5463: \g_rng[4].u_rng.r[12] -> \g_rng[4].u_rng.st[12]
+Add act_masker/$auto$insbuf.cc:97:execute$5464: \g_rng[4].u_rng.r[13] -> \g_rng[4].u_rng.st[13]
+Add act_masker/$auto$insbuf.cc:97:execute$5465: \g_rng[4].u_rng.r[14] -> \g_rng[4].u_rng.st[14]
+Add act_masker/$auto$insbuf.cc:97:execute$5466: \g_rng[4].u_rng.r[15] -> \g_rng[4].u_rng.st[15]
+Add act_masker/$auto$insbuf.cc:97:execute$5467: \g_rng[4].u_rng.r[16] -> \g_rng[4].u_rng.st[16]
+Add act_masker/$auto$insbuf.cc:97:execute$5468: \g_rng[4].u_rng.r[17] -> \g_rng[4].u_rng.st[17]
+Add act_masker/$auto$insbuf.cc:97:execute$5469: \g_rng[4].u_rng.r[18] -> \g_rng[4].u_rng.st[18]
+Add act_masker/$auto$insbuf.cc:97:execute$5470: \g_rng[4].u_rng.r[19] -> \g_rng[4].u_rng.st[19]
+Add act_masker/$auto$insbuf.cc:97:execute$5471: \g_rng[4].u_rng.r[20] -> \g_rng[4].u_rng.st[20]
+Add act_masker/$auto$insbuf.cc:97:execute$5472: \g_rng[4].u_rng.r[21] -> \g_rng[4].u_rng.st[21]
+Add act_masker/$auto$insbuf.cc:97:execute$5473: \g_rng[4].u_rng.r[22] -> \g_rng[4].u_rng.st[22]
+Add act_masker/$auto$insbuf.cc:97:execute$5474: \g_rng[4].u_rng.r[23] -> \g_rng[4].u_rng.st[23]
+Add act_masker/$auto$insbuf.cc:97:execute$5475: \g_rng[4].u_rng.r[24] -> \g_rng[4].u_rng.st[24]
+Add act_masker/$auto$insbuf.cc:97:execute$5476: \g_rng[4].u_rng.r[25] -> \g_rng[4].u_rng.st[25]
+Add act_masker/$auto$insbuf.cc:97:execute$5477: \g_rng[4].u_rng.r[26] -> \g_rng[4].u_rng.st[26]
+Add act_masker/$auto$insbuf.cc:97:execute$5478: \g_rng[4].u_rng.r[27] -> \g_rng[4].u_rng.st[27]
+Add act_masker/$auto$insbuf.cc:97:execute$5479: \g_rng[4].u_rng.r[28] -> \g_rng[4].u_rng.st[28]
+Add act_masker/$auto$insbuf.cc:97:execute$5480: \g_rng[4].u_rng.r[29] -> \g_rng[4].u_rng.st[29]
+Add act_masker/$auto$insbuf.cc:97:execute$5481: \g_rng[4].u_rng.r[30] -> \g_rng[4].u_rng.st[30]
+Add act_masker/$auto$insbuf.cc:97:execute$5482: \g_rng[4].u_rng.r[31] -> \g_rng[4].u_rng.st[31]
+
+17. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \act_masker..
+Removed 160 unused cells and 160 unused wires.
+<suppressed ~320 debug messages>
+
+18. Executing CHECK pass (checking for obvious problems).
+Checking module act_masker...
+Found and reported 0 problems.
+
+19. Printing statistics.
+
+=== act_masker ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+     3007        - wires
+     3364        - wire bits
+      327        - public wires
+      684        - public wire bits
+        7        - ports
+      364        - port bits
+     3000     4655 cells
+       56   59.584   AND2_X1
+       10     13.3   AND3_X1
+       25    59.85   AOI211_X2
+      374  397.936   AOI21_X1
+       42   67.032   AOI221_X1
+        4     5.32   AOI22_X1
+      320  1447.04   DFF_X1
+      334  177.688   INV_X1
+        1    1.862   MUX2_X1
+      258  205.884   NAND2_X1
+       24   25.536   NAND3_X1
+      111   88.578   NOR2_X1
+        6    6.384   NOR3_X1
+       25    59.85   OAI211_X2
+      337  358.568   OAI21_X1
+       17   27.132   OAI221_X1
+       55    58.52   OR2_X1
+       10     13.3   OR3_X1
+        5     7.98   OR4_X1
+      619  987.924   XNOR2_X1
+      367  585.732   XOR2_X1
+
+   Chip area for module '\act_masker': 4655.000000
+     of which used for sequential elements: 1447.040000 (31.09%)
+
+20. Executing Verilog backend.
+Dumping module `\act_masker'.
+
+End of script. Logfile hash: 4f4eaf52b7, time: 1.97s, user: 0.50s, system: 0.18s, MEM: 37.60 MB peak
+Yosys 0.69+75 (git sha1 f0b945f63, Release, GNU /usr/bin/c++ 11.4.0)
+Time spent: 60% 2x abc (0 sec), 9% 19x opt_clean (0 sec), ...

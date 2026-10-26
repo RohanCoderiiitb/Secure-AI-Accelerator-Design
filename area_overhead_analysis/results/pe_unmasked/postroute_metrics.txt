@@ -1,0 +1,22 @@
+design processing_element
+area_seq 221.5780
+count_seq 49
+area_comb 679.6300
+count_comb 573
+area_bufinv 25.0040
+count_bufinv 41
+area_clkbuf 6.6500
+count_clkbuf 5
+area_tap 15.9600
+count_tap 60
+area_tie 0.0000
+count_tie 0
+area_fill 846.6780
+count_fill 743
+stdcell_area 948.8220
+stdcell_count 728
+core_area 1795.5000
+die_area 2200.0790
+die_wh 46.905 46.905
+core_util 0.5284
+route_drc_violations 0

@@ -1,0 +1,22 @@
+design masked_multiplier_aw
+area_seq 436.2400
+count_seq 96
+area_comb 4212.6420
+count_comb 3431
+area_bufinv 193.3820
+count_bufinv 270
+area_clkbuf 12.7680
+count_clkbuf 10
+area_tap 36.7080
+count_tap 138
+area_tie 0.0000
+count_tie 0
+area_fill 4542.2160
+count_fill 3459
+stdcell_area 4891.7400
+stdcell_count 3945
+core_area 9433.9560
+die_area 10374.4410
+die_wh 101.855 101.855
+core_util 0.5185
+route_drc_violations 0
