@@ -17,6 +17,7 @@
 #   ./tb/tb_tvla_masked_act_wt_mult.sv                        testbench (act + weight masked)
 #   ./tb/tb_tvla_masked_act_pe.sv                            testbench (activation-masked PE)
 #   ./tb/tb_tvla_masked_act_array.sv                         testbench (activation-masked array)
+#   ./tb/tb_tvla_actlink_masked_array.sv                     testbench (plain-multiplier array, masked activation links)
 #   ./build ./traces ./out                                generated
 #
 # Outputs
@@ -35,6 +36,8 @@
 #   DUT=masked_act_pe    activation-masked PE          (TARGET is act; exhaustive)
 #   DUT=masked_act_array activation-masked ROWSxCOLS array (TARGET=act default, or row0)
 #                        ROWS=5 COLS=5; N is the number of traces and is YOURS to pick
+#   DUT=actlink_masked_array  array of baseline (unmasked) PEs, masking only on the
+#                        activation links inside the array (TARGET=act default, or row0)
 #   e.g.  make all DUT=masked_mult_aw TARGET=act
 #
 # Recommended order:
@@ -129,8 +132,15 @@ else ifeq ($(DUT),masked_act_array)
   TARGET ?= act
   N_DEF  := 2000
   PARAMS := -Ptb_tvla_masked_act_array.ROWS=$(ROWS) -Ptb_tvla_masked_act_array.COLS=$(COLS)
+else ifeq ($(DUT),actlink_masked_array)
+  SRCS   := ../../source/multiplier.sv ../../source/processing_element.sv \
+            $(RTL_P)/systolic_array_actlink_masked.sv $(RTL_P)/act_masker.sv
+  TBF    := $(TB)/tb_tvla_actlink_masked_array.sv
+  TARGET ?= act
+  N_DEF  := 2000
+  PARAMS := -Ptb_tvla_actlink_masked_array.ROWS=$(ROWS) -Ptb_tvla_actlink_masked_array.COLS=$(COLS)
 else
-  $(error unknown DUT=$(DUT): use masked_mult, masked_act_mult, masked_mult_aw, masked_act_pe or masked_act_array)
+  $(error unknown DUT=$(DUT): use masked_mult, masked_act_mult, masked_mult_aw, masked_act_pe, masked_act_array or actlink_masked_array)
 endif
 N ?= $(N_DEF)
 
@@ -142,6 +152,9 @@ ifeq ($(DUT),masked_act_pe)
 else ifeq ($(DUT),masked_act_array)
   MULT_NAME := act_masked_array$(ROWS)x$(COLS)
   DESIGN_DIR := act_masked_array$(ROWS)x$(COLS)
+else ifeq ($(DUT),actlink_masked_array)
+  MULT_NAME := act_linkmasked_plainmul_array$(ROWS)x$(COLS)
+  DESIGN_DIR := act_linkmasked_plainmul_array$(ROWS)x$(COLS)
 else
   MULT_NAME := $(strip $(if $(filter masked_mult,$(DUT)),wt_masked,$(if $(filter masked_act_mult,$(DUT)),act_masked,act_wt_masked)))
   DESIGN_DIR := $(MULT_NAME)_multiplier
@@ -166,7 +179,7 @@ NAME_AD = for pair in adla:statistic adla_vs_tvla:vs-tvla-comparison adla_ttd:ti
   f=$(1)_$${pair%%:*}.png; [ -f $$f ] && mv $$f $(1)__adla__$${pair$(HASH)*:}.png; done; true
 
 FIXARGS := +FIXED_W=$(FIXED_W) +FIXED_A=$(FIXED_A)
-SUF   := $(DUT)$(if $(filter masked_act_array,$(DUT)),$(ROWS)x$(COLS))
+SUF   := $(DUT)$(if $(filter masked_act_array actlink_masked_array,$(DUT)),$(ROWS)x$(COLS))
 VVPF  := $(BUILD)/tb_$(SUF).vvp
 ABS   := $(CURDIR)
 TTDF  := $(if $(filter 1,$(TTD)),--ttd --repeats $(REPEATS),)
