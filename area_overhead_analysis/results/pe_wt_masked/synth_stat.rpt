@@ -6,40 +6,52 @@
         +----------Local Count, excluding submodules.
         |        +-Local Area, excluding submodules.
         |        | 
-     3209        - wires
-     3471        - wire bits
+     2802        - wires
+     3064        - wire bits
        15        - public wires
       277        - public wire bits
        15        - ports
       277        - port bits
-     3194    4E+03 cells
-       85    90.44   AND2_X1
-      108   143.64   AND3_X1
-       29   46.284   AND4_X1
-       30    71.82   AOI211_X2
-      378  402.192   AOI21_X1
-        6    9.576   AOI221_X1
-       45    59.85   AOI22_X1
-      137  619.514   DFF_X1
-      179   95.228   INV_X1
-       13   24.206   MUX2_X1
-      564  450.072   NAND2_X1
-       72   76.608   NAND3_X1
-       20     26.6   NAND4_X1
-      400    319.2   NOR2_X1
-       46   48.944   NOR3_X1
-        9    11.97   NOR4_X1
-        4    9.576   OAI211_X2
-      258  274.512   OAI21_X1
-        3    4.788   OAI221_X1
-       59    78.47   OAI22_X1
-       20    37.24   OAI33_X1
-       76   80.864   OR2_X1
-       80    106.4   OR3_X1
-        1    1.596   OR4_X1
-      350    558.6   XNOR2_X1
-      222  354.312   XOR2_X1
+     2924  5837.94 cells
+      111  151.848   AND2X1
+       12   24.624   AND3XL
+       55   131.67   AND4X1
+       28   67.032   AO21X1
+       16   43.776   AO22X1
+       17   34.884   AOI211XL
+      140    239.4   AOI21X1
+       87  178.524   AOI22X1
+       33   67.716   AOI2BB1X1
+       36   73.872   AOI31X1
+        9   21.546   AOI32X1
+        3    7.182   AOI33XL
+       60   164.16   CLKXOR2X1
+      137  749.664   DFFHQX1
+       76   51.984   INVX1
+        8   19.152   MX2X1
+       72  172.368   MXI2XL
+       51   69.768   NAND2BX1
+      581  596.106   NAND2X1
+       53    90.63   NAND3BXL
+       18    30.78   NAND3X1
+       38    64.98   NAND4XL
+       43   58.824   NOR2BX1
+      290   297.54   NOR2X1
+        8   16.416   NOR3BX1
+       20     34.2   NOR3X1
+       17   34.884   OA21X1
+       38    64.98   OAI211X1
+      164   280.44   OAI21X1
+       23   47.196   OAI22X1
+      120    205.2   OAI2BB1X1
+       26   53.352   OAI31X1
+        5    11.97   OAI32X1
+       77  105.336   OR2X1
+       26   53.352   OR3X1
+      328  785.232   XNOR2X1
+       73  549.252   XNOR3X1
+       25    188.1   XOR3X1
 
-   Chip area for module '\processing_element_masked': 4002.502000
-     of which used for sequential elements: 619.514000 (15.48%)
+   Chip area for module '\processing_element_masked': 5837.940000
+     of which used for sequential elements: 749.664000 (12.84%)
 

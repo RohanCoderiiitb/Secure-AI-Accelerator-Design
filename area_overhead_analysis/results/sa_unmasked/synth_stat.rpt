@@ -6,42 +6,64 @@
         +----------Local Count, excluding submodules.
         |        +-Local Area, excluding submodules.
         |        | 
-    16987        - wires
-    17434        - wire bits
+    13745        - wires
+    14192        - wire bits
      1036        - public wires
      1483        - public wire bits
        11        - ports
       458        - port bits
-    15961 2.23E+04 cells
-      933  992.712   AND2_X1
-      268   356.44   AND3_X1
-      201  320.796   AND4_X1
-      225   538.65   AOI211_X2
-     1808 1.92E+03   AOI21_X1
-      152  242.592   AOI221_X1
-        1    2.128   AOI222_X1
-      267   355.11   AOI22_X1
-       10     7.98   BUF_X1
-     1225  5539.45   DFF_X1
-      798  424.536   INV_X1
-      140   260.68   MUX2_X1
-     2063 1.65E+03   NAND2_X1
-      245   260.68   NAND3_X1
-      191   254.03   NAND4_X1
-     1662 1.33E+03   NOR2_X1
-      326  346.864   NOR3_X1
-       14    18.62   NOR4_X1
-       24   57.456   OAI211_X2
-     1590  1691.76   OAI21_X1
-       39   62.244   OAI221_X1
-      134   178.22   OAI22_X1
-      236  439.432   OAI33_X1
-      547  582.008   OR2_X1
-      215   285.95   OR3_X1
-       27   43.092   OR4_X1
-     1815  2896.74   XNOR2_X1
-      805  1284.78   XOR2_X1
+    13944 3.17E+04 cells
+      906 1.24E+03   AND2X1
+       73  149.796   AND3XL
+      129  308.826   AND4X1
+       96  229.824   AO21X1
+       58  158.688   AO22X1
+      133  272.916   AOI211XL
+      981  1677.51   AOI21X1
+       29   69.426   AOI221X1
+        1    3.078   AOI222X1
+      244  500.688   AOI22X1
+      124  254.448   AOI2BB1X1
+        4    13.68   AOI2BB2X1
+      155   318.06   AOI31X1
+       39   93.366   AOI32X1
+       42  100.548   AOI33XL
+       10    20.52   BUFX3
+      262  716.832   CLKXOR2X1
+     1225   6703.2   DFFHQX1
+      413  282.492   INVX1
+       87  208.278   MX2X1
+      262  627.228   MXI2XL
+      248  339.264   NAND2BX1
+     1996 2.05E+03   NAND2X1
+      193   330.03   NAND3BXL
+       75   128.25   NAND3X1
+        1    2.394   NAND4BX1
+      204   348.84   NAND4XL
+      308  421.344   NOR2BX1
+     1030  1056.78   NOR2X1
+       23   47.196   NOR3BX1
+      141   241.11   NOR3X1
+        2    5.472   NOR4BBX1
+       26    44.46   NOR4X1
+      142  291.384   OA21X1
+        5    11.97   OA22X1
+      195   333.45   OAI211X1
+     1266  2164.86   OAI21X1
+       11   26.334   OAI221X1
+       46   94.392   OAI22X1
+      426   728.46   OAI2BB1X1
+       11   41.382   OAI2BB2XL
+      190   389.88   OAI31X1
+       14   33.516   OAI32X1
+        7   19.152   OAI33X1
+      249  340.632   OR2X1
+       66  135.432   OR3X1
+        4    8.208   OR4X1
+     1046  2.5E+03   XNOR2X1
+      527 3.97E+03   XNOR3X1
+      219 1.65E+03   XOR3X1
 
-   Chip area for module '\systolic_array': 22339.212000
-     of which used for sequential elements: 5539.450000 (24.80%)
+   Chip area for module '\systolic_array': 31697.928000
+     of which used for sequential elements: 6703.200000 (21.15%)
 

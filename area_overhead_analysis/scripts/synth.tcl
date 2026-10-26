@@ -1,6 +1,7 @@
-# Yosys logic synthesis to the Nangate45 (FreePDK45) standard-cell library.
+# Yosys logic synthesis to the standard-cell library in scripts/pdk_gpdk045.sh.
 # Driven by environment variables set in run_design.sh:
-#   TOP, VERILOG_FILES, PARAMS ("NAME=VAL NAME=VAL"), LIB, OUT_DIR, DONT_USE
+#   TOP, VERILOG_FILES, PARAMS ("NAME=VAL NAME=VAL"), LIB, OUT_DIR, DONT_USE,
+#   TIEHI_CELL, TIELO_CELL, BUF_CELL
 yosys -import
 
 set top      $::env(TOP)
@@ -16,7 +17,7 @@ foreach f $::env(VERILOG_FILES) {
     read_verilog -sv $f
 }
 
-# Parameter overrides on the top module. The two array tops leave PARAMS
+# Parameter overrides on the top module. The array tops leave PARAMS
 # empty (see designs.sh) and elaborate with their RTL defaults.
 foreach kv $::env(PARAMS) {
     lassign [split $kv =] k v
@@ -35,10 +36,10 @@ opt
 abc -D 10000 -liberty $lib {*}$dont_use
 opt_clean -purge
 
-hilomap -singleton -hicell LOGIC1_X1 Z -locell LOGIC0_X1 Z
+hilomap -singleton -hicell {*}$::env(TIEHI_CELL) -locell {*}$::env(TIELO_CELL)
 setundef -zero
 splitnets
-insbuf -buf BUF_X1 A Z
+insbuf -buf {*}$::env(BUF_CELL)
 opt_clean -purge
 
 check

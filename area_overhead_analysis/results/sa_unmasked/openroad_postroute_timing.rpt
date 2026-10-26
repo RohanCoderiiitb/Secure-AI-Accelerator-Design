@@ -1,5 +1,5 @@
-Startpoint: act_flat[16] (input port clocked by clk)
-Endpoint: _31345_ (rising edge-triggered flip-flop clocked by clk)
+Startpoint: act_flat[9] (input port clocked by clk)
+Endpoint: _26340_ (rising edge-triggered flip-flop clocked by clk)
 Path Group: clk
 Path Type: max
 
@@ -8,55 +8,51 @@ Path Type: max
    0.000    0.000   clock clk (rise edge)
    0.000    0.000   clock network delay (propagated)
    2.000    2.000 ^ input external delay
-   0.070    2.070 ^ act_flat[16] (in)
-   0.068    2.137 v _25863_/ZN (NAND4_X1)
-   0.062    2.199 ^ _25885_/ZN (OAI22_X1)
-   0.077    2.276 ^ _25886_/ZN (AND4_X1)
-   0.014    2.290 v _25896_/ZN (NOR3_X1)
-   0.135    2.425 ^ _25898_/ZN (OAI33_X1)
-   0.069    2.494 ^ _25903_/ZN (AND2_X1)
-   0.017    2.510 v _25916_/ZN (AOI211_X2)
-   0.114    2.624 ^ _25928_/ZN (OAI33_X1)
-   0.065    2.689 ^ _25931_/Z (XOR2_X1)
-   0.032    2.721 v _25942_/ZN (XNOR2_X1)
-   0.067    2.789 ^ _26001_/ZN (OAI21_X1)
-   0.033    2.822 v _26008_/ZN (AOI221_X1)
-   0.117    2.939 ^ _26010_/ZN (OAI33_X1)
-   0.037    2.976 v _26015_/ZN (OAI21_X1)
-   0.069    3.046 ^ _26018_/ZN (AOI21_X1)
-   0.021    3.066 v _27244_/ZN (AOI211_X2)
-   0.107    3.174 ^ _18255_/ZN (OAI33_X1)
-   0.068    3.242 ^ _18257_/ZN (AND2_X1)
-   0.020    3.261 v _18260_/ZN (NOR2_X1)
-   0.095    3.356 ^ _18262_/ZN (NOR2_X2)
-   0.048    3.404 v _18297_/ZN (XNOR2_X1)
-   0.050    3.454 ^ _18309_/ZN (OAI21_X1)
-   0.038    3.492 v _18313_/ZN (AOI221_X1)
-   0.138    3.630 ^ _18315_/ZN (OAI33_X1)
-   0.040    3.671 v _18318_/ZN (AOI21_X1)
-   0.043    3.714 ^ _18322_/ZN (OAI211_X2)
-   0.059    3.773 ^ _18323_/ZN (AND3_X1)
-   0.035    3.808 v _18325_/ZN (OAI33_X1)
-   0.121    3.930 v _18329_/ZN (OR4_X1)
-   0.055    3.985 ^ _18335_/ZN (AOI21_X1)
-   0.038    4.023 v _18337_/ZN (OAI33_X1)
-   0.062    4.085 v _18338_/ZN (OR2_X1)
-   0.035    4.120 v _18340_/ZN (AND3_X1)
-   0.113    4.233 ^ _18342_/ZN (NOR3_X1)
-   0.001    4.234 ^ _31345_/D (DFF_X1)
-            4.234   data arrival time
+   0.110    2.110 ^ act_flat[9] (in)
+   0.257    2.367 v _16582_/Y (NAND4XL)
+   0.088    2.454 v _16584_/Y (AND2X1)
+   0.189    2.643 ^ _16610_/Y (AOI211XL)
+   0.143    2.786 v _16615_/Y (OAI21X1)
+   0.191    2.977 ^ _16617_/Y (AOI33XL)
+   0.160    3.138 v _16638_/Y (AOI21X1)
+   0.132    3.270 ^ _16668_/Y (OAI31X1)
+   0.188    3.457 v _16671_/Y (NAND3BXL)
+   0.163    3.621 ^ _16710_/Y (AOI31X1)
+   0.142    3.763 v _16751_/Y (AOI32X1)
+   0.139    3.902 ^ _16772_/Y (OAI31X1)
+   0.119    4.021 v _16780_/Y (AOI21X1)
+   0.105    4.126 ^ _16821_/Y (NOR2X1)
+   0.060    4.186 v _16822_/Y (NOR2X1)
+   0.117    4.303 ^ _16879_/Y (OAI32X1)
+   0.111    4.413 v _16880_/Y (AOI21X1)
+   0.089    4.502 ^ _16881_/Y (OAI21X1)
+   0.188    4.690 v _16883_/Y (AOI21X1)
+   0.148    4.838 ^ _16884_/Y (OAI21X1)
+   0.138    4.976 v _23624_/Y (AOI211XL)
+   0.124    5.100 ^ _23625_/Y (OAI31X1)
+   0.096    5.196 v _23626_/Y (AOI21X1)
+   0.137    5.333 ^ _24966_/Y (NOR4X1)
+   0.132    5.465 v _24972_/Y (OAI21X1)
+   0.126    5.591 ^ _14226_/Y (OAI31X1)
+   0.085    5.677 v _14229_/Y (AOI21X1)
+   0.062    5.739 v _14230_/Y (OA21X1)
+   0.058    5.797 v _15176_/Y (OA21X1)
+   0.041    5.838 ^ _15178_/Y (OAI21X1)
+   0.041    5.879 v _15180_/Y (AOI21X1)
+   0.000    5.879 v _26340_/D (DFFHQX1)
+            5.879   data arrival time
 
   10.000   10.000   clock clk (rise edge)
-   0.215   10.215   clock network delay (propagated)
-   0.000   10.215   clock reconvergence pessimism
-           10.215 ^ _31345_/CK (DFF_X1)
-  -0.042   10.173   library setup time
-           10.173   data required time
+   0.554   10.554   clock network delay (propagated)
+   0.000   10.554   clock reconvergence pessimism
+           10.554 ^ _26340_/CK (DFFHQX1)
+  -0.014   10.540   library setup time
+           10.540   data required time
 -----------------------------------------------------------
-           10.173   data required time
-           -4.234   data arrival time
+           10.540   data required time
+           -5.879   data arrival time
 -----------------------------------------------------------
-            5.939   slack (MET)
+            4.662   slack (MET)
 
 
 wns max 0.00

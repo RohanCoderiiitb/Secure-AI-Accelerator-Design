@@ -1,0 +1,4 @@
+setup_wns_ns 3.8526
+setup_tns_ns 0.0000
+hold_wns_ns 0.3451
+crit_arrival_ns 6.2884

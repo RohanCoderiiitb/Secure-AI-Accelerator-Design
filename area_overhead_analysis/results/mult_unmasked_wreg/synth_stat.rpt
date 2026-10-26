@@ -6,39 +6,52 @@
         +----------Local Count, excluding submodules.
         |        +-Local Area, excluding submodules.
         |        | 
-      404        - wires
-      433        - wire bits
+      325        - wires
+      354        - wire bits
        28        - public wires
        57        - public wire bits
         6        - ports
        35        - port bits
-      406  498.218 cells
-       19   20.216   AND2_X1
-        9    11.97   AND3_X1
-       10    15.96   AND4_X1
-       10    23.94   AOI211_X2
-       30    31.92   AOI21_X1
-        4    6.384   AOI221_X1
-       11    14.63   AOI22_X1
-       14   11.172   BUF_X1
-        8   36.176   DFF_X1
-       18    9.576   INV_X1
-        5     9.31   MUX2_X1
-       59   47.082   NAND2_X1
-        7    7.448   NAND3_X1
-       10     13.3   NAND4_X1
-       45    35.91   NOR2_X1
-       12   12.768   NOR3_X1
-        1    2.394   OAI211_X2
-       34   36.176   OAI21_X1
-        2    3.192   OAI221_X1
-        4     5.32   OAI22_X1
-        6   11.172   OAI33_X1
-       10    10.64   OR2_X1
-       11    14.63   OR3_X1
-       37   59.052   XNOR2_X1
-       30    47.88   XOR2_X1
+      335  709.308 cells
+       30    41.04   AND2X1
+        2    4.104   AND3XL
+        3    7.182   AND4X1
+        1    2.394   AO21X1
+        1    2.736   AO22X1
+        4    8.208   AOI211XL
+       13    22.23   AOI21X1
+        1    2.394   AOI221X1
+       10    20.52   AOI22X1
+        6   12.312   AOI31X1
+        2    4.788   AOI32X1
+        2    4.788   AOI33XL
+       14   28.728   BUFX3
+        9   24.624   CLKXOR2X1
+        8   43.776   DFFHQX1
+        9    6.156   INVX1
+       11   26.334   MX2X1
+        2    4.788   MXI2XL
+        7    9.576   NAND2BX1
+       50     51.3   NAND2X1
+        5     8.55   NAND3BXL
+        3     5.13   NAND3X1
+        8    13.68   NAND4XL
+        7    9.576   NOR2BX1
+       16   16.416   NOR2X1
+        8    13.68   NOR3X1
+        6   12.312   OA21X1
+        7    11.97   OAI211X1
+       21    35.91   OAI21X1
+        2    4.104   OAI22X1
+       10     17.1   OAI2BB1X1
+        5    10.26   OAI31X1
+        1    2.394   OAI32X1
+        4    5.472   OR2X1
+        1    2.052   OR3X1
+       26   62.244   XNOR2X1
+       14  105.336   XNOR3X1
+        6   45.144   XOR3X1
 
-   Chip area for module '\bw_multiplier_wreg': 498.218000
-     of which used for sequential elements: 36.176000 (7.26%)
+   Chip area for module '\bw_multiplier_wreg': 709.308000
+     of which used for sequential elements: 43.776000 (6.17%)
 

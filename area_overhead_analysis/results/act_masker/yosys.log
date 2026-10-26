@@ -11,8 +11,8 @@
 [TCL: yosys -import] Command name collision: found pre-existing command `read' -> skip.
 [TCL: yosys -import] Command name collision: found pre-existing command `trace' -> skip.
 
-1. Executing Liberty frontend: /home/ihs24/OpenROAD-flow-scripts/flow/platforms/nangate45/lib/NangateOpenCellLibrary_typical.lib
-Imported 135 cell types from liberty file.
+1. Executing Liberty frontend: /home/ihs24/Desktop/Secure-AI-Accelerator-Design/45_nm_PDK/cadence/cadence_45nm/lib/fast_vdd1v0_basicCells.lib
+Imported 480 cell types from liberty file.
 
 2. Executing Verilog-2005 frontend: /home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv
 Parsing SystemVerilog input from `/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/act_masker.sv' to AST representation.
@@ -735,37 +735,37 @@ Removed 6 unused cells and 41 unused wires.
 <suppressed ~47 debug messages>
 
 9. Executing DFFLIBMAP pass (mapping DFF/DLATCH cells to sequential cells from liberty file).
-  cell DFF_X1 (noninv, pins=4, area=4.52) is a direct match for cell type $_DFF_P_.
-  cell DFFR_X1 (noninv, pins=5, area=5.32) is a direct match for cell type $_DFF_PN0_.
-  cell DFFS_X1 (noninv, pins=5, area=5.32) is a direct match for cell type $_DFF_PN1_.
-  cell DFFRS_X1 (noninv, pins=6, area=6.38) is a direct match for cell type $_DFFSR_PNN_.
-  cell DLL_X1 (noninv, pins=3, area=2.66) is a direct match for cell type $_DLATCH_N_.
-  cell DLH_X1 (noninv, pins=3, area=2.66) is a direct match for cell type $_DLATCH_P_.
+  cell DFFHQX1 (noninv, pins=3, area=5.47) is a direct match for cell type $_DFF_P_.
+  cell DFFRHQX1 (noninv, pins=4, area=6.16) is a direct match for cell type $_DFF_PN0_.
+  cell DFFSHQX1 (noninv, pins=4, area=6.50) is a direct match for cell type $_DFF_PN1_.
+  cell EDFFHQX1 (noninv, pins=4, area=8.55) is a direct match for cell type $_DFFE_PP_.
+  cell DFFNSRX1 (noninv, pins=6, area=9.23) is a direct match for cell type $_DFFSR_NNN_.
+  cell DFFSRHQX1 (noninv, pins=5, area=10.94) is a direct match for cell type $_DFFSR_PNN_.
   final dff/dlatch cell mappings:
     unmapped dff/dlatch cell: $_DFF_N_
-    \DFF_X1 _DFF_P_ (.CK( C), .D( D), .Q( Q), .QN(~Q));
+    \DFFHQX1 _DFF_P_ (.CK( C), .D( D), .Q( Q));
     unmapped dff/dlatch cell: $_DFF_NN0_
     unmapped dff/dlatch cell: $_DFF_NN1_
     unmapped dff/dlatch cell: $_DFF_NP0_
     unmapped dff/dlatch cell: $_DFF_NP1_
-    \DFFR_X1 _DFF_PN0_ (.CK( C), .D( D), .Q( Q), .QN(~Q), .RN( R));
-    \DFFS_X1 _DFF_PN1_ (.CK( C), .D( D), .Q( Q), .QN(~Q), .SN( R));
+    \DFFRHQX1 _DFF_PN0_ (.CK( C), .D( D), .Q( Q), .RN( R));
+    \DFFSHQX1 _DFF_PN1_ (.CK( C), .D( D), .Q( Q), .SN( R));
     unmapped dff/dlatch cell: $_DFF_PP0_
     unmapped dff/dlatch cell: $_DFF_PP1_
     unmapped dff/dlatch cell: $_DFFE_NN_
     unmapped dff/dlatch cell: $_DFFE_NP_
     unmapped dff/dlatch cell: $_DFFE_PN_
-    unmapped dff/dlatch cell: $_DFFE_PP_
-    unmapped dff/dlatch cell: $_DFFSR_NNN_
+    \EDFFHQX1 _DFFE_PP_ (.CK( C), .D( D), .E( E), .Q( Q));
+    \DFFNSRX1 _DFFSR_NNN_ (.CKN( C), .D( D), .Q( Q), .QN(~Q), .RN( R), .SN( S));
     unmapped dff/dlatch cell: $_DFFSR_NNP_
     unmapped dff/dlatch cell: $_DFFSR_NPN_
     unmapped dff/dlatch cell: $_DFFSR_NPP_
-    \DFFRS_X1 _DFFSR_PNN_ (.CK( C), .D( D), .Q( Q), .QN(~Q), .RN( R), .SN( S));
+    \DFFSRHQX1 _DFFSR_PNN_ (.CK( C), .D( D), .Q( Q), .RN( R), .SN( S));
     unmapped dff/dlatch cell: $_DFFSR_PNP_
     unmapped dff/dlatch cell: $_DFFSR_PPN_
     unmapped dff/dlatch cell: $_DFFSR_PPP_
-    \DLL_X1 _DLATCH_N_ (.D( D), .GN( E), .Q( Q));
-    \DLH_X1 _DLATCH_P_ (.D( D), .G( E), .Q( Q));
+    unmapped dff/dlatch cell: $_DLATCH_N_
+    unmapped dff/dlatch cell: $_DLATCH_P_
     unmapped dff/dlatch cell: $_DLATCH_NN0_
     unmapped dff/dlatch cell: $_DLATCH_NN1_
     unmapped dff/dlatch cell: $_DLATCH_NP0_
@@ -786,7 +786,7 @@ Removed 6 unused cells and 41 unused wires.
 9.1. Executing DFFLEGALIZE pass (convert FFs and LATCHes to types supported by the target).
 <suppressed ~8 debug messages>
 Mapping DFF/DLATCH cells in module `\act_masker':
-  mapped 320 $_DFF_P_ cells to \DFF_X1 cells.
+  mapped 320 $_DFF_P_ cells to \DFFHQX1 cells.
 
 10. Executing OPT pass (performing simple optimizations).
 
@@ -831,7 +831,7 @@ Optimizing module act_masker.
   2759 cells in clk={ }, en={ }, arst={ }, srst={ }
 
 11.2. Extracting gate netlist of module `\act_masker' to `<abc-temp-dir>/input.blif'..
-ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache-1000/yosys_merged_4c2f18a6.scl (1 files)
+ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache-1000/yosys_merged_435ac72d.scl (1 files)
 No matching clock domain found. Not extracting any FF cells.
 
 11.2.1. Executed ABC.
@@ -841,8 +841,8 @@ ABC: UC Berkeley, ABC 1.01 (compiled Sep 18 2026 19:37:19)
 ABC: abc 01> empty
 ABC: abc 01> source <abc-temp-dir>/abc.script
 ABC: + read_blif <abc-temp-dir>/input.blif 
-ABC: + read_scl /tmp/yosys-liberty-scl-cache-1000/yosys_merged_4c2f18a6.scl 
-ABC: Warning: Detected 2 multi-output cells (for example, "FA_X1").
+ABC: + read_scl /tmp/yosys-liberty-scl-cache-1000/yosys_merged_435ac72d.scl 
+ABC: Warning: Detected 12 multi-output cells (for example, "ADDFHX1").
 ABC: + strash 
 ABC: + &get -n 
 ABC: + &fraig -x 
@@ -862,26 +862,32 @@ ABC:
 ABC: YOSYS_ABC_DONE 
 
 11.2.2. Re-integrating ABC results.
-ABC RESULTS:           AND2_X1 cells:       56
-ABC RESULTS:           AND3_X1 cells:       10
-ABC RESULTS:         AOI211_X2 cells:       25
-ABC RESULTS:          AOI21_X1 cells:      374
-ABC RESULTS:         AOI221_X1 cells:       42
-ABC RESULTS:          AOI22_X1 cells:        4
-ABC RESULTS:            INV_X1 cells:      334
-ABC RESULTS:           MUX2_X1 cells:        1
-ABC RESULTS:          NAND2_X1 cells:      258
-ABC RESULTS:          NAND3_X1 cells:       24
-ABC RESULTS:           NOR2_X1 cells:      111
-ABC RESULTS:           NOR3_X1 cells:        6
-ABC RESULTS:         OAI211_X2 cells:       25
-ABC RESULTS:          OAI21_X1 cells:      337
-ABC RESULTS:         OAI221_X1 cells:       17
-ABC RESULTS:            OR2_X1 cells:       55
-ABC RESULTS:            OR3_X1 cells:       10
-ABC RESULTS:            OR4_X1 cells:        5
-ABC RESULTS:          XNOR2_X1 cells:      619
-ABC RESULTS:           XOR2_X1 cells:      367
+ABC RESULTS:            AND2X1 cells:      171
+ABC RESULTS:          AOI211XL cells:        5
+ABC RESULTS:           AOI21X1 cells:      100
+ABC RESULTS:         AOI2BB1X1 cells:       27
+ABC RESULTS:           AOI31X1 cells:       14
+ABC RESULTS:           AOI32X1 cells:       26
+ABC RESULTS:         CLKXOR2X1 cells:      138
+ABC RESULTS:             INVX1 cells:      199
+ABC RESULTS:             MX2X1 cells:        2
+ABC RESULTS:            MXI2XL cells:       35
+ABC RESULTS:          NAND2BX1 cells:       53
+ABC RESULTS:           NAND2X1 cells:      264
+ABC RESULTS:          NAND3BXL cells:       27
+ABC RESULTS:           NAND4XL cells:        3
+ABC RESULTS:           NOR2BX1 cells:       13
+ABC RESULTS:            NOR2X1 cells:       52
+ABC RESULTS:            OA21X1 cells:        2
+ABC RESULTS:            OA22X1 cells:        1
+ABC RESULTS:          OAI211X1 cells:      181
+ABC RESULTS:           OAI21X1 cells:      129
+ABC RESULTS:          OAI221X1 cells:       15
+ABC RESULTS:         OAI2BB1X1 cells:       41
+ABC RESULTS:           OAI31X1 cells:       26
+ABC RESULTS:           OAI32X1 cells:        5
+ABC RESULTS:             OR2X1 cells:       16
+ABC RESULTS:           XNOR2X1 cells:      893
 ABC RESULTS:        internal signals:     1801
 ABC RESULTS:           input signals:      363
 ABC RESULTS:          output signals:      640
@@ -900,166 +906,166 @@ Removed 0 unused cells and 2492 unused wires.
 15. Executing SPLITNETS pass (splitting up multi-bit signals).
 
 16. Executing INSBUF pass (insert buffer cells for connected wires).
-Add act_masker/$auto$insbuf.cc:97:execute$5323: \g_rng[2].u_rng.r[0] -> \g_rng[2].u_rng.st[0]
-Add act_masker/$auto$insbuf.cc:97:execute$5324: \g_rng[2].u_rng.r[1] -> \g_rng[2].u_rng.st[1]
-Add act_masker/$auto$insbuf.cc:97:execute$5325: \g_rng[2].u_rng.r[2] -> \g_rng[2].u_rng.st[2]
-Add act_masker/$auto$insbuf.cc:97:execute$5326: \g_rng[2].u_rng.r[3] -> \g_rng[2].u_rng.st[3]
-Add act_masker/$auto$insbuf.cc:97:execute$5327: \g_rng[2].u_rng.r[4] -> \g_rng[2].u_rng.st[4]
-Add act_masker/$auto$insbuf.cc:97:execute$5328: \g_rng[2].u_rng.r[5] -> \g_rng[2].u_rng.st[5]
-Add act_masker/$auto$insbuf.cc:97:execute$5329: \g_rng[2].u_rng.r[6] -> \g_rng[2].u_rng.st[6]
-Add act_masker/$auto$insbuf.cc:97:execute$5330: \g_rng[2].u_rng.r[7] -> \g_rng[2].u_rng.st[7]
-Add act_masker/$auto$insbuf.cc:97:execute$5331: \g_rng[2].u_rng.r[8] -> \g_rng[2].u_rng.st[8]
-Add act_masker/$auto$insbuf.cc:97:execute$5332: \g_rng[2].u_rng.r[9] -> \g_rng[2].u_rng.st[9]
-Add act_masker/$auto$insbuf.cc:97:execute$5333: \g_rng[2].u_rng.r[10] -> \g_rng[2].u_rng.st[10]
-Add act_masker/$auto$insbuf.cc:97:execute$5334: \g_rng[2].u_rng.r[11] -> \g_rng[2].u_rng.st[11]
-Add act_masker/$auto$insbuf.cc:97:execute$5335: \g_rng[2].u_rng.r[12] -> \g_rng[2].u_rng.st[12]
-Add act_masker/$auto$insbuf.cc:97:execute$5336: \g_rng[2].u_rng.r[13] -> \g_rng[2].u_rng.st[13]
-Add act_masker/$auto$insbuf.cc:97:execute$5337: \g_rng[2].u_rng.r[14] -> \g_rng[2].u_rng.st[14]
-Add act_masker/$auto$insbuf.cc:97:execute$5338: \g_rng[2].u_rng.r[15] -> \g_rng[2].u_rng.st[15]
-Add act_masker/$auto$insbuf.cc:97:execute$5339: \g_rng[2].u_rng.r[16] -> \g_rng[2].u_rng.st[16]
-Add act_masker/$auto$insbuf.cc:97:execute$5340: \g_rng[2].u_rng.r[17] -> \g_rng[2].u_rng.st[17]
-Add act_masker/$auto$insbuf.cc:97:execute$5341: \g_rng[2].u_rng.r[18] -> \g_rng[2].u_rng.st[18]
-Add act_masker/$auto$insbuf.cc:97:execute$5342: \g_rng[2].u_rng.r[19] -> \g_rng[2].u_rng.st[19]
-Add act_masker/$auto$insbuf.cc:97:execute$5343: \g_rng[2].u_rng.r[20] -> \g_rng[2].u_rng.st[20]
-Add act_masker/$auto$insbuf.cc:97:execute$5344: \g_rng[2].u_rng.r[21] -> \g_rng[2].u_rng.st[21]
-Add act_masker/$auto$insbuf.cc:97:execute$5345: \g_rng[2].u_rng.r[22] -> \g_rng[2].u_rng.st[22]
-Add act_masker/$auto$insbuf.cc:97:execute$5346: \g_rng[2].u_rng.r[23] -> \g_rng[2].u_rng.st[23]
-Add act_masker/$auto$insbuf.cc:97:execute$5347: \g_rng[2].u_rng.r[24] -> \g_rng[2].u_rng.st[24]
-Add act_masker/$auto$insbuf.cc:97:execute$5348: \g_rng[2].u_rng.r[25] -> \g_rng[2].u_rng.st[25]
-Add act_masker/$auto$insbuf.cc:97:execute$5349: \g_rng[2].u_rng.r[26] -> \g_rng[2].u_rng.st[26]
-Add act_masker/$auto$insbuf.cc:97:execute$5350: \g_rng[2].u_rng.r[27] -> \g_rng[2].u_rng.st[27]
-Add act_masker/$auto$insbuf.cc:97:execute$5351: \g_rng[2].u_rng.r[28] -> \g_rng[2].u_rng.st[28]
-Add act_masker/$auto$insbuf.cc:97:execute$5352: \g_rng[2].u_rng.r[29] -> \g_rng[2].u_rng.st[29]
-Add act_masker/$auto$insbuf.cc:97:execute$5353: \g_rng[2].u_rng.r[30] -> \g_rng[2].u_rng.st[30]
-Add act_masker/$auto$insbuf.cc:97:execute$5354: \g_rng[2].u_rng.r[31] -> \g_rng[2].u_rng.st[31]
-Add act_masker/$auto$insbuf.cc:97:execute$5355: \g_rng[1].u_rng.r[0] -> \g_rng[1].u_rng.st[0]
-Add act_masker/$auto$insbuf.cc:97:execute$5356: \g_rng[1].u_rng.r[1] -> \g_rng[1].u_rng.st[1]
-Add act_masker/$auto$insbuf.cc:97:execute$5357: \g_rng[1].u_rng.r[2] -> \g_rng[1].u_rng.st[2]
-Add act_masker/$auto$insbuf.cc:97:execute$5358: \g_rng[1].u_rng.r[3] -> \g_rng[1].u_rng.st[3]
-Add act_masker/$auto$insbuf.cc:97:execute$5359: \g_rng[1].u_rng.r[4] -> \g_rng[1].u_rng.st[4]
-Add act_masker/$auto$insbuf.cc:97:execute$5360: \g_rng[1].u_rng.r[5] -> \g_rng[1].u_rng.st[5]
-Add act_masker/$auto$insbuf.cc:97:execute$5361: \g_rng[1].u_rng.r[6] -> \g_rng[1].u_rng.st[6]
-Add act_masker/$auto$insbuf.cc:97:execute$5362: \g_rng[1].u_rng.r[7] -> \g_rng[1].u_rng.st[7]
-Add act_masker/$auto$insbuf.cc:97:execute$5363: \g_rng[1].u_rng.r[8] -> \g_rng[1].u_rng.st[8]
-Add act_masker/$auto$insbuf.cc:97:execute$5364: \g_rng[1].u_rng.r[9] -> \g_rng[1].u_rng.st[9]
-Add act_masker/$auto$insbuf.cc:97:execute$5365: \g_rng[1].u_rng.r[10] -> \g_rng[1].u_rng.st[10]
-Add act_masker/$auto$insbuf.cc:97:execute$5366: \g_rng[1].u_rng.r[11] -> \g_rng[1].u_rng.st[11]
-Add act_masker/$auto$insbuf.cc:97:execute$5367: \g_rng[1].u_rng.r[12] -> \g_rng[1].u_rng.st[12]
-Add act_masker/$auto$insbuf.cc:97:execute$5368: \g_rng[1].u_rng.r[13] -> \g_rng[1].u_rng.st[13]
-Add act_masker/$auto$insbuf.cc:97:execute$5369: \g_rng[1].u_rng.r[14] -> \g_rng[1].u_rng.st[14]
-Add act_masker/$auto$insbuf.cc:97:execute$5370: \g_rng[1].u_rng.r[15] -> \g_rng[1].u_rng.st[15]
-Add act_masker/$auto$insbuf.cc:97:execute$5371: \g_rng[1].u_rng.r[16] -> \g_rng[1].u_rng.st[16]
-Add act_masker/$auto$insbuf.cc:97:execute$5372: \g_rng[1].u_rng.r[17] -> \g_rng[1].u_rng.st[17]
-Add act_masker/$auto$insbuf.cc:97:execute$5373: \g_rng[1].u_rng.r[18] -> \g_rng[1].u_rng.st[18]
-Add act_masker/$auto$insbuf.cc:97:execute$5374: \g_rng[1].u_rng.r[19] -> \g_rng[1].u_rng.st[19]
-Add act_masker/$auto$insbuf.cc:97:execute$5375: \g_rng[1].u_rng.r[20] -> \g_rng[1].u_rng.st[20]
-Add act_masker/$auto$insbuf.cc:97:execute$5376: \g_rng[1].u_rng.r[21] -> \g_rng[1].u_rng.st[21]
-Add act_masker/$auto$insbuf.cc:97:execute$5377: \g_rng[1].u_rng.r[22] -> \g_rng[1].u_rng.st[22]
-Add act_masker/$auto$insbuf.cc:97:execute$5378: \g_rng[1].u_rng.r[23] -> \g_rng[1].u_rng.st[23]
-Add act_masker/$auto$insbuf.cc:97:execute$5379: \g_rng[1].u_rng.r[24] -> \g_rng[1].u_rng.st[24]
-Add act_masker/$auto$insbuf.cc:97:execute$5380: \g_rng[1].u_rng.r[25] -> \g_rng[1].u_rng.st[25]
-Add act_masker/$auto$insbuf.cc:97:execute$5381: \g_rng[1].u_rng.r[26] -> \g_rng[1].u_rng.st[26]
-Add act_masker/$auto$insbuf.cc:97:execute$5382: \g_rng[1].u_rng.r[27] -> \g_rng[1].u_rng.st[27]
-Add act_masker/$auto$insbuf.cc:97:execute$5383: \g_rng[1].u_rng.r[28] -> \g_rng[1].u_rng.st[28]
-Add act_masker/$auto$insbuf.cc:97:execute$5384: \g_rng[1].u_rng.r[29] -> \g_rng[1].u_rng.st[29]
-Add act_masker/$auto$insbuf.cc:97:execute$5385: \g_rng[1].u_rng.r[30] -> \g_rng[1].u_rng.st[30]
-Add act_masker/$auto$insbuf.cc:97:execute$5386: \g_rng[1].u_rng.r[31] -> \g_rng[1].u_rng.st[31]
-Add act_masker/$auto$insbuf.cc:97:execute$5387: \g_rng[3].u_rng.r[0] -> \g_rng[3].u_rng.st[0]
-Add act_masker/$auto$insbuf.cc:97:execute$5388: \g_rng[3].u_rng.r[1] -> \g_rng[3].u_rng.st[1]
-Add act_masker/$auto$insbuf.cc:97:execute$5389: \g_rng[3].u_rng.r[2] -> \g_rng[3].u_rng.st[2]
-Add act_masker/$auto$insbuf.cc:97:execute$5390: \g_rng[3].u_rng.r[3] -> \g_rng[3].u_rng.st[3]
-Add act_masker/$auto$insbuf.cc:97:execute$5391: \g_rng[3].u_rng.r[4] -> \g_rng[3].u_rng.st[4]
-Add act_masker/$auto$insbuf.cc:97:execute$5392: \g_rng[3].u_rng.r[5] -> \g_rng[3].u_rng.st[5]
-Add act_masker/$auto$insbuf.cc:97:execute$5393: \g_rng[3].u_rng.r[6] -> \g_rng[3].u_rng.st[6]
-Add act_masker/$auto$insbuf.cc:97:execute$5394: \g_rng[3].u_rng.r[7] -> \g_rng[3].u_rng.st[7]
-Add act_masker/$auto$insbuf.cc:97:execute$5395: \g_rng[3].u_rng.r[8] -> \g_rng[3].u_rng.st[8]
-Add act_masker/$auto$insbuf.cc:97:execute$5396: \g_rng[3].u_rng.r[9] -> \g_rng[3].u_rng.st[9]
-Add act_masker/$auto$insbuf.cc:97:execute$5397: \g_rng[3].u_rng.r[10] -> \g_rng[3].u_rng.st[10]
-Add act_masker/$auto$insbuf.cc:97:execute$5398: \g_rng[3].u_rng.r[11] -> \g_rng[3].u_rng.st[11]
-Add act_masker/$auto$insbuf.cc:97:execute$5399: \g_rng[3].u_rng.r[12] -> \g_rng[3].u_rng.st[12]
-Add act_masker/$auto$insbuf.cc:97:execute$5400: \g_rng[3].u_rng.r[13] -> \g_rng[3].u_rng.st[13]
-Add act_masker/$auto$insbuf.cc:97:execute$5401: \g_rng[3].u_rng.r[14] -> \g_rng[3].u_rng.st[14]
-Add act_masker/$auto$insbuf.cc:97:execute$5402: \g_rng[3].u_rng.r[15] -> \g_rng[3].u_rng.st[15]
-Add act_masker/$auto$insbuf.cc:97:execute$5403: \g_rng[3].u_rng.r[16] -> \g_rng[3].u_rng.st[16]
-Add act_masker/$auto$insbuf.cc:97:execute$5404: \g_rng[3].u_rng.r[17] -> \g_rng[3].u_rng.st[17]
-Add act_masker/$auto$insbuf.cc:97:execute$5405: \g_rng[3].u_rng.r[18] -> \g_rng[3].u_rng.st[18]
-Add act_masker/$auto$insbuf.cc:97:execute$5406: \g_rng[3].u_rng.r[19] -> \g_rng[3].u_rng.st[19]
-Add act_masker/$auto$insbuf.cc:97:execute$5407: \g_rng[3].u_rng.r[20] -> \g_rng[3].u_rng.st[20]
-Add act_masker/$auto$insbuf.cc:97:execute$5408: \g_rng[3].u_rng.r[21] -> \g_rng[3].u_rng.st[21]
-Add act_masker/$auto$insbuf.cc:97:execute$5409: \g_rng[3].u_rng.r[22] -> \g_rng[3].u_rng.st[22]
-Add act_masker/$auto$insbuf.cc:97:execute$5410: \g_rng[3].u_rng.r[23] -> \g_rng[3].u_rng.st[23]
-Add act_masker/$auto$insbuf.cc:97:execute$5411: \g_rng[3].u_rng.r[24] -> \g_rng[3].u_rng.st[24]
-Add act_masker/$auto$insbuf.cc:97:execute$5412: \g_rng[3].u_rng.r[25] -> \g_rng[3].u_rng.st[25]
-Add act_masker/$auto$insbuf.cc:97:execute$5413: \g_rng[3].u_rng.r[26] -> \g_rng[3].u_rng.st[26]
-Add act_masker/$auto$insbuf.cc:97:execute$5414: \g_rng[3].u_rng.r[27] -> \g_rng[3].u_rng.st[27]
-Add act_masker/$auto$insbuf.cc:97:execute$5415: \g_rng[3].u_rng.r[28] -> \g_rng[3].u_rng.st[28]
-Add act_masker/$auto$insbuf.cc:97:execute$5416: \g_rng[3].u_rng.r[29] -> \g_rng[3].u_rng.st[29]
-Add act_masker/$auto$insbuf.cc:97:execute$5417: \g_rng[3].u_rng.r[30] -> \g_rng[3].u_rng.st[30]
-Add act_masker/$auto$insbuf.cc:97:execute$5418: \g_rng[3].u_rng.r[31] -> \g_rng[3].u_rng.st[31]
-Add act_masker/$auto$insbuf.cc:97:execute$5419: \g_rng[0].u_rng.r[0] -> \g_rng[0].u_rng.st[0]
-Add act_masker/$auto$insbuf.cc:97:execute$5420: \g_rng[0].u_rng.r[1] -> \g_rng[0].u_rng.st[1]
-Add act_masker/$auto$insbuf.cc:97:execute$5421: \g_rng[0].u_rng.r[2] -> \g_rng[0].u_rng.st[2]
-Add act_masker/$auto$insbuf.cc:97:execute$5422: \g_rng[0].u_rng.r[3] -> \g_rng[0].u_rng.st[3]
-Add act_masker/$auto$insbuf.cc:97:execute$5423: \g_rng[0].u_rng.r[4] -> \g_rng[0].u_rng.st[4]
-Add act_masker/$auto$insbuf.cc:97:execute$5424: \g_rng[0].u_rng.r[5] -> \g_rng[0].u_rng.st[5]
-Add act_masker/$auto$insbuf.cc:97:execute$5425: \g_rng[0].u_rng.r[6] -> \g_rng[0].u_rng.st[6]
-Add act_masker/$auto$insbuf.cc:97:execute$5426: \g_rng[0].u_rng.r[7] -> \g_rng[0].u_rng.st[7]
-Add act_masker/$auto$insbuf.cc:97:execute$5427: \g_rng[0].u_rng.r[8] -> \g_rng[0].u_rng.st[8]
-Add act_masker/$auto$insbuf.cc:97:execute$5428: \g_rng[0].u_rng.r[9] -> \g_rng[0].u_rng.st[9]
-Add act_masker/$auto$insbuf.cc:97:execute$5429: \g_rng[0].u_rng.r[10] -> \g_rng[0].u_rng.st[10]
-Add act_masker/$auto$insbuf.cc:97:execute$5430: \g_rng[0].u_rng.r[11] -> \g_rng[0].u_rng.st[11]
-Add act_masker/$auto$insbuf.cc:97:execute$5431: \g_rng[0].u_rng.r[12] -> \g_rng[0].u_rng.st[12]
-Add act_masker/$auto$insbuf.cc:97:execute$5432: \g_rng[0].u_rng.r[13] -> \g_rng[0].u_rng.st[13]
-Add act_masker/$auto$insbuf.cc:97:execute$5433: \g_rng[0].u_rng.r[14] -> \g_rng[0].u_rng.st[14]
-Add act_masker/$auto$insbuf.cc:97:execute$5434: \g_rng[0].u_rng.r[15] -> \g_rng[0].u_rng.st[15]
-Add act_masker/$auto$insbuf.cc:97:execute$5435: \g_rng[0].u_rng.r[16] -> \g_rng[0].u_rng.st[16]
-Add act_masker/$auto$insbuf.cc:97:execute$5436: \g_rng[0].u_rng.r[17] -> \g_rng[0].u_rng.st[17]
-Add act_masker/$auto$insbuf.cc:97:execute$5437: \g_rng[0].u_rng.r[18] -> \g_rng[0].u_rng.st[18]
-Add act_masker/$auto$insbuf.cc:97:execute$5438: \g_rng[0].u_rng.r[19] -> \g_rng[0].u_rng.st[19]
-Add act_masker/$auto$insbuf.cc:97:execute$5439: \g_rng[0].u_rng.r[20] -> \g_rng[0].u_rng.st[20]
-Add act_masker/$auto$insbuf.cc:97:execute$5440: \g_rng[0].u_rng.r[21] -> \g_rng[0].u_rng.st[21]
-Add act_masker/$auto$insbuf.cc:97:execute$5441: \g_rng[0].u_rng.r[22] -> \g_rng[0].u_rng.st[22]
-Add act_masker/$auto$insbuf.cc:97:execute$5442: \g_rng[0].u_rng.r[23] -> \g_rng[0].u_rng.st[23]
-Add act_masker/$auto$insbuf.cc:97:execute$5443: \g_rng[0].u_rng.r[24] -> \g_rng[0].u_rng.st[24]
-Add act_masker/$auto$insbuf.cc:97:execute$5444: \g_rng[0].u_rng.r[25] -> \g_rng[0].u_rng.st[25]
-Add act_masker/$auto$insbuf.cc:97:execute$5445: \g_rng[0].u_rng.r[26] -> \g_rng[0].u_rng.st[26]
-Add act_masker/$auto$insbuf.cc:97:execute$5446: \g_rng[0].u_rng.r[27] -> \g_rng[0].u_rng.st[27]
-Add act_masker/$auto$insbuf.cc:97:execute$5447: \g_rng[0].u_rng.r[28] -> \g_rng[0].u_rng.st[28]
-Add act_masker/$auto$insbuf.cc:97:execute$5448: \g_rng[0].u_rng.r[29] -> \g_rng[0].u_rng.st[29]
-Add act_masker/$auto$insbuf.cc:97:execute$5449: \g_rng[0].u_rng.r[30] -> \g_rng[0].u_rng.st[30]
-Add act_masker/$auto$insbuf.cc:97:execute$5450: \g_rng[0].u_rng.r[31] -> \g_rng[0].u_rng.st[31]
-Add act_masker/$auto$insbuf.cc:97:execute$5451: \g_rng[4].u_rng.r[0] -> \g_rng[4].u_rng.st[0]
-Add act_masker/$auto$insbuf.cc:97:execute$5452: \g_rng[4].u_rng.r[1] -> \g_rng[4].u_rng.st[1]
-Add act_masker/$auto$insbuf.cc:97:execute$5453: \g_rng[4].u_rng.r[2] -> \g_rng[4].u_rng.st[2]
-Add act_masker/$auto$insbuf.cc:97:execute$5454: \g_rng[4].u_rng.r[3] -> \g_rng[4].u_rng.st[3]
-Add act_masker/$auto$insbuf.cc:97:execute$5455: \g_rng[4].u_rng.r[4] -> \g_rng[4].u_rng.st[4]
-Add act_masker/$auto$insbuf.cc:97:execute$5456: \g_rng[4].u_rng.r[5] -> \g_rng[4].u_rng.st[5]
-Add act_masker/$auto$insbuf.cc:97:execute$5457: \g_rng[4].u_rng.r[6] -> \g_rng[4].u_rng.st[6]
-Add act_masker/$auto$insbuf.cc:97:execute$5458: \g_rng[4].u_rng.r[7] -> \g_rng[4].u_rng.st[7]
-Add act_masker/$auto$insbuf.cc:97:execute$5459: \g_rng[4].u_rng.r[8] -> \g_rng[4].u_rng.st[8]
-Add act_masker/$auto$insbuf.cc:97:execute$5460: \g_rng[4].u_rng.r[9] -> \g_rng[4].u_rng.st[9]
-Add act_masker/$auto$insbuf.cc:97:execute$5461: \g_rng[4].u_rng.r[10] -> \g_rng[4].u_rng.st[10]
-Add act_masker/$auto$insbuf.cc:97:execute$5462: \g_rng[4].u_rng.r[11] -> \g_rng[4].u_rng.st[11]
-Add act_masker/$auto$insbuf.cc:97:execute$5463: \g_rng[4].u_rng.r[12] -> \g_rng[4].u_rng.st[12]
-Add act_masker/$auto$insbuf.cc:97:execute$5464: \g_rng[4].u_rng.r[13] -> \g_rng[4].u_rng.st[13]
-Add act_masker/$auto$insbuf.cc:97:execute$5465: \g_rng[4].u_rng.r[14] -> \g_rng[4].u_rng.st[14]
-Add act_masker/$auto$insbuf.cc:97:execute$5466: \g_rng[4].u_rng.r[15] -> \g_rng[4].u_rng.st[15]
-Add act_masker/$auto$insbuf.cc:97:execute$5467: \g_rng[4].u_rng.r[16] -> \g_rng[4].u_rng.st[16]
-Add act_masker/$auto$insbuf.cc:97:execute$5468: \g_rng[4].u_rng.r[17] -> \g_rng[4].u_rng.st[17]
-Add act_masker/$auto$insbuf.cc:97:execute$5469: \g_rng[4].u_rng.r[18] -> \g_rng[4].u_rng.st[18]
-Add act_masker/$auto$insbuf.cc:97:execute$5470: \g_rng[4].u_rng.r[19] -> \g_rng[4].u_rng.st[19]
-Add act_masker/$auto$insbuf.cc:97:execute$5471: \g_rng[4].u_rng.r[20] -> \g_rng[4].u_rng.st[20]
-Add act_masker/$auto$insbuf.cc:97:execute$5472: \g_rng[4].u_rng.r[21] -> \g_rng[4].u_rng.st[21]
-Add act_masker/$auto$insbuf.cc:97:execute$5473: \g_rng[4].u_rng.r[22] -> \g_rng[4].u_rng.st[22]
-Add act_masker/$auto$insbuf.cc:97:execute$5474: \g_rng[4].u_rng.r[23] -> \g_rng[4].u_rng.st[23]
-Add act_masker/$auto$insbuf.cc:97:execute$5475: \g_rng[4].u_rng.r[24] -> \g_rng[4].u_rng.st[24]
-Add act_masker/$auto$insbuf.cc:97:execute$5476: \g_rng[4].u_rng.r[25] -> \g_rng[4].u_rng.st[25]
-Add act_masker/$auto$insbuf.cc:97:execute$5477: \g_rng[4].u_rng.r[26] -> \g_rng[4].u_rng.st[26]
-Add act_masker/$auto$insbuf.cc:97:execute$5478: \g_rng[4].u_rng.r[27] -> \g_rng[4].u_rng.st[27]
-Add act_masker/$auto$insbuf.cc:97:execute$5479: \g_rng[4].u_rng.r[28] -> \g_rng[4].u_rng.st[28]
-Add act_masker/$auto$insbuf.cc:97:execute$5480: \g_rng[4].u_rng.r[29] -> \g_rng[4].u_rng.st[29]
-Add act_masker/$auto$insbuf.cc:97:execute$5481: \g_rng[4].u_rng.r[30] -> \g_rng[4].u_rng.st[30]
-Add act_masker/$auto$insbuf.cc:97:execute$5482: \g_rng[4].u_rng.r[31] -> \g_rng[4].u_rng.st[31]
+Add act_masker/$auto$insbuf.cc:97:execute$5003: \g_rng[2].u_rng.r[0] -> \g_rng[2].u_rng.st[0]
+Add act_masker/$auto$insbuf.cc:97:execute$5004: \g_rng[2].u_rng.r[1] -> \g_rng[2].u_rng.st[1]
+Add act_masker/$auto$insbuf.cc:97:execute$5005: \g_rng[2].u_rng.r[2] -> \g_rng[2].u_rng.st[2]
+Add act_masker/$auto$insbuf.cc:97:execute$5006: \g_rng[2].u_rng.r[3] -> \g_rng[2].u_rng.st[3]
+Add act_masker/$auto$insbuf.cc:97:execute$5007: \g_rng[2].u_rng.r[4] -> \g_rng[2].u_rng.st[4]
+Add act_masker/$auto$insbuf.cc:97:execute$5008: \g_rng[2].u_rng.r[5] -> \g_rng[2].u_rng.st[5]
+Add act_masker/$auto$insbuf.cc:97:execute$5009: \g_rng[2].u_rng.r[6] -> \g_rng[2].u_rng.st[6]
+Add act_masker/$auto$insbuf.cc:97:execute$5010: \g_rng[2].u_rng.r[7] -> \g_rng[2].u_rng.st[7]
+Add act_masker/$auto$insbuf.cc:97:execute$5011: \g_rng[2].u_rng.r[8] -> \g_rng[2].u_rng.st[8]
+Add act_masker/$auto$insbuf.cc:97:execute$5012: \g_rng[2].u_rng.r[9] -> \g_rng[2].u_rng.st[9]
+Add act_masker/$auto$insbuf.cc:97:execute$5013: \g_rng[2].u_rng.r[10] -> \g_rng[2].u_rng.st[10]
+Add act_masker/$auto$insbuf.cc:97:execute$5014: \g_rng[2].u_rng.r[11] -> \g_rng[2].u_rng.st[11]
+Add act_masker/$auto$insbuf.cc:97:execute$5015: \g_rng[2].u_rng.r[12] -> \g_rng[2].u_rng.st[12]
+Add act_masker/$auto$insbuf.cc:97:execute$5016: \g_rng[2].u_rng.r[13] -> \g_rng[2].u_rng.st[13]
+Add act_masker/$auto$insbuf.cc:97:execute$5017: \g_rng[2].u_rng.r[14] -> \g_rng[2].u_rng.st[14]
+Add act_masker/$auto$insbuf.cc:97:execute$5018: \g_rng[2].u_rng.r[15] -> \g_rng[2].u_rng.st[15]
+Add act_masker/$auto$insbuf.cc:97:execute$5019: \g_rng[2].u_rng.r[16] -> \g_rng[2].u_rng.st[16]
+Add act_masker/$auto$insbuf.cc:97:execute$5020: \g_rng[2].u_rng.r[17] -> \g_rng[2].u_rng.st[17]
+Add act_masker/$auto$insbuf.cc:97:execute$5021: \g_rng[2].u_rng.r[18] -> \g_rng[2].u_rng.st[18]
+Add act_masker/$auto$insbuf.cc:97:execute$5022: \g_rng[2].u_rng.r[19] -> \g_rng[2].u_rng.st[19]
+Add act_masker/$auto$insbuf.cc:97:execute$5023: \g_rng[2].u_rng.r[20] -> \g_rng[2].u_rng.st[20]
+Add act_masker/$auto$insbuf.cc:97:execute$5024: \g_rng[2].u_rng.r[21] -> \g_rng[2].u_rng.st[21]
+Add act_masker/$auto$insbuf.cc:97:execute$5025: \g_rng[2].u_rng.r[22] -> \g_rng[2].u_rng.st[22]
+Add act_masker/$auto$insbuf.cc:97:execute$5026: \g_rng[2].u_rng.r[23] -> \g_rng[2].u_rng.st[23]
+Add act_masker/$auto$insbuf.cc:97:execute$5027: \g_rng[2].u_rng.r[24] -> \g_rng[2].u_rng.st[24]
+Add act_masker/$auto$insbuf.cc:97:execute$5028: \g_rng[2].u_rng.r[25] -> \g_rng[2].u_rng.st[25]
+Add act_masker/$auto$insbuf.cc:97:execute$5029: \g_rng[2].u_rng.r[26] -> \g_rng[2].u_rng.st[26]
+Add act_masker/$auto$insbuf.cc:97:execute$5030: \g_rng[2].u_rng.r[27] -> \g_rng[2].u_rng.st[27]
+Add act_masker/$auto$insbuf.cc:97:execute$5031: \g_rng[2].u_rng.r[28] -> \g_rng[2].u_rng.st[28]
+Add act_masker/$auto$insbuf.cc:97:execute$5032: \g_rng[2].u_rng.r[29] -> \g_rng[2].u_rng.st[29]
+Add act_masker/$auto$insbuf.cc:97:execute$5033: \g_rng[2].u_rng.r[30] -> \g_rng[2].u_rng.st[30]
+Add act_masker/$auto$insbuf.cc:97:execute$5034: \g_rng[2].u_rng.r[31] -> \g_rng[2].u_rng.st[31]
+Add act_masker/$auto$insbuf.cc:97:execute$5035: \g_rng[1].u_rng.r[0] -> \g_rng[1].u_rng.st[0]
+Add act_masker/$auto$insbuf.cc:97:execute$5036: \g_rng[1].u_rng.r[1] -> \g_rng[1].u_rng.st[1]
+Add act_masker/$auto$insbuf.cc:97:execute$5037: \g_rng[1].u_rng.r[2] -> \g_rng[1].u_rng.st[2]
+Add act_masker/$auto$insbuf.cc:97:execute$5038: \g_rng[1].u_rng.r[3] -> \g_rng[1].u_rng.st[3]
+Add act_masker/$auto$insbuf.cc:97:execute$5039: \g_rng[1].u_rng.r[4] -> \g_rng[1].u_rng.st[4]
+Add act_masker/$auto$insbuf.cc:97:execute$5040: \g_rng[1].u_rng.r[5] -> \g_rng[1].u_rng.st[5]
+Add act_masker/$auto$insbuf.cc:97:execute$5041: \g_rng[1].u_rng.r[6] -> \g_rng[1].u_rng.st[6]
+Add act_masker/$auto$insbuf.cc:97:execute$5042: \g_rng[1].u_rng.r[7] -> \g_rng[1].u_rng.st[7]
+Add act_masker/$auto$insbuf.cc:97:execute$5043: \g_rng[1].u_rng.r[8] -> \g_rng[1].u_rng.st[8]
+Add act_masker/$auto$insbuf.cc:97:execute$5044: \g_rng[1].u_rng.r[9] -> \g_rng[1].u_rng.st[9]
+Add act_masker/$auto$insbuf.cc:97:execute$5045: \g_rng[1].u_rng.r[10] -> \g_rng[1].u_rng.st[10]
+Add act_masker/$auto$insbuf.cc:97:execute$5046: \g_rng[1].u_rng.r[11] -> \g_rng[1].u_rng.st[11]
+Add act_masker/$auto$insbuf.cc:97:execute$5047: \g_rng[1].u_rng.r[12] -> \g_rng[1].u_rng.st[12]
+Add act_masker/$auto$insbuf.cc:97:execute$5048: \g_rng[1].u_rng.r[13] -> \g_rng[1].u_rng.st[13]
+Add act_masker/$auto$insbuf.cc:97:execute$5049: \g_rng[1].u_rng.r[14] -> \g_rng[1].u_rng.st[14]
+Add act_masker/$auto$insbuf.cc:97:execute$5050: \g_rng[1].u_rng.r[15] -> \g_rng[1].u_rng.st[15]
+Add act_masker/$auto$insbuf.cc:97:execute$5051: \g_rng[1].u_rng.r[16] -> \g_rng[1].u_rng.st[16]
+Add act_masker/$auto$insbuf.cc:97:execute$5052: \g_rng[1].u_rng.r[17] -> \g_rng[1].u_rng.st[17]
+Add act_masker/$auto$insbuf.cc:97:execute$5053: \g_rng[1].u_rng.r[18] -> \g_rng[1].u_rng.st[18]
+Add act_masker/$auto$insbuf.cc:97:execute$5054: \g_rng[1].u_rng.r[19] -> \g_rng[1].u_rng.st[19]
+Add act_masker/$auto$insbuf.cc:97:execute$5055: \g_rng[1].u_rng.r[20] -> \g_rng[1].u_rng.st[20]
+Add act_masker/$auto$insbuf.cc:97:execute$5056: \g_rng[1].u_rng.r[21] -> \g_rng[1].u_rng.st[21]
+Add act_masker/$auto$insbuf.cc:97:execute$5057: \g_rng[1].u_rng.r[22] -> \g_rng[1].u_rng.st[22]
+Add act_masker/$auto$insbuf.cc:97:execute$5058: \g_rng[1].u_rng.r[23] -> \g_rng[1].u_rng.st[23]
+Add act_masker/$auto$insbuf.cc:97:execute$5059: \g_rng[1].u_rng.r[24] -> \g_rng[1].u_rng.st[24]
+Add act_masker/$auto$insbuf.cc:97:execute$5060: \g_rng[1].u_rng.r[25] -> \g_rng[1].u_rng.st[25]
+Add act_masker/$auto$insbuf.cc:97:execute$5061: \g_rng[1].u_rng.r[26] -> \g_rng[1].u_rng.st[26]
+Add act_masker/$auto$insbuf.cc:97:execute$5062: \g_rng[1].u_rng.r[27] -> \g_rng[1].u_rng.st[27]
+Add act_masker/$auto$insbuf.cc:97:execute$5063: \g_rng[1].u_rng.r[28] -> \g_rng[1].u_rng.st[28]
+Add act_masker/$auto$insbuf.cc:97:execute$5064: \g_rng[1].u_rng.r[29] -> \g_rng[1].u_rng.st[29]
+Add act_masker/$auto$insbuf.cc:97:execute$5065: \g_rng[1].u_rng.r[30] -> \g_rng[1].u_rng.st[30]
+Add act_masker/$auto$insbuf.cc:97:execute$5066: \g_rng[1].u_rng.r[31] -> \g_rng[1].u_rng.st[31]
+Add act_masker/$auto$insbuf.cc:97:execute$5067: \g_rng[3].u_rng.r[0] -> \g_rng[3].u_rng.st[0]
+Add act_masker/$auto$insbuf.cc:97:execute$5068: \g_rng[3].u_rng.r[1] -> \g_rng[3].u_rng.st[1]
+Add act_masker/$auto$insbuf.cc:97:execute$5069: \g_rng[3].u_rng.r[2] -> \g_rng[3].u_rng.st[2]
+Add act_masker/$auto$insbuf.cc:97:execute$5070: \g_rng[3].u_rng.r[3] -> \g_rng[3].u_rng.st[3]
+Add act_masker/$auto$insbuf.cc:97:execute$5071: \g_rng[3].u_rng.r[4] -> \g_rng[3].u_rng.st[4]
+Add act_masker/$auto$insbuf.cc:97:execute$5072: \g_rng[3].u_rng.r[5] -> \g_rng[3].u_rng.st[5]
+Add act_masker/$auto$insbuf.cc:97:execute$5073: \g_rng[3].u_rng.r[6] -> \g_rng[3].u_rng.st[6]
+Add act_masker/$auto$insbuf.cc:97:execute$5074: \g_rng[3].u_rng.r[7] -> \g_rng[3].u_rng.st[7]
+Add act_masker/$auto$insbuf.cc:97:execute$5075: \g_rng[3].u_rng.r[8] -> \g_rng[3].u_rng.st[8]
+Add act_masker/$auto$insbuf.cc:97:execute$5076: \g_rng[3].u_rng.r[9] -> \g_rng[3].u_rng.st[9]
+Add act_masker/$auto$insbuf.cc:97:execute$5077: \g_rng[3].u_rng.r[10] -> \g_rng[3].u_rng.st[10]
+Add act_masker/$auto$insbuf.cc:97:execute$5078: \g_rng[3].u_rng.r[11] -> \g_rng[3].u_rng.st[11]
+Add act_masker/$auto$insbuf.cc:97:execute$5079: \g_rng[3].u_rng.r[12] -> \g_rng[3].u_rng.st[12]
+Add act_masker/$auto$insbuf.cc:97:execute$5080: \g_rng[3].u_rng.r[13] -> \g_rng[3].u_rng.st[13]
+Add act_masker/$auto$insbuf.cc:97:execute$5081: \g_rng[3].u_rng.r[14] -> \g_rng[3].u_rng.st[14]
+Add act_masker/$auto$insbuf.cc:97:execute$5082: \g_rng[3].u_rng.r[15] -> \g_rng[3].u_rng.st[15]
+Add act_masker/$auto$insbuf.cc:97:execute$5083: \g_rng[3].u_rng.r[16] -> \g_rng[3].u_rng.st[16]
+Add act_masker/$auto$insbuf.cc:97:execute$5084: \g_rng[3].u_rng.r[17] -> \g_rng[3].u_rng.st[17]
+Add act_masker/$auto$insbuf.cc:97:execute$5085: \g_rng[3].u_rng.r[18] -> \g_rng[3].u_rng.st[18]
+Add act_masker/$auto$insbuf.cc:97:execute$5086: \g_rng[3].u_rng.r[19] -> \g_rng[3].u_rng.st[19]
+Add act_masker/$auto$insbuf.cc:97:execute$5087: \g_rng[3].u_rng.r[20] -> \g_rng[3].u_rng.st[20]
+Add act_masker/$auto$insbuf.cc:97:execute$5088: \g_rng[3].u_rng.r[21] -> \g_rng[3].u_rng.st[21]
+Add act_masker/$auto$insbuf.cc:97:execute$5089: \g_rng[3].u_rng.r[22] -> \g_rng[3].u_rng.st[22]
+Add act_masker/$auto$insbuf.cc:97:execute$5090: \g_rng[3].u_rng.r[23] -> \g_rng[3].u_rng.st[23]
+Add act_masker/$auto$insbuf.cc:97:execute$5091: \g_rng[3].u_rng.r[24] -> \g_rng[3].u_rng.st[24]
+Add act_masker/$auto$insbuf.cc:97:execute$5092: \g_rng[3].u_rng.r[25] -> \g_rng[3].u_rng.st[25]
+Add act_masker/$auto$insbuf.cc:97:execute$5093: \g_rng[3].u_rng.r[26] -> \g_rng[3].u_rng.st[26]
+Add act_masker/$auto$insbuf.cc:97:execute$5094: \g_rng[3].u_rng.r[27] -> \g_rng[3].u_rng.st[27]
+Add act_masker/$auto$insbuf.cc:97:execute$5095: \g_rng[3].u_rng.r[28] -> \g_rng[3].u_rng.st[28]
+Add act_masker/$auto$insbuf.cc:97:execute$5096: \g_rng[3].u_rng.r[29] -> \g_rng[3].u_rng.st[29]
+Add act_masker/$auto$insbuf.cc:97:execute$5097: \g_rng[3].u_rng.r[30] -> \g_rng[3].u_rng.st[30]
+Add act_masker/$auto$insbuf.cc:97:execute$5098: \g_rng[3].u_rng.r[31] -> \g_rng[3].u_rng.st[31]
+Add act_masker/$auto$insbuf.cc:97:execute$5099: \g_rng[0].u_rng.r[0] -> \g_rng[0].u_rng.st[0]
+Add act_masker/$auto$insbuf.cc:97:execute$5100: \g_rng[0].u_rng.r[1] -> \g_rng[0].u_rng.st[1]
+Add act_masker/$auto$insbuf.cc:97:execute$5101: \g_rng[0].u_rng.r[2] -> \g_rng[0].u_rng.st[2]
+Add act_masker/$auto$insbuf.cc:97:execute$5102: \g_rng[0].u_rng.r[3] -> \g_rng[0].u_rng.st[3]
+Add act_masker/$auto$insbuf.cc:97:execute$5103: \g_rng[0].u_rng.r[4] -> \g_rng[0].u_rng.st[4]
+Add act_masker/$auto$insbuf.cc:97:execute$5104: \g_rng[0].u_rng.r[5] -> \g_rng[0].u_rng.st[5]
+Add act_masker/$auto$insbuf.cc:97:execute$5105: \g_rng[0].u_rng.r[6] -> \g_rng[0].u_rng.st[6]
+Add act_masker/$auto$insbuf.cc:97:execute$5106: \g_rng[0].u_rng.r[7] -> \g_rng[0].u_rng.st[7]
+Add act_masker/$auto$insbuf.cc:97:execute$5107: \g_rng[0].u_rng.r[8] -> \g_rng[0].u_rng.st[8]
+Add act_masker/$auto$insbuf.cc:97:execute$5108: \g_rng[0].u_rng.r[9] -> \g_rng[0].u_rng.st[9]
+Add act_masker/$auto$insbuf.cc:97:execute$5109: \g_rng[0].u_rng.r[10] -> \g_rng[0].u_rng.st[10]
+Add act_masker/$auto$insbuf.cc:97:execute$5110: \g_rng[0].u_rng.r[11] -> \g_rng[0].u_rng.st[11]
+Add act_masker/$auto$insbuf.cc:97:execute$5111: \g_rng[0].u_rng.r[12] -> \g_rng[0].u_rng.st[12]
+Add act_masker/$auto$insbuf.cc:97:execute$5112: \g_rng[0].u_rng.r[13] -> \g_rng[0].u_rng.st[13]
+Add act_masker/$auto$insbuf.cc:97:execute$5113: \g_rng[0].u_rng.r[14] -> \g_rng[0].u_rng.st[14]
+Add act_masker/$auto$insbuf.cc:97:execute$5114: \g_rng[0].u_rng.r[15] -> \g_rng[0].u_rng.st[15]
+Add act_masker/$auto$insbuf.cc:97:execute$5115: \g_rng[0].u_rng.r[16] -> \g_rng[0].u_rng.st[16]
+Add act_masker/$auto$insbuf.cc:97:execute$5116: \g_rng[0].u_rng.r[17] -> \g_rng[0].u_rng.st[17]
+Add act_masker/$auto$insbuf.cc:97:execute$5117: \g_rng[0].u_rng.r[18] -> \g_rng[0].u_rng.st[18]
+Add act_masker/$auto$insbuf.cc:97:execute$5118: \g_rng[0].u_rng.r[19] -> \g_rng[0].u_rng.st[19]
+Add act_masker/$auto$insbuf.cc:97:execute$5119: \g_rng[0].u_rng.r[20] -> \g_rng[0].u_rng.st[20]
+Add act_masker/$auto$insbuf.cc:97:execute$5120: \g_rng[0].u_rng.r[21] -> \g_rng[0].u_rng.st[21]
+Add act_masker/$auto$insbuf.cc:97:execute$5121: \g_rng[0].u_rng.r[22] -> \g_rng[0].u_rng.st[22]
+Add act_masker/$auto$insbuf.cc:97:execute$5122: \g_rng[0].u_rng.r[23] -> \g_rng[0].u_rng.st[23]
+Add act_masker/$auto$insbuf.cc:97:execute$5123: \g_rng[0].u_rng.r[24] -> \g_rng[0].u_rng.st[24]
+Add act_masker/$auto$insbuf.cc:97:execute$5124: \g_rng[0].u_rng.r[25] -> \g_rng[0].u_rng.st[25]
+Add act_masker/$auto$insbuf.cc:97:execute$5125: \g_rng[0].u_rng.r[26] -> \g_rng[0].u_rng.st[26]
+Add act_masker/$auto$insbuf.cc:97:execute$5126: \g_rng[0].u_rng.r[27] -> \g_rng[0].u_rng.st[27]
+Add act_masker/$auto$insbuf.cc:97:execute$5127: \g_rng[0].u_rng.r[28] -> \g_rng[0].u_rng.st[28]
+Add act_masker/$auto$insbuf.cc:97:execute$5128: \g_rng[0].u_rng.r[29] -> \g_rng[0].u_rng.st[29]
+Add act_masker/$auto$insbuf.cc:97:execute$5129: \g_rng[0].u_rng.r[30] -> \g_rng[0].u_rng.st[30]
+Add act_masker/$auto$insbuf.cc:97:execute$5130: \g_rng[0].u_rng.r[31] -> \g_rng[0].u_rng.st[31]
+Add act_masker/$auto$insbuf.cc:97:execute$5131: \g_rng[4].u_rng.r[0] -> \g_rng[4].u_rng.st[0]
+Add act_masker/$auto$insbuf.cc:97:execute$5132: \g_rng[4].u_rng.r[1] -> \g_rng[4].u_rng.st[1]
+Add act_masker/$auto$insbuf.cc:97:execute$5133: \g_rng[4].u_rng.r[2] -> \g_rng[4].u_rng.st[2]
+Add act_masker/$auto$insbuf.cc:97:execute$5134: \g_rng[4].u_rng.r[3] -> \g_rng[4].u_rng.st[3]
+Add act_masker/$auto$insbuf.cc:97:execute$5135: \g_rng[4].u_rng.r[4] -> \g_rng[4].u_rng.st[4]
+Add act_masker/$auto$insbuf.cc:97:execute$5136: \g_rng[4].u_rng.r[5] -> \g_rng[4].u_rng.st[5]
+Add act_masker/$auto$insbuf.cc:97:execute$5137: \g_rng[4].u_rng.r[6] -> \g_rng[4].u_rng.st[6]
+Add act_masker/$auto$insbuf.cc:97:execute$5138: \g_rng[4].u_rng.r[7] -> \g_rng[4].u_rng.st[7]
+Add act_masker/$auto$insbuf.cc:97:execute$5139: \g_rng[4].u_rng.r[8] -> \g_rng[4].u_rng.st[8]
+Add act_masker/$auto$insbuf.cc:97:execute$5140: \g_rng[4].u_rng.r[9] -> \g_rng[4].u_rng.st[9]
+Add act_masker/$auto$insbuf.cc:97:execute$5141: \g_rng[4].u_rng.r[10] -> \g_rng[4].u_rng.st[10]
+Add act_masker/$auto$insbuf.cc:97:execute$5142: \g_rng[4].u_rng.r[11] -> \g_rng[4].u_rng.st[11]
+Add act_masker/$auto$insbuf.cc:97:execute$5143: \g_rng[4].u_rng.r[12] -> \g_rng[4].u_rng.st[12]
+Add act_masker/$auto$insbuf.cc:97:execute$5144: \g_rng[4].u_rng.r[13] -> \g_rng[4].u_rng.st[13]
+Add act_masker/$auto$insbuf.cc:97:execute$5145: \g_rng[4].u_rng.r[14] -> \g_rng[4].u_rng.st[14]
+Add act_masker/$auto$insbuf.cc:97:execute$5146: \g_rng[4].u_rng.r[15] -> \g_rng[4].u_rng.st[15]
+Add act_masker/$auto$insbuf.cc:97:execute$5147: \g_rng[4].u_rng.r[16] -> \g_rng[4].u_rng.st[16]
+Add act_masker/$auto$insbuf.cc:97:execute$5148: \g_rng[4].u_rng.r[17] -> \g_rng[4].u_rng.st[17]
+Add act_masker/$auto$insbuf.cc:97:execute$5149: \g_rng[4].u_rng.r[18] -> \g_rng[4].u_rng.st[18]
+Add act_masker/$auto$insbuf.cc:97:execute$5150: \g_rng[4].u_rng.r[19] -> \g_rng[4].u_rng.st[19]
+Add act_masker/$auto$insbuf.cc:97:execute$5151: \g_rng[4].u_rng.r[20] -> \g_rng[4].u_rng.st[20]
+Add act_masker/$auto$insbuf.cc:97:execute$5152: \g_rng[4].u_rng.r[21] -> \g_rng[4].u_rng.st[21]
+Add act_masker/$auto$insbuf.cc:97:execute$5153: \g_rng[4].u_rng.r[22] -> \g_rng[4].u_rng.st[22]
+Add act_masker/$auto$insbuf.cc:97:execute$5154: \g_rng[4].u_rng.r[23] -> \g_rng[4].u_rng.st[23]
+Add act_masker/$auto$insbuf.cc:97:execute$5155: \g_rng[4].u_rng.r[24] -> \g_rng[4].u_rng.st[24]
+Add act_masker/$auto$insbuf.cc:97:execute$5156: \g_rng[4].u_rng.r[25] -> \g_rng[4].u_rng.st[25]
+Add act_masker/$auto$insbuf.cc:97:execute$5157: \g_rng[4].u_rng.r[26] -> \g_rng[4].u_rng.st[26]
+Add act_masker/$auto$insbuf.cc:97:execute$5158: \g_rng[4].u_rng.r[27] -> \g_rng[4].u_rng.st[27]
+Add act_masker/$auto$insbuf.cc:97:execute$5159: \g_rng[4].u_rng.r[28] -> \g_rng[4].u_rng.st[28]
+Add act_masker/$auto$insbuf.cc:97:execute$5160: \g_rng[4].u_rng.r[29] -> \g_rng[4].u_rng.st[29]
+Add act_masker/$auto$insbuf.cc:97:execute$5161: \g_rng[4].u_rng.r[30] -> \g_rng[4].u_rng.st[30]
+Add act_masker/$auto$insbuf.cc:97:execute$5162: \g_rng[4].u_rng.r[31] -> \g_rng[4].u_rng.st[31]
 
 17. Executing OPT_CLEAN pass (remove unused cells and wires).
 Finding unused cells or wires in module \act_masker..
@@ -1077,41 +1083,47 @@ Found and reported 0 problems.
         +----------Local Count, excluding submodules.
         |        +-Local Area, excluding submodules.
         |        | 
-     3007        - wires
-     3364        - wire bits
+     2445        - wires
+     2802        - wire bits
       327        - public wires
       684        - public wire bits
         7        - ports
       364        - port bits
-     3000     4655 cells
-       56   59.584   AND2_X1
-       10     13.3   AND3_X1
-       25    59.85   AOI211_X2
-      374  397.936   AOI21_X1
-       42   67.032   AOI221_X1
-        4     5.32   AOI22_X1
-      320  1447.04   DFF_X1
-      334  177.688   INV_X1
-        1    1.862   MUX2_X1
-      258  205.884   NAND2_X1
-       24   25.536   NAND3_X1
-      111   88.578   NOR2_X1
-        6    6.384   NOR3_X1
-       25    59.85   OAI211_X2
-      337  358.568   OAI21_X1
-       17   27.132   OAI221_X1
-       55    58.52   OR2_X1
-       10     13.3   OR3_X1
-        5     7.98   OR4_X1
-      619  987.924   XNOR2_X1
-      367  585.732   XOR2_X1
+     2758  6248.34 cells
+      171  233.928   AND2X1
+        5    10.26   AOI211XL
+      100      171   AOI21X1
+       27   55.404   AOI2BB1X1
+       14   28.728   AOI31X1
+       26   62.244   AOI32X1
+      138  377.568   CLKXOR2X1
+      320  1751.04   DFFHQX1
+      199  136.116   INVX1
+        2    4.788   MX2X1
+       35    83.79   MXI2XL
+       53   72.504   NAND2BX1
+      264  270.864   NAND2X1
+       27    46.17   NAND3BXL
+        3     5.13   NAND4XL
+       13   17.784   NOR2BX1
+       52   53.352   NOR2X1
+        2    4.104   OA21X1
+        1    2.394   OA22X1
+      181   309.51   OAI211X1
+      129   220.59   OAI21X1
+       15    35.91   OAI221X1
+       41    70.11   OAI2BB1X1
+       26   53.352   OAI31X1
+        5    11.97   OAI32X1
+       16   21.888   OR2X1
+      893 2.14E+03   XNOR2X1
 
-   Chip area for module '\act_masker': 4655.000000
-     of which used for sequential elements: 1447.040000 (31.09%)
+   Chip area for module '\act_masker': 6248.340000
+     of which used for sequential elements: 1751.040000 (28.02%)
 
 20. Executing Verilog backend.
 Dumping module `\act_masker'.
 
-End of script. Logfile hash: 4f4eaf52b7, time: 1.97s, user: 0.50s, system: 0.18s, MEM: 37.60 MB peak
+End of script. Logfile hash: 117dd69aaf, time: 1.29s, user: 0.36s, system: 0.47s, MEM: 38.73 MB peak
 Yosys 0.69+75 (git sha1 f0b945f63, Release, GNU /usr/bin/c++ 11.4.0)
-Time spent: 60% 2x abc (0 sec), 9% 19x opt_clean (0 sec), ...
+Time spent: 40% 2x abc (0 sec), 15% 1x synth (0 sec), ...

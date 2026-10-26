@@ -11,8 +11,8 @@
 [TCL: yosys -import] Command name collision: found pre-existing command `read' -> skip.
 [TCL: yosys -import] Command name collision: found pre-existing command `trace' -> skip.
 
-1. Executing Liberty frontend: /home/ihs24/OpenROAD-flow-scripts/flow/platforms/nangate45/lib/NangateOpenCellLibrary_typical.lib
-Imported 135 cell types from liberty file.
+1. Executing Liberty frontend: /home/ihs24/Desktop/Secure-AI-Accelerator-Design/45_nm_PDK/cadence/cadence_45nm/lib/fast_vdd1v0_basicCells.lib
+Imported 480 cell types from liberty file.
 
 2. Executing Verilog-2005 frontend: /home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/masked_wt_multiplier.sv
 Parsing SystemVerilog input from `/home/ihs24/Desktop/Secure-AI-Accelerator-Design/protected_designs/source/masked_wt_multiplier.sv' to AST representation.
@@ -1821,37 +1821,37 @@ Removed 127 unused cells and 362 unused wires.
 <suppressed ~489 debug messages>
 
 9. Executing DFFLIBMAP pass (mapping DFF/DLATCH cells to sequential cells from liberty file).
-  cell DFF_X1 (noninv, pins=4, area=4.52) is a direct match for cell type $_DFF_P_.
-  cell DFFR_X1 (noninv, pins=5, area=5.32) is a direct match for cell type $_DFF_PN0_.
-  cell DFFS_X1 (noninv, pins=5, area=5.32) is a direct match for cell type $_DFF_PN1_.
-  cell DFFRS_X1 (noninv, pins=6, area=6.38) is a direct match for cell type $_DFFSR_PNN_.
-  cell DLL_X1 (noninv, pins=3, area=2.66) is a direct match for cell type $_DLATCH_N_.
-  cell DLH_X1 (noninv, pins=3, area=2.66) is a direct match for cell type $_DLATCH_P_.
+  cell DFFHQX1 (noninv, pins=3, area=5.47) is a direct match for cell type $_DFF_P_.
+  cell DFFRHQX1 (noninv, pins=4, area=6.16) is a direct match for cell type $_DFF_PN0_.
+  cell DFFSHQX1 (noninv, pins=4, area=6.50) is a direct match for cell type $_DFF_PN1_.
+  cell EDFFHQX1 (noninv, pins=4, area=8.55) is a direct match for cell type $_DFFE_PP_.
+  cell DFFNSRX1 (noninv, pins=6, area=9.23) is a direct match for cell type $_DFFSR_NNN_.
+  cell DFFSRHQX1 (noninv, pins=5, area=10.94) is a direct match for cell type $_DFFSR_PNN_.
   final dff/dlatch cell mappings:
     unmapped dff/dlatch cell: $_DFF_N_
-    \DFF_X1 _DFF_P_ (.CK( C), .D( D), .Q( Q), .QN(~Q));
+    \DFFHQX1 _DFF_P_ (.CK( C), .D( D), .Q( Q));
     unmapped dff/dlatch cell: $_DFF_NN0_
     unmapped dff/dlatch cell: $_DFF_NN1_
     unmapped dff/dlatch cell: $_DFF_NP0_
     unmapped dff/dlatch cell: $_DFF_NP1_
-    \DFFR_X1 _DFF_PN0_ (.CK( C), .D( D), .Q( Q), .QN(~Q), .RN( R));
-    \DFFS_X1 _DFF_PN1_ (.CK( C), .D( D), .Q( Q), .QN(~Q), .SN( R));
+    \DFFRHQX1 _DFF_PN0_ (.CK( C), .D( D), .Q( Q), .RN( R));
+    \DFFSHQX1 _DFF_PN1_ (.CK( C), .D( D), .Q( Q), .SN( R));
     unmapped dff/dlatch cell: $_DFF_PP0_
     unmapped dff/dlatch cell: $_DFF_PP1_
     unmapped dff/dlatch cell: $_DFFE_NN_
     unmapped dff/dlatch cell: $_DFFE_NP_
     unmapped dff/dlatch cell: $_DFFE_PN_
-    unmapped dff/dlatch cell: $_DFFE_PP_
-    unmapped dff/dlatch cell: $_DFFSR_NNN_
+    \EDFFHQX1 _DFFE_PP_ (.CK( C), .D( D), .E( E), .Q( Q));
+    \DFFNSRX1 _DFFSR_NNN_ (.CKN( C), .D( D), .Q( Q), .QN(~Q), .RN( R), .SN( S));
     unmapped dff/dlatch cell: $_DFFSR_NNP_
     unmapped dff/dlatch cell: $_DFFSR_NPN_
     unmapped dff/dlatch cell: $_DFFSR_NPP_
-    \DFFRS_X1 _DFFSR_PNN_ (.CK( C), .D( D), .Q( Q), .QN(~Q), .RN( R), .SN( S));
+    \DFFSRHQX1 _DFFSR_PNN_ (.CK( C), .D( D), .Q( Q), .RN( R), .SN( S));
     unmapped dff/dlatch cell: $_DFFSR_PNP_
     unmapped dff/dlatch cell: $_DFFSR_PPN_
     unmapped dff/dlatch cell: $_DFFSR_PPP_
-    \DLL_X1 _DLATCH_N_ (.D( D), .GN( E), .Q( Q));
-    \DLH_X1 _DLATCH_P_ (.D( D), .G( E), .Q( Q));
+    unmapped dff/dlatch cell: $_DLATCH_N_
+    unmapped dff/dlatch cell: $_DLATCH_P_
     unmapped dff/dlatch cell: $_DLATCH_NN0_
     unmapped dff/dlatch cell: $_DLATCH_NN1_
     unmapped dff/dlatch cell: $_DLATCH_NP0_
@@ -1873,7 +1873,7 @@ Removed 127 unused cells and 362 unused wires.
 <suppressed ~8 debug messages>
 Mapping DFF/DLATCH cells in module `$paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier':
 Mapping DFF/DLATCH cells in module `\masked_act_multiplier':
-  mapped 8 $_DFF_P_ cells to \DFF_X1 cells.
+  mapped 8 $_DFF_P_ cells to \DFFHQX1 cells.
 
 10. Executing OPT pass (performing simple optimizations).
 
@@ -1931,14 +1931,14 @@ Optimizing module masked_act_multiplier.
   561 cells in clk={ }, en={ }, arst={ }, srst={ }
 
 11.2. Extracting gate netlist of module `$paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier' to `<abc-temp-dir>/input.blif'..
-ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache-1000/yosys_merged_4c2f18a6.scl (1 files)
+ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache-1000/yosys_merged_435ac72d.scl (1 files)
 No matching clock domain found. Not extracting any FF cells.
 
 11.3. Summary of detected clock domains:
   26 cells in clk={ }, en={ }, arst={ }, srst={ }
 
 11.4. Extracting gate netlist of module `\masked_act_multiplier' to `<abc-temp-dir>/input.blif'..
-ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache-1000/yosys_merged_4c2f18a6.scl (1 files)
+ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache-1000/yosys_merged_435ac72d.scl (1 files)
 No matching clock domain found. Not extracting any FF cells.
 
 11.4.1. Executed ABC.
@@ -1948,8 +1948,8 @@ ABC: UC Berkeley, ABC 1.01 (compiled Sep 18 2026 19:37:19)
 ABC: abc 01> empty
 ABC: abc 01> source <abc-temp-dir>/abc.script
 ABC: + read_blif <abc-temp-dir>/input.blif 
-ABC: + read_scl /tmp/yosys-liberty-scl-cache-1000/yosys_merged_4c2f18a6.scl 
-ABC: Warning: Detected 2 multi-output cells (for example, "FA_X1").
+ABC: + read_scl /tmp/yosys-liberty-scl-cache-1000/yosys_merged_435ac72d.scl 
+ABC: Warning: Detected 12 multi-output cells (for example, "ADDFHX1").
 ABC: + strash 
 ABC: + &get -n 
 ABC: + &fraig -x 
@@ -1969,28 +1969,44 @@ ABC:
 ABC: YOSYS_ABC_DONE 
 
 11.4.2. Re-integrating ABC results.
-ABC RESULTS:           AND2_X1 cells:       24
-ABC RESULTS:           AND3_X1 cells:       14
-ABC RESULTS:           AND4_X1 cells:       11
-ABC RESULTS:         AOI211_X2 cells:        9
-ABC RESULTS:          AOI21_X1 cells:       34
-ABC RESULTS:         AOI221_X1 cells:        4
-ABC RESULTS:          AOI22_X1 cells:       14
-ABC RESULTS:            INV_X1 cells:       20
-ABC RESULTS:           MUX2_X1 cells:        6
-ABC RESULTS:          NAND2_X1 cells:      119
-ABC RESULTS:          NAND3_X1 cells:       22
-ABC RESULTS:          NAND4_X1 cells:        6
-ABC RESULTS:           NOR2_X1 cells:       65
-ABC RESULTS:           NOR3_X1 cells:       14
-ABC RESULTS:          OAI21_X1 cells:       30
-ABC RESULTS:         OAI221_X1 cells:        3
-ABC RESULTS:          OAI22_X1 cells:        6
-ABC RESULTS:          OAI33_X1 cells:        6
-ABC RESULTS:            OR2_X1 cells:       15
-ABC RESULTS:            OR3_X1 cells:       13
-ABC RESULTS:          XNOR2_X1 cells:       75
-ABC RESULTS:           XOR2_X1 cells:       32
+ABC RESULTS:            AND2X1 cells:       24
+ABC RESULTS:            AND3XL cells:        3
+ABC RESULTS:            AND4X1 cells:        9
+ABC RESULTS:            AO21X1 cells:        5
+ABC RESULTS:            AO22X1 cells:        4
+ABC RESULTS:          AOI211XL cells:        9
+ABC RESULTS:           AOI21X1 cells:       17
+ABC RESULTS:          AOI221X1 cells:        2
+ABC RESULTS:           AOI22X1 cells:       14
+ABC RESULTS:         AOI2BB1X1 cells:        8
+ABC RESULTS:           AOI31X1 cells:        5
+ABC RESULTS:           AOI32X1 cells:        1
+ABC RESULTS:         CLKXOR2X1 cells:       14
+ABC RESULTS:             INVX1 cells:       10
+ABC RESULTS:             MX2X1 cells:        4
+ABC RESULTS:            MXI2XL cells:        3
+ABC RESULTS:          NAND2BX1 cells:       10
+ABC RESULTS:           NAND2X1 cells:       89
+ABC RESULTS:          NAND3BXL cells:        6
+ABC RESULTS:           NAND3X1 cells:        7
+ABC RESULTS:           NAND4XL cells:       12
+ABC RESULTS:           NOR2BX1 cells:        9
+ABC RESULTS:            NOR2X1 cells:       36
+ABC RESULTS:           NOR3BX1 cells:        1
+ABC RESULTS:            NOR3X1 cells:        2
+ABC RESULTS:            OA21X1 cells:        3
+ABC RESULTS:          OAI211X1 cells:        9
+ABC RESULTS:           OAI21X1 cells:       25
+ABC RESULTS:          OAI221X1 cells:        1
+ABC RESULTS:           OAI22X1 cells:        1
+ABC RESULTS:         OAI2BB1X1 cells:       13
+ABC RESULTS:           OAI31X1 cells:        4
+ABC RESULTS:           OAI32X1 cells:        1
+ABC RESULTS:             OR2X1 cells:        8
+ABC RESULTS:             OR3X1 cells:        6
+ABC RESULTS:           XNOR2X1 cells:       63
+ABC RESULTS:           XNOR3X1 cells:       10
+ABC RESULTS:            XOR3X1 cells:        7
 ABC RESULTS:        internal signals:      545
 ABC RESULTS:           input signals:       24
 ABC RESULTS:          output signals:       16
@@ -2003,8 +2019,8 @@ ABC: UC Berkeley, ABC 1.01 (compiled Sep 18 2026 19:37:19)
 ABC: abc 01> empty
 ABC: abc 01> source <abc-temp-dir>/abc.script
 ABC: + read_blif <abc-temp-dir>/input.blif 
-ABC: + read_scl /tmp/yosys-liberty-scl-cache-1000/yosys_merged_4c2f18a6.scl 
-ABC: Warning: Detected 2 multi-output cells (for example, "FA_X1").
+ABC: + read_scl /tmp/yosys-liberty-scl-cache-1000/yosys_merged_435ac72d.scl 
+ABC: Warning: Detected 12 multi-output cells (for example, "ADDFHX1").
 ABC: + strash 
 ABC: + &get -n 
 ABC: + &fraig -x 
@@ -2024,8 +2040,8 @@ ABC:
 ABC: YOSYS_ABC_DONE 
 
 11.4.2. Re-integrating ABC results.
-ABC RESULTS:           AND2_X1 cells:        8
-ABC RESULTS:           MUX2_X1 cells:        8
+ABC RESULTS:            AND2X1 cells:        8
+ABC RESULTS:             MX2X1 cells:        8
 ABC RESULTS:        internal signals:        9
 ABC RESULTS:           input signals:       18
 ABC RESULTS:          output signals:        8
@@ -2045,22 +2061,22 @@ Removed 0 unused cells and 619 unused wires.
 15. Executing SPLITNETS pass (splitting up multi-bit signals).
 
 16. Executing INSBUF pass (insert buffer cells for connected wires).
-Add $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier/$auto$insbuf.cc:97:execute$3110: \g_csa_row[1].g_csa_col[0].g_ha.u_ha.b -> \p [0]
-Add $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier/$auto$insbuf.cc:97:execute$3111: \g_csa_row[1].g_csa_col[1].g_fa.u_fa.s -> \p [1]
-Add $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier/$auto$insbuf.cc:97:execute$3112: \g_csa_row[2].g_csa_col[2].g_fa.u_fa.s -> \p [2]
-Add $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier/$auto$insbuf.cc:97:execute$3113: \g_csa_row[3].g_csa_col[3].g_fa.u_fa.s -> \p [3]
-Add $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier/$auto$insbuf.cc:97:execute$3114: \g_csa_row[4].g_csa_col[4].g_fa.u_fa.s -> \p [4]
-Add $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier/$auto$insbuf.cc:97:execute$3115: \g_csa_row[5].g_csa_col[5].g_fa.u_fa.s -> \p [5]
-Add $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier/$auto$insbuf.cc:97:execute$3116: \g_csa_row[6].g_csa_col[6].g_fa.u_fa.s -> \p [6]
-Add $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier/$auto$insbuf.cc:97:execute$3117: \g_csa_row[7].g_csa_col[7].g_fa.u_fa.s -> \p [7]
-Add $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier/$auto$insbuf.cc:97:execute$3118: \g_vma[8].u_vma.s -> \p [8]
-Add $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier/$auto$insbuf.cc:97:execute$3119: \g_vma[9].u_vma.s -> \p [9]
-Add $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier/$auto$insbuf.cc:97:execute$3120: \g_vma[10].u_vma.s -> \p [10]
-Add $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier/$auto$insbuf.cc:97:execute$3121: \g_vma[11].u_vma.s -> \p [11]
-Add $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier/$auto$insbuf.cc:97:execute$3122: \g_vma[12].u_vma.s -> \p [12]
-Add $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier/$auto$insbuf.cc:97:execute$3123: \g_vma[13].u_vma.s -> \p [13]
-Add $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier/$auto$insbuf.cc:97:execute$3124: \g_vma[14].u_vma.s -> \p [14]
-Add $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier/$auto$insbuf.cc:97:execute$3125: \g_vma[15].u_vma.s -> \p [15]
+Add $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier/$auto$insbuf.cc:97:execute$3102: \g_csa_row[1].g_csa_col[0].g_ha.u_ha.b -> \p [0]
+Add $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier/$auto$insbuf.cc:97:execute$3103: \g_csa_row[1].g_csa_col[1].g_fa.u_fa.s -> \p [1]
+Add $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier/$auto$insbuf.cc:97:execute$3104: \g_csa_row[2].g_csa_col[2].g_fa.u_fa.s -> \p [2]
+Add $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier/$auto$insbuf.cc:97:execute$3105: \g_csa_row[3].g_csa_col[3].g_fa.u_fa.s -> \p [3]
+Add $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier/$auto$insbuf.cc:97:execute$3106: \g_csa_row[4].g_csa_col[4].g_fa.u_fa.s -> \p [4]
+Add $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier/$auto$insbuf.cc:97:execute$3107: \g_csa_row[5].g_csa_col[5].g_fa.u_fa.s -> \p [5]
+Add $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier/$auto$insbuf.cc:97:execute$3108: \g_csa_row[6].g_csa_col[6].g_fa.u_fa.s -> \p [6]
+Add $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier/$auto$insbuf.cc:97:execute$3109: \g_csa_row[7].g_csa_col[7].g_fa.u_fa.s -> \p [7]
+Add $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier/$auto$insbuf.cc:97:execute$3110: \g_vma[8].u_vma.s -> \p [8]
+Add $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier/$auto$insbuf.cc:97:execute$3111: \g_vma[9].u_vma.s -> \p [9]
+Add $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier/$auto$insbuf.cc:97:execute$3112: \g_vma[10].u_vma.s -> \p [10]
+Add $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier/$auto$insbuf.cc:97:execute$3113: \g_vma[11].u_vma.s -> \p [11]
+Add $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier/$auto$insbuf.cc:97:execute$3114: \g_vma[12].u_vma.s -> \p [12]
+Add $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier/$auto$insbuf.cc:97:execute$3115: \g_vma[13].u_vma.s -> \p [13]
+Add $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier/$auto$insbuf.cc:97:execute$3116: \g_vma[14].u_vma.s -> \p [14]
+Add $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier/$auto$insbuf.cc:97:execute$3117: \g_vma[15].u_vma.s -> \p [15]
 
 17. Executing OPT_CLEAN pass (remove unused cells and wires).
 Finding unused cells or wires in module $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier..
@@ -2078,38 +2094,54 @@ Found and reported 0 problems.
         +----------Local Count, excluding submodules.
         |        +-Local Area, excluding submodules.
         |        | 
-      545        - wires
-      582        - wire bits
+      458        - wires
+      495        - wire bits
        19        - public wires
        56        - public wire bits
         3        - ports
        40        - port bits
-      558  632.016 cells
-       24   25.536   AND2_X1
-       14    18.62   AND3_X1
-       11   17.556   AND4_X1
-        9   21.546   AOI211_X2
-       34   36.176   AOI21_X1
-        4    6.384   AOI221_X1
-       14    18.62   AOI22_X1
-       16   12.768   BUF_X1
-       20    10.64   INV_X1
-        6   11.172   MUX2_X1
-      119   94.962   NAND2_X1
-       22   23.408   NAND3_X1
-        6     7.98   NAND4_X1
-       65    51.87   NOR2_X1
-       14   14.896   NOR3_X1
-       30    31.92   OAI21_X1
-        3    4.788   OAI221_X1
-        6     7.98   OAI22_X1
-        6   11.172   OAI33_X1
-       15    15.96   OR2_X1
-       13    17.29   OR3_X1
-       75    119.7   XNOR2_X1
-       32   51.072   XOR2_X1
+      471   894.33 cells
+       24   32.832   AND2X1
+        3    6.156   AND3XL
+        9   21.546   AND4X1
+        5    11.97   AO21X1
+        4   10.944   AO22X1
+        9   18.468   AOI211XL
+       17    29.07   AOI21X1
+        2    4.788   AOI221X1
+       14   28.728   AOI22X1
+        8   16.416   AOI2BB1X1
+        5    10.26   AOI31X1
+        1    2.394   AOI32X1
+       16   32.832   BUFX3
+       14   38.304   CLKXOR2X1
+       10     6.84   INVX1
+        4    9.576   MX2X1
+        3    7.182   MXI2XL
+       10    13.68   NAND2BX1
+       89   91.314   NAND2X1
+        6    10.26   NAND3BXL
+        7    11.97   NAND3X1
+       12    20.52   NAND4XL
+        9   12.312   NOR2BX1
+       36   36.936   NOR2X1
+        1    2.052   NOR3BX1
+        2     3.42   NOR3X1
+        3    6.156   OA21X1
+        9    15.39   OAI211X1
+       25    42.75   OAI21X1
+        1    2.394   OAI221X1
+        1    2.052   OAI22X1
+       13    22.23   OAI2BB1X1
+        4    8.208   OAI31X1
+        1    2.394   OAI32X1
+        8   10.944   OR2X1
+        6   12.312   OR3X1
+       63  150.822   XNOR2X1
+       10    75.24   XNOR3X1
+        7   52.668   XOR3X1
 
-   Chip area for module '$paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier': 632.016000
+   Chip area for module '$paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier': 894.330000
      of which used for sequential elements: 0.000000 (0.00%)
 
 === masked_act_multiplier ===
@@ -2117,35 +2149,35 @@ Found and reported 0 problems.
         +----------Local Count, excluding submodules.
         |        +-Local Area, excluding submodules.
         |        | 
-       40        - wires
-      107        - wire bits
+       32        - wires
+       99        - wire bits
        16        - public wires
        83        - public wire bits
         8        - ports
        75        - port bits
-       24   59.584 cells
-        8    8.512   AND2_X1
-        8   36.176   DFF_X1
-        8   14.896   MUX2_X1
+       24   73.872 cells
+        8   10.944   AND2X1
+        8   43.776   DFFHQX1
+        8   19.152   MX2X1
         2        - submodules
         2        -   $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier
 
-   Chip area for module '\masked_act_multiplier': 59.584000
-     of which used for sequential elements: 36.176000 (60.71%)
+   Chip area for module '\masked_act_multiplier': 73.872000
+     of which used for sequential elements: 43.776000 (59.26%)
 
 === design hierarchy ===
 
         +----------Count including submodules.
         |        +-Area including submodules.
         |        | 
-     1140 1.32E+03 masked_act_multiplier
-      558  632.016 $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier
+      966 1.86E+03 masked_act_multiplier
+      471   894.33 $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier
 
         +----------Count including submodules.
         |        +-Area including submodules.
         |        | 
-     1130        - wires
-     1271        - wire bits
+      948        - wires
+     1089        - wire bits
        54        - public wires
       195        - public wire bits
        14        - ports
@@ -2153,41 +2185,57 @@ Found and reported 0 problems.
         -        - memories
         -        - memory bits
         -        - processes
-     1140 1.32E+03 cells
-       56   59.584   AND2_X1
-       28    37.24   AND3_X1
-       22   35.112   AND4_X1
-       18   43.092   AOI211_X2
-       68   72.352   AOI21_X1
-        8   12.768   AOI221_X1
-       28    37.24   AOI22_X1
-       32   25.536   BUF_X1
-        8   36.176   DFF_X1
-       40    21.28   INV_X1
-       20    37.24   MUX2_X1
-      238  189.924   NAND2_X1
-       44   46.816   NAND3_X1
-       12    15.96   NAND4_X1
-      130   103.74   NOR2_X1
-       28   29.792   NOR3_X1
-       60    63.84   OAI21_X1
-        6    9.576   OAI221_X1
-       12    15.96   OAI22_X1
-       12   22.344   OAI33_X1
-       30    31.92   OR2_X1
-       26    34.58   OR3_X1
-      150    239.4   XNOR2_X1
-       64  102.144   XOR2_X1
-        2 1.26E+03 submodules
-        2 1.26E+03   $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier
+      966 1.86E+03 cells
+       56   76.608   AND2X1
+        6   12.312   AND3XL
+       18   43.092   AND4X1
+       10    23.94   AO21X1
+        8   21.888   AO22X1
+       18   36.936   AOI211XL
+       34    58.14   AOI21X1
+        4    9.576   AOI221X1
+       28   57.456   AOI22X1
+       16   32.832   AOI2BB1X1
+       10    20.52   AOI31X1
+        2    4.788   AOI32X1
+       32   65.664   BUFX3
+       28   76.608   CLKXOR2X1
+        8   43.776   DFFHQX1
+       20    13.68   INVX1
+       16   38.304   MX2X1
+        6   14.364   MXI2XL
+       20    27.36   NAND2BX1
+      178  182.628   NAND2X1
+       12    20.52   NAND3BXL
+       14    23.94   NAND3X1
+       24    41.04   NAND4XL
+       18   24.624   NOR2BX1
+       72   73.872   NOR2X1
+        2    4.104   NOR3BX1
+        4     6.84   NOR3X1
+        6   12.312   OA21X1
+       18    30.78   OAI211X1
+       50     85.5   OAI21X1
+        2    4.788   OAI221X1
+        2    4.104   OAI22X1
+       26    44.46   OAI2BB1X1
+        8   16.416   OAI31X1
+        2    4.788   OAI32X1
+       16   21.888   OR2X1
+       12   24.624   OR3X1
+      126  301.644   XNOR2X1
+       20   150.48   XNOR3X1
+       14  105.336   XOR3X1
+        2  1788.66 submodules
+        2  1788.66   $paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier
 
-   Chip area for top module '\masked_act_multiplier': 1323.616000
-     of which used for sequential elements: 36.176000 (2.73%)
+   Chip area for top module '\masked_act_multiplier': 1862.532000
+     of which used for sequential elements: 43.776000 (2.35%)
 
 20. Executing Verilog backend.
 Dumping module `$paramod$6e726118d8531510d62d86bd84b1d27c910e1729\share_multiplier'.
 Dumping module `\masked_act_multiplier'.
 
-End of script. Logfile hash: a373d0da89, time: 1.47s, user: 0.48s, system: 0.18s, MEM: 35.75 MB peak
+End of script. Logfile hash: 000c818010, time: 0.95s, user: 0.32s, system: 0.47s, MEM: 35.25 MB peak
 Yosys 0.69+75 (git sha1 f0b945f63, Release, GNU /usr/bin/c++ 11.4.0)
-Time spent: 38% 2x abc (0 sec), 10% 18x opt_clean (0 sec), ...
+Time spent: 24% 2x abc (0 sec), 19% 1x synth (0 sec), ...

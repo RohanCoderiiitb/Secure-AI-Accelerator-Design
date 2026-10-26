@@ -6,39 +6,54 @@
         +----------Local Count, excluding submodules.
         |        +-Local Area, excluding submodules.
         |        | 
-      753        - wires
-      798        - wire bits
+      623        - wires
+      668        - wire bits
        19        - public wires
        64        - public wire bits
         3        - ports
        48        - port bits
-      766  916.104 cells
-       44   46.816   AND2_X1
-       15    19.95   AND3_X1
-       14   22.344   AND4_X1
-       25    59.85   AOI211_X2
-       45    47.88   AOI21_X1
-        9   14.364   AOI221_X1
-       21    27.93   AOI22_X1
-       16   12.768   BUF_X1
-       32   17.024   INV_X1
-       12   22.344   MUX2_X1
-      120    95.76   NAND2_X1
-        7    7.448   NAND3_X1
-       15    19.95   NAND4_X1
-       92   73.416   NOR2_X1
-       22   23.408   NOR3_X1
-        2    4.788   OAI211_X2
-       42   44.688   OAI21_X1
-        1    1.596   OAI221_X1
-        9    11.97   OAI22_X1
-       18   33.516   OAI33_X1
-       25     26.6   OR2_X1
-       21    27.93   OR3_X1
-      119  189.924   XNOR2_X1
-       40    63.84   XOR2_X1
+      636 1.34E+03 cells
+       38   51.984   AND2X1
+        3    6.156   AND3XL
+       13   31.122   AND4X1
+        8   19.152   AO21X1
+        4   10.944   AO22X1
+        8   16.416   AOI211XL
+       26    44.46   AOI21X1
+       13   26.676   AOI22X1
+        7   14.364   AOI2BB1X1
+       10    20.52   AOI31X1
+        1    2.394   AOI32X1
+        4    9.576   AOI33XL
+       16   32.832   BUFX3
+       12   32.832   CLKXOR2X1
+       14    9.576   INVX1
+        6   14.364   MX2X1
+        4    9.576   MXI2XL
+       13   17.784   NAND2BX1
+      120   123.12   NAND2X1
+       12    20.52   NAND3BXL
+        8    13.68   NAND3X1
+       12    20.52   NAND4XL
+        7    9.576   NOR2BX1
+       33   33.858   NOR2X1
+        9    15.39   NOR3X1
+        1     1.71   NOR4X1
+        5    10.26   OA21X1
+       17    29.07   OAI211X1
+       46    78.66   OAI21X1
+        1    2.394   OAI221X1
+        3    6.156   OAI22X1
+       18    30.78   OAI2BB1X1
+        7   14.364   OAI31X1
+        2    4.788   OAI32X1
+       11   15.048   OR2X1
+        5    10.26   OR3X1
+       72  172.368   XNOR2X1
+       24  180.576   XNOR3X1
+       23  173.052   XOR3X1
 
-   Chip area for module '$paramod$952548052fd0d06f779d0f477d8e90ed6a64d4b1\share_multiplier': 916.104000
+   Chip area for module '$paramod$952548052fd0d06f779d0f477d8e90ed6a64d4b1\share_multiplier': 1336.878000
      of which used for sequential elements: 0.000000 (0.00%)
 
 === masked_multiplier_aw ===
@@ -46,51 +61,60 @@
         +----------Local Count, excluding submodules.
         |        +-Local Area, excluding submodules.
         |        | 
-      837        - wires
-      957        - wire bits
+      751        - wires
+      871        - wire bits
       172        - public wires
       292        - public wire bits
        12        - ports
       132        - port bits
-      697 1.12E+03 cells
-       62   65.968   AND2_X1
-       25    33.25   AND3_X1
-       64   68.096   AOI21_X1
-        4    6.384   AOI221_X1
-       19   40.432   AOI222_X1
-        9    11.97   AOI22_X1
-       96  434.112   DFF_X1
-       42   22.344   INV_X1
-       80    63.84   NAND2_X1
-       13   13.832   NAND3_X1
-       63   50.274   NOR2_X1
-        9    9.576   NOR3_X1
-        4    9.576   OAI211_X2
-       51   54.264   OAI21_X1
-        2    3.192   OAI221_X1
-       10    10.64   OR2_X1
-       16    21.28   OR3_X1
-       80   127.68   XNOR2_X1
-       48   76.608   XOR2_X1
+      707  1.5E+03 cells
+       62   84.816   AND2X1
+        2    4.104   AND3XL
+        1    2.394   AO21X1
+        8   16.416   AOI211XL
+       46    78.66   AOI21X1
+       13   31.122   AOI221X1
+        4   12.312   AOI222X1
+       16   32.832   AOI22X1
+        3    6.156   AOI2BB1X1
+        7   14.364   AOI31X1
+        5    13.68   CLKXOR2X1
+       96  525.312   DFFHQX1
+       10     6.84   INVX1
+       33   45.144   NAND2BX1
+       80    82.08   NAND2X1
+        2     3.42   NAND3BXL
+        1     1.71   NAND3X1
+       44   60.192   NOR2BX1
+       84   86.184   NOR2X1
+        3    6.156   NOR3BX1
+        1     1.71   NOR3X1
+        6   12.312   OA21X1
+        7    11.97   OAI211X1
+       28    47.88   OAI21X1
+       17    29.07   OAI2BB1X1
+       12   24.624   OAI31X1
+       23   31.464   OR2X1
+       93  222.642   XNOR2X1
         4        - submodules
         4        -   $paramod$952548052fd0d06f779d0f477d8e90ed6a64d4b1\share_multiplier
 
-   Chip area for module '\masked_multiplier_aw': 1123.318000
-     of which used for sequential elements: 434.112000 (38.65%)
+   Chip area for module '\masked_multiplier_aw': 1495.566000
+     of which used for sequential elements: 525.312000 (35.12%)
 
 === design hierarchy ===
 
         +----------Count including submodules.
         |        +-Area including submodules.
         |        | 
-     3761 4.79E+03 masked_multiplier_aw
-      766  916.104 $paramod$952548052fd0d06f779d0f477d8e90ed6a64d4b1\share_multiplier
+     3251 6.84E+03 masked_multiplier_aw
+      636 1.34E+03 $paramod$952548052fd0d06f779d0f477d8e90ed6a64d4b1\share_multiplier
 
         +----------Count including submodules.
         |        +-Area including submodules.
         |        | 
-     3849        - wires
-     4149        - wire bits
+     3243        - wires
+     3543        - wire bits
       248        - public wires
       548        - public wire bits
        24        - ports
@@ -98,36 +122,53 @@
         -        - memories
         -        - memory bits
         -        - processes
-     3761 4.79E+03 cells
-      238  253.232   AND2_X1
-       85   113.05   AND3_X1
-       56   89.376   AND4_X1
-      100    239.4   AOI211_X2
-      244  259.616   AOI21_X1
-       40    63.84   AOI221_X1
-       19   40.432   AOI222_X1
-       93   123.69   AOI22_X1
-       64   51.072   BUF_X1
-       96  434.112   DFF_X1
-      170    90.44   INV_X1
-       48   89.376   MUX2_X1
-      560   446.88   NAND2_X1
-       41   43.624   NAND3_X1
-       60     79.8   NAND4_X1
-      431  343.938   NOR2_X1
-       97  103.208   NOR3_X1
-       12   28.728   OAI211_X2
-      219  233.016   OAI21_X1
-        6    9.576   OAI221_X1
-       36    47.88   OAI22_X1
-       72  134.064   OAI33_X1
-      110   117.04   OR2_X1
-      100      133   OR3_X1
-      556  887.376   XNOR2_X1
-      208  331.968   XOR2_X1
-        4 3.66E+03 submodules
-        4 3.66E+03   $paramod$952548052fd0d06f779d0f477d8e90ed6a64d4b1\share_multiplier
+     3251 6.84E+03 cells
+      214  292.752   AND2X1
+       14   28.728   AND3XL
+       52  124.488   AND4X1
+       33   79.002   AO21X1
+       16   43.776   AO22X1
+       40    82.08   AOI211XL
+      150    256.5   AOI21X1
+       13   31.122   AOI221X1
+        4   12.312   AOI222X1
+       68  139.536   AOI22X1
+       31   63.612   AOI2BB1X1
+       47   96.444   AOI31X1
+        4    9.576   AOI32X1
+       16   38.304   AOI33XL
+       64  131.328   BUFX3
+       53  145.008   CLKXOR2X1
+       96  525.312   DFFHQX1
+       66   45.144   INVX1
+       24   57.456   MX2X1
+       16   38.304   MXI2XL
+       85   116.28   NAND2BX1
+      560   574.56   NAND2X1
+       50     85.5   NAND3BXL
+       33    56.43   NAND3X1
+       48    82.08   NAND4XL
+       72   98.496   NOR2BX1
+      216  221.616   NOR2X1
+        3    6.156   NOR3BX1
+       37    63.27   NOR3X1
+        4     6.84   NOR4X1
+       26   53.352   OA21X1
+       75   128.25   OAI211X1
+      212   362.52   OAI21X1
+        4    9.576   OAI221X1
+       12   24.624   OAI22X1
+       89   152.19   OAI2BB1X1
+       40    82.08   OAI31X1
+        8   19.152   OAI32X1
+       67   91.656   OR2X1
+       20    41.04   OR3X1
+      381  912.114   XNOR2X1
+       96  722.304   XNOR3X1
+       92  692.208   XOR3X1
+        4 5.35E+03 submodules
+        4 5.35E+03   $paramod$952548052fd0d06f779d0f477d8e90ed6a64d4b1\share_multiplier
 
-   Chip area for top module '\masked_multiplier_aw': 4787.734000
-     of which used for sequential elements: 434.112000 (9.07%)
+   Chip area for top module '\masked_multiplier_aw': 6843.078000
+     of which used for sequential elements: 525.312000 (7.68%)
 

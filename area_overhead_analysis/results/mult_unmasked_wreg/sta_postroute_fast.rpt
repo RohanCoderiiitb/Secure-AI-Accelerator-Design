@@ -1,0 +1,119 @@
+Startpoint: a[0] (input port clocked by clk)
+Endpoint: p[15] (output port clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                            0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (propagated)
+                            2.000    2.000 ^ input external delay
+    17    0.049    0.111    0.062    2.062 ^ a[0] (in)
+     5    0.007    0.282    0.191    2.253 v _559_/Y (NAND4XL)
+     4    0.008    0.123    0.124    2.377 ^ _562_/Y (OAI211X1)
+     3    0.007    0.149    0.126    2.504 v _578_/Y (NAND3X1)
+     1    0.001    0.036    0.060    2.564 ^ _591_/Y (NAND3BXL)
+     3    0.005    0.200    0.109    2.673 v _598_/Y (AOI33XL)
+     2    0.007    0.059    0.117    2.790 v _314_/Y (XNOR3X1)
+     2    0.003    0.075    0.032    2.821 ^ _315_/Y (OAI31X1)
+     2    0.004    0.140    0.105    2.926 v _316_/Y (NAND3BXL)
+     4    0.007    0.094    0.091    3.017 v _348_/Y (OAI2BB1X1)
+     3    0.004    0.106    0.088    3.105 ^ _424_/Y (OAI32X1)
+     3    0.005    0.114    0.106    3.211 v _451_/Y (AOI31X1)
+     3    0.007    0.146    0.123    3.334 ^ _480_/Y (OAI31X1)
+     2    0.004    0.103    0.110    3.444 v _499_/Y (AOI31X1)
+     2    0.003    0.062    0.065    3.509 ^ _508_/Y (OAI21X1)
+     2    0.005    0.080    0.063    3.572 v _518_/Y (AOI21X1)
+     1    0.014    0.190    0.136    3.708 ^ _519_/Y (OAI21X1)
+                   0.190    0.000    3.709 ^ p[15] (out)
+                                     3.709   data arrival time
+
+                           10.000   10.000   clock clk (rise edge)
+                            0.000   10.000   clock network delay (propagated)
+                            0.000   10.000   clock reconvergence pessimism
+                           -2.000    8.000   output external delay
+                                     8.000   data required time
+---------------------------------------------------------------------------------
+                                     8.000   data required time
+                                    -3.709   data arrival time
+---------------------------------------------------------------------------------
+                                     4.291   slack (MET)
+
+
+Startpoint: _610_ (rising edge-triggered flip-flop clocked by clk)
+Endpoint: _610_ (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock clk (rise edge)
+   0.057    0.057   clock network delay (propagated)
+   0.000    0.057 ^ _610_/CK (DFFHQX1)
+   0.144    0.201 v _610_/Q (DFFHQX1)
+   0.065    0.266 v _544_/Y (MX2X1)
+   0.021    0.287 v _555_/Y (AND2X1)
+   0.000    0.287 v _610_/D (DFFHQX1)
+            0.287   data arrival time
+
+   0.000    0.000   clock clk (rise edge)
+   0.057    0.057   clock network delay (propagated)
+   0.000    0.057   clock reconvergence pessimism
+            0.057 ^ _610_/CK (DFFHQX1)
+   0.002    0.060   library hold time
+            0.060   data required time
+-----------------------------------------------------------
+            0.060   data required time
+           -0.287   data arrival time
+-----------------------------------------------------------
+            0.228   slack (MET)
+
+
+max slew
+
+Pin                                    Limit    Slew   Slack
+------------------------------------------------------------
+_300_/B                                 0.28    0.37   -0.09 (VIOLATED)
+_302_/S0                                0.28    0.37   -0.09 (VIOLATED)
+_307_/A0                                0.28    0.37   -0.09 (VIOLATED)
+_584_/Y                                 0.28    0.37   -0.09 (VIOLATED)
+_369_/A                                 0.28    0.34   -0.06 (VIOLATED)
+_390_/A                                 0.28    0.34   -0.06 (VIOLATED)
+_430_/A0                                0.28    0.34   -0.06 (VIOLATED)
+_429_/A                                 0.28    0.34   -0.06 (VIOLATED)
+_583_/B                                 0.28    0.34   -0.06 (VIOLATED)
+_584_/B                                 0.28    0.34   -0.06 (VIOLATED)
+_585_/A0                                0.28    0.34   -0.06 (VIOLATED)
+_458_/A                                 0.28    0.34   -0.06 (VIOLATED)
+_582_/A                                 0.28    0.34   -0.06 (VIOLATED)
+_482_/A0                                0.28    0.34   -0.06 (VIOLATED)
+_483_/A                                 0.28    0.34   -0.06 (VIOLATED)
+_305_/B                                 0.28    0.34   -0.06 (VIOLATED)
+_336_/A                                 0.28    0.34   -0.06 (VIOLATED)
+_303_/A1                                0.28    0.34   -0.06 (VIOLATED)
+_398_/A                                 0.28    0.34   -0.06 (VIOLATED)
+_615_/Q                                 0.28    0.34   -0.06 (VIOLATED)
+_430_/Y                                 0.28    0.33   -0.05 (VIOLATED)
+_431_/B                                 0.28    0.33   -0.05 (VIOLATED)
+_440_/B                                 0.28    0.33   -0.05 (VIOLATED)
+_459_/A1                                0.28    0.33   -0.05 (VIOLATED)
+_560_/A1                                0.28    0.30   -0.02 (VIOLATED)
+_559_/C                                 0.28    0.30   -0.02 (VIOLATED)
+_583_/D                                 0.28    0.30   -0.02 (VIOLATED)
+_584_/D                                 0.28    0.30   -0.02 (VIOLATED)
+_585_/B0                                0.28    0.30   -0.02 (VIOLATED)
+_331_/B                                 0.28    0.30   -0.02 (VIOLATED)
+_301_/B                                 0.28    0.30   -0.02 (VIOLATED)
+_363_/B                                 0.28    0.30   -0.02 (VIOLATED)
+_404_/B                                 0.28    0.30   -0.02 (VIOLATED)
+_427_/B                                 0.28    0.30   -0.02 (VIOLATED)
+_453_/B                                 0.28    0.30   -0.02 (VIOLATED)
+_321_/A                                 0.28    0.30   -0.02 (VIOLATED)
+_614_/Q                                 0.28    0.30   -0.02 (VIOLATED)
+_559_/Y                                 0.28    0.28   -0.00 (VIOLATED)
+_561_/A                                 0.28    0.28   -0.00 (VIOLATED)
+_562_/B0                                0.28    0.28   -0.00 (VIOLATED)
+_579_/B                                 0.28    0.28   -0.00 (VIOLATED)
+_581_/S0                                0.28    0.28   -0.00 (VIOLATED)
+_587_/A0                                0.28    0.28   -0.00 (VIOLATED)
+

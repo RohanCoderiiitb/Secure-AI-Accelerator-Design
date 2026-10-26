@@ -57,7 +57,9 @@ def synth_area(path):
 def load(design):
     d = RES / design
     m = kv_file(d / "postroute_metrics.txt")
-    m.update(kv_file(d / "sta_metrics.txt"))
+    # fast corner = implementation corner (lab flow); slow = worst-case check
+    m.update(kv_file(d / "sta_metrics_fast.txt"))
+    m.update({k + "_slow": v for k, v in kv_file(d / "sta_metrics_slow.txt").items()})
     m["synth_area"] = synth_area(d / "synth_stat.rpt")
     return m
 
@@ -97,7 +99,8 @@ def main():
               "total_x", "reg_x", "comb_x", "die_x", "total_pct",
               "logic_um2", "buf_inv_um2", "clk_buf_um2", "tap_tie_um2",
               "cell_count", "synth_area_um2", "core_area_um2", "core_util",
-              "setup_wns_ns", "hold_wns_ns", "crit_arrival_ns", "route_drc"]
+              "setup_wns_ns", "hold_wns_ns", "crit_arrival_ns",
+              "setup_wns_slow_ns", "hold_wns_slow_ns", "crit_arrival_slow_ns", "route_drc"]
     rows = []
     for design, level, label, base in ROWS:
         m = data[design]
@@ -121,6 +124,9 @@ def main():
             "setup_wns_ns": m.get("setup_wns_ns", ""),
             "hold_wns_ns": m.get("hold_wns_ns", ""),
             "crit_arrival_ns": m.get("crit_arrival_ns", ""),
+            "setup_wns_slow_ns": m.get("setup_wns_ns_slow", ""),
+            "hold_wns_slow_ns": m.get("hold_wns_ns_slow", ""),
+            "crit_arrival_slow_ns": m.get("crit_arrival_ns_slow", ""),
             "route_drc": int(m.get("route_drc_violations", -1)),
         }
         if base and "stdcell_area" in data.get(base, {}):
@@ -144,13 +150,14 @@ def main():
                   f"{r['comb_um2']:,.1f} | {r['other_um2']:,.1f} | {r['die_um2']:,.0f} | "
                   f"{ox(r['total_x'])} | {ox(r['reg_x'])} | {ox(r['comb_x'])} | {ox(r['die_x'])} |")
     md += ["", "| Design | Register | Comb. logic | Buf/Inv | Clock buf (CTS) | Tap/Tie | Total | Yosys area | Cells | "
-           "Core util | Setup WNS (ns) | Hold WNS (ns) | DRC |",
-           "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|"]
+           "Core util | Setup WNS fast (ns) | Hold WNS fast (ns) | Setup WNS slow (ns) | DRC |",
+           "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|"]
     for r in rows:
         md.append(f"| {r['design']} | {r['reg_um2']:,.1f} | {r['logic_um2']:,.1f} | {r['buf_inv_um2']:,.1f} | "
                   f"{r['clk_buf_um2']:,.1f} | {r['tap_tie_um2']:,.1f} | {r['total_um2']:,.1f} | "
                   f"{fmt(r['synth_area_um2'], ',.1f')} | {r['cell_count']:,} | {r['core_util']*100:.1f} % | "
-                  f"{fmt(r['setup_wns_ns'], '+.3f')} | {fmt(r['hold_wns_ns'], '+.3f')} | {r['route_drc']} |")
+                  f"{fmt(r['setup_wns_ns'], '+.3f')} | {fmt(r['hold_wns_ns'], '+.3f')} | "
+                  f"{fmt(r['setup_wns_slow_ns'], '+.3f')} | {r['route_drc']} |")
     (RES / "area_tables.md").write_text("\n".join(md) + "\n")
     print("\n".join(md))
 

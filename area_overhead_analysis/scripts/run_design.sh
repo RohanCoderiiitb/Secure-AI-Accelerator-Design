@@ -8,9 +8,16 @@ ANALYSIS=$(dirname "$HERE")
 REPO=$(dirname "$ANALYSIS")
 source "$HERE/designs.sh"
 
-export PLATFORM_DIR=${PLATFORM_DIR:-$HOME/OpenROAD-flow-scripts/flow/platforms/nangate45}
-export LIB=$PLATFORM_DIR/lib/NangateOpenCellLibrary_typical.lib
-export DONT_USE="TAPCELL_X1 FILLCELL_X1 AOI211_X1 OAI211_X1"
+source "$HERE/pdk_gpdk045.sh"
+for f in "$TECH_LEF" "$CELL_LEF" "$LIB_FAST" "$LIB_SLOW"; do
+    [[ -f $f ]] || { echo "PDK file missing: $f" >&2; exit 1; }
+done
+# Router-compatible copy of the tech LEF (front-end via rules dropped; see
+# make_router_tech_lef.py). Used by OpenROAD only; Yosys/OpenSTA need no LEF.
+export ROUTER_TECH_LEF=$ANALYSIS/results/pdk_derived/gsclib045_tech.router.lef
+mkdir -p "$(dirname "$ROUTER_TECH_LEF")"
+python3 "$HERE/make_router_tech_lef.py" "$TECH_LEF" "$ROUTER_TECH_LEF.$$" > /dev/null
+mv "$ROUTER_TECH_LEF.$$" "$ROUTER_TECH_LEF"
 export SDC=$ANALYSIS/constraints/constraints.sdc
 export CORE_UTIL=${CORE_UTIL:-50}
 export PLACE_DENSITY=${PLACE_DENSITY:-0.60}
@@ -36,6 +43,7 @@ echo "[$name] yosys"
 yosys -q -l "$OUT_DIR/yosys.log" -c "$HERE/synth.tcl"
 echo "[$name] openroad"
 openroad -no_splash -exit -log "$OUT_DIR/openroad.log" "$HERE/pnr.tcl" > /dev/null
-echo "[$name] opensta"
-sta -no_splash -exit "$HERE/sta_postroute.tcl" > "$OUT_DIR/sta.log" 2>&1
+echo "[$name] opensta (slow + fast corner)"
+STA_LIB=$LIB_FAST STA_TAG=fast sta -no_splash -exit "$HERE/sta_postroute.tcl" > "$OUT_DIR/sta_fast.log" 2>&1
+STA_LIB=$LIB_SLOW STA_TAG=slow sta -no_splash -exit "$HERE/sta_postroute.tcl" > "$OUT_DIR/sta_slow.log" 2>&1
 echo "[$name] done"

@@ -1,65 +1,64 @@
-# OpenROAD place & route for the area analysis (Nangate45 / FreePDK45).
-# Floorplan -> tapcells -> PDN -> IO pins -> global/detailed placement ->
-# CTS -> timing repair -> global route -> detailed route -> RC extraction.
+# OpenROAD place & route for the area analysis, using the PDK set up in
+# scripts/pdk_gpdk045.sh (Cadence GPDK045 / gsclib045).
+# Floorplan -> PDN -> IO pins -> global/detailed placement -> CTS ->
+# timing repair -> global route -> detailed route -> RC extraction.
 # Driven by environment variables set in run_design.sh:
-#   TOP, PLATFORM_DIR, OUT_DIR, SDC, CORE_UTIL, PLACE_DENSITY, THREADS
+#   TOP, OUT_DIR, SDC, CORE_UTIL, PLACE_DENSITY, THREADS + the PDK variables
 
 set top      $::env(TOP)
-set pdir     $::env(PLATFORM_DIR)
 set out      $::env(OUT_DIR)
 set util     $::env(CORE_UTIL)
 set density  $::env(PLACE_DENSITY)
 set_thread_count $::env(THREADS)
 
-set site      FreePDK45_38x28_10R_NP_162NW_34O
-set dont_use  {TAPCELL_X1 FILLCELL_X1 AOI211_X1 OAI211_X1}
-set fillers   {FILLCELL_X1 FILLCELL_X2 FILLCELL_X4 FILLCELL_X8 FILLCELL_X16 FILLCELL_X32}
-
 #---------------------------------------------------------------- read design
-read_lef     $pdir/lef/NangateOpenCellLibrary.tech.lef
-read_lef     $pdir/lef/NangateOpenCellLibrary.macro.mod.lef
-read_liberty $pdir/lib/NangateOpenCellLibrary_typical.lib
+read_lef     $::env(ROUTER_TECH_LEF)   ;# PDK tech LEF minus front-end via rules
+read_lef     $::env(CELL_LEF)
+read_liberty $::env(LIB)
 read_verilog $out/netlist_synth.v
 link_design  $top
 read_sdc     $::env(SDC)
-source       $pdir/setRC.tcl
-set_dont_use $dont_use
+foreach p $::env(DONT_USE) {
+    set cells [get_lib_cells -quiet $p]
+    if {[llength $cells]} { set_dont_use $cells }
+}
+# Wire RC from the tech LEF (RPERSQ / CPERSQDIST per layer).
+set_wire_rc -signal -layer Metal3
+set_wire_rc -clock  -layer Metal5
 
 set has_clk [expr {[llength [get_ports -quiet clk]] > 0}]
 
 #---------------------------------------------------------------- floorplan
 # Same target utilisation for every design, so post-route area differences
-# come from the logic, not from floorplan choices.
-initialize_floorplan -utilization $util -aspect_ratio 1.0 -core_space 2.0 -site $site
-source $pdir/make_tracks.tcl
-tapcell -distance 120 -tapcell_master TAPCELL_X1 -endcap_master TAPCELL_X1
+# come from the logic, not from floorplan choices. gsclib045 is a tapless
+# library, so no tap/endcap cells are inserted.
+initialize_floorplan -utilization $util -aspect_ratio 1.0 -core_space 2.0 -site $::env(SITE)
+make_tracks
 
-# PDN: metal1 follow-pin rails + metal4 straps. The platform default
-# (M4 @ 56 um, M7 @ 30 um) is coarser than the smaller multiplier dies,
-# so the strap pitch is scaled to the die here; this only affects routing
-# resources, not cell area.
+# PDN: Metal1 follow-pin rails + Metal4 straps, strap pitch scaled to the die.
 add_global_connection -net VDD -inst_pattern {.*} -pin_pattern {^VDD$} -power
 add_global_connection -net VSS -inst_pattern {.*} -pin_pattern {^VSS$} -ground
 global_connect
 set_voltage_domain -name CORE -power VDD -ground VSS
 define_pdn_grid -name grid -voltage_domains CORE
-add_pdn_stripe -grid grid -layer metal1 -width 0.17 -pitch 2.4 -offset 0 -followpins
+add_pdn_stripe -grid grid -layer $::env(RAIL_LAYER) -width $::env(RAIL_WIDTH) -followpins
 set core_w [expr {[ord::dbu_to_microns [[[ord::get_db_block] getCoreArea] dx]]}]
 # whole-micron pitch keeps it on the 5 nm manufacturing grid
-set m4_pitch [expr {double(round(min(56.0, max(10.0, $core_w / 4.0))))}]
-add_pdn_stripe -grid grid -layer metal4 -width 0.48 -pitch $m4_pitch -offset 2
-add_pdn_connect -grid grid -layers {metal1 metal4}
+set strap_pitch [expr {double(round(min(56.0, max(10.0, $core_w / 4.0))))}]
+add_pdn_stripe -grid grid -layer $::env(STRAP_LAYER) -width $::env(STRAP_WIDTH) \
+               -pitch $strap_pitch -offset 2
+add_pdn_connect -grid grid -layers [list $::env(RAIL_LAYER) $::env(STRAP_LAYER)]
 pdngen
 
 #---------------------------------------------------------------- placement
-place_pins -hor_layers metal3 -ver_layers metal4
+place_pins -hor_layers $::env(PIN_HOR_LAYER) -ver_layers $::env(PIN_VER_LAYER)
 global_placement -density $density
 estimate_parasitics -placement
 repair_design
 detailed_placement
 
 if {$has_clk} {
-    clock_tree_synthesis -root_buf CLKBUF_X3 -buf_list {CLKBUF_X1 CLKBUF_X2 CLKBUF_X3}
+    clock_tree_synthesis -root_buf $::env(CTS_ROOT_BUF) -buf_list $::env(CTS_BUFS)
     set_propagated_clock [all_clocks]
 }
 estimate_parasitics -placement
@@ -68,11 +67,10 @@ detailed_placement
 check_placement
 
 #---------------------------------------------------------------- routing
-# Platform fastroute.tcl settings, with the ORFS env variables written out.
-set_global_routing_layer_adjustment metal2-metal3  0.5
-set_global_routing_layer_adjustment metal4-metal10 0.25
-set_routing_layers -clock  metal4-metal10
-set_routing_layers -signal metal2-metal10
+set_global_routing_layer_adjustment Metal2-Metal3  0.5
+set_global_routing_layer_adjustment Metal4-Metal10 0.25
+set_routing_layers -clock  $::env(CLOCK_LAYERS)
+set_routing_layers -signal $::env(SIGNAL_LAYERS)
 global_route -congestion_iterations 50
 estimate_parasitics -global_routing
 repair_timing
@@ -80,14 +78,15 @@ detailed_placement
 
 # Fillers go in before detailed routing (as in ORFS); they are excluded
 # from every area number reported below.
-filler_placement $fillers
+filler_placement $::env(FILLERS)
 check_placement
 detailed_route -output_drc $out/route_drc.rpt -verbose 0
 
 #---------------------------------------------------------------- post-route
-set_extraction_rules_file $pdir/rcx_patterns.rules
-extract_parasitics
-write_spef    $out/postroute.spef
+# No OpenRCX rules exist for this PDK (only a Cadence QRC .tch), so the
+# post-route parasitics are estimated from the routed design's global routes
+# with the tech-LEF layer RC, and written out as SPEF for OpenSTA.
+estimate_parasitics -global_routing -spef_file $out/postroute.spef
 write_verilog $out/netlist_postroute.v
 write_def     $out/postroute.def
 write_db      $out/postroute.odb
@@ -99,18 +98,20 @@ array set count {seq 0 comb 0 bufinv 0 clkbuf 0 tap 0 tie 0 fill 0}
 foreach inst [$block getInsts] {
     set m    [$inst getMaster]
     set name [$m getName]
+    set iname [$inst getName]
     set a    [expr {[ord::dbu_to_microns [$m getWidth]] * [ord::dbu_to_microns [$m getHeight]]}]
-    if {[string match FILLCELL* $name]} {
+    if {[string match FILL* $name]} {
         set k fill
     } elseif {[string match TAPCELL* $name]} {
         set k tap
-    } elseif {[string match LOGIC* $name]} {
+    } elseif {[string match TIE* $name]} {
         set k tie
-    } elseif {[regexp {^(DFF|SDFF|DL)} $name]} {
+    } elseif {[regexp {^(DFF|SDFF|EDFF|SEDFF|MDFF|SMDFF|TLAT|RDFF)} $name]} {
         set k seq
-    } elseif {[string match CLKBUF* $name]} {
+    } elseif {[regexp {^clk(buf|load|inv)} $iname]} {
+        # inserted by clock_tree_synthesis (instance names clkbuf_*/clkload*)
         set k clkbuf
-    } elseif {[regexp {^(BUF|INV)_} $name]} {
+    } elseif {[regexp {^(CLK)?(BUF|INV)X} $name]} {
         set k bufinv
     } else {
         set k comb

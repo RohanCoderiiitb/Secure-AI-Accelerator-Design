@@ -15,5 +15,5 @@ if {[llength [get_ports -quiet clk]] > 0} {
 
 set_input_delay  $io_delay -clock clk $data_inputs
 set_output_delay $io_delay -clock clk [all_outputs]
-set_driving_cell -lib_cell BUF_X2 -pin Z $data_inputs
+set_driving_cell -lib_cell $::env(DRIVE_CELL) -pin $::env(DRIVE_PIN) $data_inputs
 set_load 0.005 [all_outputs]

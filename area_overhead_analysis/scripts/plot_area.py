@@ -119,7 +119,7 @@ def fig_area(rows):
     h, l = axes[0].get_legend_handles_labels()
     fig.legend(h, l, loc="upper right", bbox_to_anchor=(0.99, 0.945), ncol=3, frameon=False,
                fontsize=FS, handlelength=1.2, columnspacing=2.0, labelcolor=INK)
-    fig.suptitle("Post-route area: unprotected vs. masked — 45nm PDK, 100 MHz",
+    fig.suptitle("Post-route area: unprotected vs. masked — 45nm PDK (fast corner), 100 MHz",
                  x=0.01, y=0.995, ha="left", fontsize=FS + 4, color=INK, fontweight="bold")
     fig.text(0.01, 0.962, "Total = register + combinational + clock tree/tap/tie cells "
              "(the last is ≤ 3 % of total and not drawn separately). "
@@ -155,7 +155,7 @@ def fig_overhead(rows):
         ax.set_xlabel("masked ÷ unmasked", fontsize=FS - 1, color=INK2)
         clean(ax)
     axes[0].set_yticks(ypos, labels, fontsize=FS)
-    fig.suptitle("Masking overhead by area component — post-route, 45nm PDK",
+    fig.suptitle("Masking overhead by area component — post-route, 45nm PDK (fast corner)",
                  x=0.01, y=0.985, ha="left", fontsize=FS + 4, color=INK, fontweight="bold")
     fig.text(0.01, 0.905, "Dashed line = 1× (no overhead).  Baselines: multipliers vs. unprotected "
              "multiplier + weight register; PEs vs. unprotected PE; arrays vs. unprotected array.",

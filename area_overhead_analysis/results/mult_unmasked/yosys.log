@@ -11,8 +11,8 @@
 [TCL: yosys -import] Command name collision: found pre-existing command `read' -> skip.
 [TCL: yosys -import] Command name collision: found pre-existing command `trace' -> skip.
 
-1. Executing Liberty frontend: /home/ihs24/OpenROAD-flow-scripts/flow/platforms/nangate45/lib/NangateOpenCellLibrary_typical.lib
-Imported 135 cell types from liberty file.
+1. Executing Liberty frontend: /home/ihs24/Desktop/Secure-AI-Accelerator-Design/45_nm_PDK/cadence/cadence_45nm/lib/fast_vdd1v0_basicCells.lib
+Imported 480 cell types from liberty file.
 
 2. Executing Verilog-2005 frontend: /home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv
 Parsing SystemVerilog input from `/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv' to AST representation.
@@ -1078,37 +1078,37 @@ Removed 64 unused cells and 54 unused wires.
 <suppressed ~118 debug messages>
 
 7. Executing DFFLIBMAP pass (mapping DFF/DLATCH cells to sequential cells from liberty file).
-  cell DFF_X1 (noninv, pins=4, area=4.52) is a direct match for cell type $_DFF_P_.
-  cell DFFR_X1 (noninv, pins=5, area=5.32) is a direct match for cell type $_DFF_PN0_.
-  cell DFFS_X1 (noninv, pins=5, area=5.32) is a direct match for cell type $_DFF_PN1_.
-  cell DFFRS_X1 (noninv, pins=6, area=6.38) is a direct match for cell type $_DFFSR_PNN_.
-  cell DLL_X1 (noninv, pins=3, area=2.66) is a direct match for cell type $_DLATCH_N_.
-  cell DLH_X1 (noninv, pins=3, area=2.66) is a direct match for cell type $_DLATCH_P_.
+  cell DFFHQX1 (noninv, pins=3, area=5.47) is a direct match for cell type $_DFF_P_.
+  cell DFFRHQX1 (noninv, pins=4, area=6.16) is a direct match for cell type $_DFF_PN0_.
+  cell DFFSHQX1 (noninv, pins=4, area=6.50) is a direct match for cell type $_DFF_PN1_.
+  cell EDFFHQX1 (noninv, pins=4, area=8.55) is a direct match for cell type $_DFFE_PP_.
+  cell DFFNSRX1 (noninv, pins=6, area=9.23) is a direct match for cell type $_DFFSR_NNN_.
+  cell DFFSRHQX1 (noninv, pins=5, area=10.94) is a direct match for cell type $_DFFSR_PNN_.
   final dff/dlatch cell mappings:
     unmapped dff/dlatch cell: $_DFF_N_
-    \DFF_X1 _DFF_P_ (.CK( C), .D( D), .Q( Q), .QN(~Q));
+    \DFFHQX1 _DFF_P_ (.CK( C), .D( D), .Q( Q));
     unmapped dff/dlatch cell: $_DFF_NN0_
     unmapped dff/dlatch cell: $_DFF_NN1_
     unmapped dff/dlatch cell: $_DFF_NP0_
     unmapped dff/dlatch cell: $_DFF_NP1_
-    \DFFR_X1 _DFF_PN0_ (.CK( C), .D( D), .Q( Q), .QN(~Q), .RN( R));
-    \DFFS_X1 _DFF_PN1_ (.CK( C), .D( D), .Q( Q), .QN(~Q), .SN( R));
+    \DFFRHQX1 _DFF_PN0_ (.CK( C), .D( D), .Q( Q), .RN( R));
+    \DFFSHQX1 _DFF_PN1_ (.CK( C), .D( D), .Q( Q), .SN( R));
     unmapped dff/dlatch cell: $_DFF_PP0_
     unmapped dff/dlatch cell: $_DFF_PP1_
     unmapped dff/dlatch cell: $_DFFE_NN_
     unmapped dff/dlatch cell: $_DFFE_NP_
     unmapped dff/dlatch cell: $_DFFE_PN_
-    unmapped dff/dlatch cell: $_DFFE_PP_
-    unmapped dff/dlatch cell: $_DFFSR_NNN_
+    \EDFFHQX1 _DFFE_PP_ (.CK( C), .D( D), .E( E), .Q( Q));
+    \DFFNSRX1 _DFFSR_NNN_ (.CKN( C), .D( D), .Q( Q), .QN(~Q), .RN( R), .SN( S));
     unmapped dff/dlatch cell: $_DFFSR_NNP_
     unmapped dff/dlatch cell: $_DFFSR_NPN_
     unmapped dff/dlatch cell: $_DFFSR_NPP_
-    \DFFRS_X1 _DFFSR_PNN_ (.CK( C), .D( D), .Q( Q), .QN(~Q), .RN( R), .SN( S));
+    \DFFSRHQX1 _DFFSR_PNN_ (.CK( C), .D( D), .Q( Q), .RN( R), .SN( S));
     unmapped dff/dlatch cell: $_DFFSR_PNP_
     unmapped dff/dlatch cell: $_DFFSR_PPN_
     unmapped dff/dlatch cell: $_DFFSR_PPP_
-    \DLL_X1 _DLATCH_N_ (.D( D), .GN( E), .Q( Q));
-    \DLH_X1 _DLATCH_P_ (.D( D), .G( E), .Q( Q));
+    unmapped dff/dlatch cell: $_DLATCH_N_
+    unmapped dff/dlatch cell: $_DLATCH_P_
     unmapped dff/dlatch cell: $_DLATCH_NN0_
     unmapped dff/dlatch cell: $_DLATCH_NN1_
     unmapped dff/dlatch cell: $_DLATCH_NP0_
@@ -1173,7 +1173,7 @@ Optimizing module baugh_wooley_multiplier.
   367 cells in clk={ }, en={ }, arst={ }, srst={ }
 
 9.2. Extracting gate netlist of module `\baugh_wooley_multiplier' to `<abc-temp-dir>/input.blif'..
-ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache-1000/yosys_merged_4c2f18a6.scl (1 files)
+ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache-1000/yosys_merged_435ac72d.scl (1 files)
 No matching clock domain found. Not extracting any FF cells.
 
 9.2.1. Executed ABC.
@@ -1183,8 +1183,8 @@ ABC: UC Berkeley, ABC 1.01 (compiled Sep 18 2026 19:37:19)
 ABC: abc 01> empty
 ABC: abc 01> source <abc-temp-dir>/abc.script
 ABC: + read_blif <abc-temp-dir>/input.blif 
-ABC: + read_scl /tmp/yosys-liberty-scl-cache-1000/yosys_merged_4c2f18a6.scl 
-ABC: Warning: Detected 2 multi-output cells (for example, "FA_X1").
+ABC: + read_scl /tmp/yosys-liberty-scl-cache-1000/yosys_merged_435ac72d.scl 
+ABC: Warning: Detected 12 multi-output cells (for example, "ADDFHX1").
 ABC: + strash 
 ABC: + &get -n 
 ABC: + &fraig -x 
@@ -1204,28 +1204,42 @@ ABC:
 ABC: YOSYS_ABC_DONE 
 
 9.2.2. Re-integrating ABC results.
-ABC RESULTS:           AND2_X1 cells:       20
-ABC RESULTS:           AND3_X1 cells:        7
-ABC RESULTS:           AND4_X1 cells:        8
-ABC RESULTS:         AOI211_X2 cells:        9
-ABC RESULTS:          AOI21_X1 cells:       20
-ABC RESULTS:         AOI221_X1 cells:        4
-ABC RESULTS:          AOI22_X1 cells:        9
-ABC RESULTS:            INV_X1 cells:       15
-ABC RESULTS:           MUX2_X1 cells:        6
-ABC RESULTS:          NAND2_X1 cells:       60
-ABC RESULTS:          NAND3_X1 cells:        5
-ABC RESULTS:          NAND4_X1 cells:       10
-ABC RESULTS:           NOR2_X1 cells:       44
-ABC RESULTS:           NOR3_X1 cells:       12
-ABC RESULTS:          OAI21_X1 cells:       23
-ABC RESULTS:         OAI221_X1 cells:        2
-ABC RESULTS:          OAI22_X1 cells:        3
-ABC RESULTS:          OAI33_X1 cells:        7
-ABC RESULTS:            OR2_X1 cells:       11
-ABC RESULTS:            OR3_X1 cells:        8
-ABC RESULTS:          XNOR2_X1 cells:       46
-ABC RESULTS:           XOR2_X1 cells:       24
+ABC RESULTS:            AND2X1 cells:       19
+ABC RESULTS:            AND3XL cells:        3
+ABC RESULTS:            AND4X1 cells:        4
+ABC RESULTS:            AO21X1 cells:        3
+ABC RESULTS:            AO22X1 cells:        2
+ABC RESULTS:          AOI211XL cells:        2
+ABC RESULTS:           AOI21X1 cells:       12
+ABC RESULTS:          AOI221X1 cells:        2
+ABC RESULTS:           AOI22X1 cells:        8
+ABC RESULTS:         AOI2BB1X1 cells:        2
+ABC RESULTS:           AOI31X1 cells:        5
+ABC RESULTS:           AOI32X1 cells:        1
+ABC RESULTS:           AOI33XL cells:        1
+ABC RESULTS:         CLKXOR2X1 cells:        3
+ABC RESULTS:             INVX1 cells:        9
+ABC RESULTS:             MX2X1 cells:        5
+ABC RESULTS:          NAND2BX1 cells:        5
+ABC RESULTS:           NAND2X1 cells:       59
+ABC RESULTS:          NAND3BXL cells:        6
+ABC RESULTS:           NAND3X1 cells:        5
+ABC RESULTS:           NAND4XL cells:        7
+ABC RESULTS:           NOR2BX1 cells:        6
+ABC RESULTS:            NOR2X1 cells:       14
+ABC RESULTS:            NOR3X1 cells:        4
+ABC RESULTS:            OA21X1 cells:        6
+ABC RESULTS:          OAI211X1 cells:        7
+ABC RESULTS:           OAI21X1 cells:       21
+ABC RESULTS:           OAI22X1 cells:        1
+ABC RESULTS:         OAI2BB1X1 cells:       13
+ABC RESULTS:           OAI31X1 cells:        5
+ABC RESULTS:           OAI32X1 cells:        1
+ABC RESULTS:             OR2X1 cells:        3
+ABC RESULTS:             OR3X1 cells:        3
+ABC RESULTS:           XNOR2X1 cells:       29
+ABC RESULTS:           XNOR3X1 cells:       12
+ABC RESULTS:            XOR3X1 cells:        8
 ABC RESULTS:        internal signals:      351
 ABC RESULTS:           input signals:       16
 ABC RESULTS:          output signals:       16
@@ -1273,43 +1287,57 @@ Found and reported 0 problems.
         +----------Local Count, excluding submodules.
         |        +-Local Area, excluding submodules.
         |        | 
-      354        - wires
-      383        - wire bits
+      297        - wires
+      326        - wire bits
        17        - public wires
        46        - public wire bits
         3        - ports
        32        - port bits
-      367  427.994 cells
-       20    21.28   AND2_X1
-        7     9.31   AND3_X1
-        8   12.768   AND4_X1
-        9   21.546   AOI211_X2
-       20    21.28   AOI21_X1
-        4    6.384   AOI221_X1
-        9    11.97   AOI22_X1
-       14   11.172   BUF_X1
-       15     7.98   INV_X1
-        6   11.172   MUX2_X1
-       60    47.88   NAND2_X1
-        5     5.32   NAND3_X1
-       10     13.3   NAND4_X1
-       44   35.112   NOR2_X1
-       12   12.768   NOR3_X1
-       23   24.472   OAI21_X1
-        2    3.192   OAI221_X1
-        3     3.99   OAI22_X1
-        7   13.034   OAI33_X1
-       11   11.704   OR2_X1
-        8    10.64   OR3_X1
-       46   73.416   XNOR2_X1
-       24   38.304   XOR2_X1
+      310   629.28 cells
+       19   25.992   AND2X1
+        3    6.156   AND3XL
+        4    9.576   AND4X1
+        3    7.182   AO21X1
+        2    5.472   AO22X1
+        2    4.104   AOI211XL
+       12    20.52   AOI21X1
+        2    4.788   AOI221X1
+        8   16.416   AOI22X1
+        2    4.104   AOI2BB1X1
+        5    10.26   AOI31X1
+        1    2.394   AOI32X1
+        1    2.394   AOI33XL
+       14   28.728   BUFX3
+        3    8.208   CLKXOR2X1
+        9    6.156   INVX1
+        5    11.97   MX2X1
+        5     6.84   NAND2BX1
+       59   60.534   NAND2X1
+        6    10.26   NAND3BXL
+        5     8.55   NAND3X1
+        7    11.97   NAND4XL
+        6    8.208   NOR2BX1
+       14   14.364   NOR2X1
+        4     6.84   NOR3X1
+        6   12.312   OA21X1
+        7    11.97   OAI211X1
+       21    35.91   OAI21X1
+        1    2.052   OAI22X1
+       13    22.23   OAI2BB1X1
+        5    10.26   OAI31X1
+        1    2.394   OAI32X1
+        3    4.104   OR2X1
+        3    6.156   OR3X1
+       29   69.426   XNOR2X1
+       12   90.288   XNOR3X1
+        8   60.192   XOR3X1
 
-   Chip area for module '\baugh_wooley_multiplier': 427.994000
+   Chip area for module '\baugh_wooley_multiplier': 629.280000
      of which used for sequential elements: 0.000000 (0.00%)
 
 18. Executing Verilog backend.
 Dumping module `\baugh_wooley_multiplier'.
 
-End of script. Logfile hash: f86e3438cb, time: 0.95s, user: 0.32s, system: 0.18s, MEM: 31.25 MB peak
+End of script. Logfile hash: 7d1cc9ccb3, time: 0.87s, user: 0.23s, system: 0.46s, MEM: 32.25 MB peak
 Yosys 0.69+75 (git sha1 f0b945f63, Release, GNU /usr/bin/c++ 11.4.0)
-Time spent: 42% 2x abc (0 sec), 9% 17x opt_clean (0 sec), ...
+Time spent: 24% 2x abc (0 sec), 22% 1x synth (0 sec), ...

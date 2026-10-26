@@ -11,8 +11,8 @@
 [TCL: yosys -import] Command name collision: found pre-existing command `read' -> skip.
 [TCL: yosys -import] Command name collision: found pre-existing command `trace' -> skip.
 
-1. Executing Liberty frontend: /home/ihs24/OpenROAD-flow-scripts/flow/platforms/nangate45/lib/NangateOpenCellLibrary_typical.lib
-Imported 135 cell types from liberty file.
+1. Executing Liberty frontend: /home/ihs24/Desktop/Secure-AI-Accelerator-Design/45_nm_PDK/cadence/cadence_45nm/lib/fast_vdd1v0_basicCells.lib
+Imported 480 cell types from liberty file.
 
 2. Executing Verilog-2005 frontend: /home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv
 Parsing SystemVerilog input from `/home/ihs24/Desktop/Secure-AI-Accelerator-Design/source/multiplier.sv' to AST representation.
@@ -1864,9 +1864,8 @@ Removing temp directory.
 6.24.4.1. Executed ABC.
 Extracted 15054 gates and 17348 wires to a netlist network with 2294 inputs and 800 outputs.
 Running ABC script: <abc-temp-dir>/abc.script
-ABC: UC Berkeley, ABC 1.01 (compiled Sep 18 2026 19:37:19)
-ABC: abc 01> empty
-ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: empty
+ABC: abc 07> source <abc-temp-dir>/abc.script
 ABC: + read_blif <abc-temp-dir>/input.blif 
 ABC: + read_library <abc-temp-dir>/stdcells.genlib 
 ABC: + strash 
@@ -1970,37 +1969,37 @@ Removed 1650 unused cells and 4647 unused wires.
 <suppressed ~6297 debug messages>
 
 8. Executing DFFLIBMAP pass (mapping DFF/DLATCH cells to sequential cells from liberty file).
-  cell DFF_X1 (noninv, pins=4, area=4.52) is a direct match for cell type $_DFF_P_.
-  cell DFFR_X1 (noninv, pins=5, area=5.32) is a direct match for cell type $_DFF_PN0_.
-  cell DFFS_X1 (noninv, pins=5, area=5.32) is a direct match for cell type $_DFF_PN1_.
-  cell DFFRS_X1 (noninv, pins=6, area=6.38) is a direct match for cell type $_DFFSR_PNN_.
-  cell DLL_X1 (noninv, pins=3, area=2.66) is a direct match for cell type $_DLATCH_N_.
-  cell DLH_X1 (noninv, pins=3, area=2.66) is a direct match for cell type $_DLATCH_P_.
+  cell DFFHQX1 (noninv, pins=3, area=5.47) is a direct match for cell type $_DFF_P_.
+  cell DFFRHQX1 (noninv, pins=4, area=6.16) is a direct match for cell type $_DFF_PN0_.
+  cell DFFSHQX1 (noninv, pins=4, area=6.50) is a direct match for cell type $_DFF_PN1_.
+  cell EDFFHQX1 (noninv, pins=4, area=8.55) is a direct match for cell type $_DFFE_PP_.
+  cell DFFNSRX1 (noninv, pins=6, area=9.23) is a direct match for cell type $_DFFSR_NNN_.
+  cell DFFSRHQX1 (noninv, pins=5, area=10.94) is a direct match for cell type $_DFFSR_PNN_.
   final dff/dlatch cell mappings:
     unmapped dff/dlatch cell: $_DFF_N_
-    \DFF_X1 _DFF_P_ (.CK( C), .D( D), .Q( Q), .QN(~Q));
+    \DFFHQX1 _DFF_P_ (.CK( C), .D( D), .Q( Q));
     unmapped dff/dlatch cell: $_DFF_NN0_
     unmapped dff/dlatch cell: $_DFF_NN1_
     unmapped dff/dlatch cell: $_DFF_NP0_
     unmapped dff/dlatch cell: $_DFF_NP1_
-    \DFFR_X1 _DFF_PN0_ (.CK( C), .D( D), .Q( Q), .QN(~Q), .RN( R));
-    \DFFS_X1 _DFF_PN1_ (.CK( C), .D( D), .Q( Q), .QN(~Q), .SN( R));
+    \DFFRHQX1 _DFF_PN0_ (.CK( C), .D( D), .Q( Q), .RN( R));
+    \DFFSHQX1 _DFF_PN1_ (.CK( C), .D( D), .Q( Q), .SN( R));
     unmapped dff/dlatch cell: $_DFF_PP0_
     unmapped dff/dlatch cell: $_DFF_PP1_
     unmapped dff/dlatch cell: $_DFFE_NN_
     unmapped dff/dlatch cell: $_DFFE_NP_
     unmapped dff/dlatch cell: $_DFFE_PN_
-    unmapped dff/dlatch cell: $_DFFE_PP_
-    unmapped dff/dlatch cell: $_DFFSR_NNN_
+    \EDFFHQX1 _DFFE_PP_ (.CK( C), .D( D), .E( E), .Q( Q));
+    \DFFNSRX1 _DFFSR_NNN_ (.CKN( C), .D( D), .Q( Q), .QN(~Q), .RN( R), .SN( S));
     unmapped dff/dlatch cell: $_DFFSR_NNP_
     unmapped dff/dlatch cell: $_DFFSR_NPN_
     unmapped dff/dlatch cell: $_DFFSR_NPP_
-    \DFFRS_X1 _DFFSR_PNN_ (.CK( C), .D( D), .Q( Q), .QN(~Q), .RN( R), .SN( S));
+    \DFFSRHQX1 _DFFSR_PNN_ (.CK( C), .D( D), .Q( Q), .RN( R), .SN( S));
     unmapped dff/dlatch cell: $_DFFSR_PNP_
     unmapped dff/dlatch cell: $_DFFSR_PPN_
     unmapped dff/dlatch cell: $_DFFSR_PPP_
-    \DLL_X1 _DLATCH_N_ (.D( D), .GN( E), .Q( Q));
-    \DLH_X1 _DLATCH_P_ (.D( D), .G( E), .Q( Q));
+    unmapped dff/dlatch cell: $_DLATCH_N_
+    unmapped dff/dlatch cell: $_DLATCH_P_
     unmapped dff/dlatch cell: $_DLATCH_NN0_
     unmapped dff/dlatch cell: $_DLATCH_NN1_
     unmapped dff/dlatch cell: $_DLATCH_NP0_
@@ -2021,7 +2020,7 @@ Removed 1650 unused cells and 4647 unused wires.
 8.1. Executing DFFLEGALIZE pass (convert FFs and LATCHes to types supported by the target).
 <suppressed ~8 debug messages>
 Mapping DFF/DLATCH cells in module `\systolic_array':
-  mapped 1225 $_DFF_P_ cells to \DFF_X1 cells.
+  mapped 1225 $_DFF_P_ cells to \DFFHQX1 cells.
 
 9. Executing OPT pass (performing simple optimizations).
 
@@ -2054,58 +2053,30 @@ Removed a total of 0 cells.
 
 9.7. Executing OPT_CLEAN pass (remove unused cells and wires).
 Finding unused cells or wires in module \systolic_array..
-Removed 1 unused cells and 2 unused wires.
-<suppressed ~2 debug messages>
 
 9.8. Executing OPT_EXPR pass (perform const folding).
 Optimizing module systolic_array.
 
-9.9. Rerunning OPT passes. (Maybe there is more to do..)
-
-9.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
-Running muxtree optimizer on module \systolic_array..
-  Creating internal representation of mux trees.
-  No muxes found in this module.
-Removed 0 multiplexer ports.
-
-9.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
-  Optimizing cells in module \systolic_array.
-Performed a total of 0 changes.
-
-9.12. Executing OPT_MERGE pass (detect identical cells).
-Finding identical cells in module `\systolic_array'.
-Computing hashes of 16034 cells of `\systolic_array'.
-Finding duplicate cells in `\systolic_array'.
-Removed a total of 0 cells.
-
-9.13. Executing OPT_DFF pass (perform DFF optimizations).
-
-9.14. Executing OPT_CLEAN pass (remove unused cells and wires).
-Finding unused cells or wires in module \systolic_array..
-
-9.15. Executing OPT_EXPR pass (perform const folding).
-Optimizing module systolic_array.
-
-9.16. Finished fast OPT passes. (There is nothing left to do.)
+9.9. Finished fast OPT passes. (There is nothing left to do.)
 
 10. Executing ABC pass (technology mapping using ABC).
 
 10.1. Summary of detected clock domains:
-  16034 cells in clk={ }, en={ }, arst={ }, srst={ }
+  16035 cells in clk={ }, en={ }, arst={ }, srst={ }
 
 10.2. Extracting gate netlist of module `\systolic_array' to `<abc-temp-dir>/input.blif'..
-ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache-1000/yosys_merged_4c2f18a6.scl (1 files)
+ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache-1000/yosys_merged_435ac72d.scl (1 files)
 No matching clock domain found. Not extracting any FF cells.
 
 10.2.1. Executed ABC.
-Extracted 14809 gates and 16078 wires to a netlist network with 1268 inputs and 1225 outputs.
+Extracted 14810 gates and 16078 wires to a netlist network with 1267 inputs and 1225 outputs.
 Running ABC script: <abc-temp-dir>/abc.script
 ABC: UC Berkeley, ABC 1.01 (compiled Sep 18 2026 19:37:19)
 ABC: abc 01> empty
 ABC: abc 01> source <abc-temp-dir>/abc.script
 ABC: + read_blif <abc-temp-dir>/input.blif 
-ABC: + read_scl /tmp/yosys-liberty-scl-cache-1000/yosys_merged_4c2f18a6.scl 
-ABC: Warning: Detected 2 multi-output cells (for example, "FA_X1").
+ABC: + read_scl /tmp/yosys-liberty-scl-cache-1000/yosys_merged_435ac72d.scl 
+ABC: Warning: Detected 12 multi-output cells (for example, "ADDFHX1").
 ABC: + strash 
 ABC: + &get -n 
 ABC: + &fraig -x 
@@ -2125,34 +2096,56 @@ ABC:
 ABC: YOSYS_ABC_DONE 
 
 10.2.2. Re-integrating ABC results.
-ABC RESULTS:           AND2_X1 cells:      933
-ABC RESULTS:           AND3_X1 cells:      268
-ABC RESULTS:           AND4_X1 cells:      201
-ABC RESULTS:         AOI211_X2 cells:      225
-ABC RESULTS:          AOI21_X1 cells:     1808
-ABC RESULTS:         AOI221_X1 cells:      152
-ABC RESULTS:         AOI222_X1 cells:        1
-ABC RESULTS:          AOI22_X1 cells:      267
-ABC RESULTS:            INV_X1 cells:      798
-ABC RESULTS:           MUX2_X1 cells:      140
-ABC RESULTS:          NAND2_X1 cells:     2063
-ABC RESULTS:          NAND3_X1 cells:      245
-ABC RESULTS:          NAND4_X1 cells:      191
-ABC RESULTS:           NOR2_X1 cells:     1662
-ABC RESULTS:           NOR3_X1 cells:      326
-ABC RESULTS:           NOR4_X1 cells:       14
-ABC RESULTS:         OAI211_X2 cells:       24
-ABC RESULTS:          OAI21_X1 cells:     1590
-ABC RESULTS:         OAI221_X1 cells:       39
-ABC RESULTS:          OAI22_X1 cells:      134
-ABC RESULTS:          OAI33_X1 cells:      236
-ABC RESULTS:            OR2_X1 cells:      547
-ABC RESULTS:            OR3_X1 cells:      215
-ABC RESULTS:            OR4_X1 cells:       27
-ABC RESULTS:          XNOR2_X1 cells:     1815
-ABC RESULTS:           XOR2_X1 cells:      805
-ABC RESULTS:        internal signals:    13585
-ABC RESULTS:           input signals:     1268
+ABC RESULTS:            AND2X1 cells:      906
+ABC RESULTS:            AND3XL cells:       73
+ABC RESULTS:            AND4X1 cells:      129
+ABC RESULTS:            AO21X1 cells:       96
+ABC RESULTS:            AO22X1 cells:       58
+ABC RESULTS:          AOI211XL cells:      133
+ABC RESULTS:           AOI21X1 cells:      981
+ABC RESULTS:          AOI221X1 cells:       29
+ABC RESULTS:          AOI222X1 cells:        1
+ABC RESULTS:           AOI22X1 cells:      244
+ABC RESULTS:         AOI2BB1X1 cells:      124
+ABC RESULTS:         AOI2BB2X1 cells:        4
+ABC RESULTS:           AOI31X1 cells:      155
+ABC RESULTS:           AOI32X1 cells:       39
+ABC RESULTS:           AOI33XL cells:       42
+ABC RESULTS:         CLKXOR2X1 cells:      262
+ABC RESULTS:             INVX1 cells:      413
+ABC RESULTS:             MX2X1 cells:       87
+ABC RESULTS:            MXI2XL cells:      262
+ABC RESULTS:          NAND2BX1 cells:      248
+ABC RESULTS:           NAND2X1 cells:     1996
+ABC RESULTS:          NAND3BXL cells:      193
+ABC RESULTS:           NAND3X1 cells:       75
+ABC RESULTS:          NAND4BX1 cells:        1
+ABC RESULTS:           NAND4XL cells:      204
+ABC RESULTS:           NOR2BX1 cells:      308
+ABC RESULTS:            NOR2X1 cells:     1030
+ABC RESULTS:           NOR3BX1 cells:       23
+ABC RESULTS:            NOR3X1 cells:      141
+ABC RESULTS:          NOR4BBX1 cells:        2
+ABC RESULTS:            NOR4X1 cells:       26
+ABC RESULTS:            OA21X1 cells:      142
+ABC RESULTS:            OA22X1 cells:        5
+ABC RESULTS:          OAI211X1 cells:      195
+ABC RESULTS:           OAI21X1 cells:     1266
+ABC RESULTS:          OAI221X1 cells:       11
+ABC RESULTS:           OAI22X1 cells:       46
+ABC RESULTS:         OAI2BB1X1 cells:      426
+ABC RESULTS:         OAI2BB2XL cells:       11
+ABC RESULTS:           OAI31X1 cells:      190
+ABC RESULTS:           OAI32X1 cells:       14
+ABC RESULTS:           OAI33X1 cells:        7
+ABC RESULTS:             OR2X1 cells:      249
+ABC RESULTS:             OR3X1 cells:       66
+ABC RESULTS:             OR4X1 cells:        4
+ABC RESULTS:           XNOR2X1 cells:     1046
+ABC RESULTS:           XNOR3X1 cells:      527
+ABC RESULTS:            XOR3X1 cells:      219
+ABC RESULTS:        internal signals:    13586
+ABC RESULTS:           input signals:     1267
 ABC RESULTS:          output signals:     1225
 Removing temp directory.
 Removing global temp directory.
@@ -2169,16 +2162,16 @@ Removed 0 unused cells and 15327 unused wires.
 14. Executing SPLITNETS pass (splitting up multi-bit signals).
 
 15. Executing INSBUF pass (insert buffer cells for connected wires).
-Add systolic_array/$auto$insbuf.cc:97:execute$28165: \vld[5][0] -> \valid_act_out [0]
-Add systolic_array/$auto$insbuf.cc:97:execute$28166: \vld[11][0] -> \valid_act_out [1]
-Add systolic_array/$auto$insbuf.cc:97:execute$28167: \vld[17][0] -> \valid_act_out [2]
-Add systolic_array/$auto$insbuf.cc:97:execute$28168: \vld[23][0] -> \valid_act_out [3]
-Add systolic_array/$auto$insbuf.cc:97:execute$28169: \vld[29][0] -> \valid_act_out [4]
-Add systolic_array/$auto$insbuf.cc:97:execute$28170: \vld[25][0] -> \valid_sum_out [0]
-Add systolic_array/$auto$insbuf.cc:97:execute$28171: \vld[26][0] -> \valid_sum_out [1]
-Add systolic_array/$auto$insbuf.cc:97:execute$28172: \vld[27][0] -> \valid_sum_out [2]
-Add systolic_array/$auto$insbuf.cc:97:execute$28173: \vld[28][0] -> \valid_sum_out [3]
-Add systolic_array/$auto$insbuf.cc:97:execute$28174: \vld[29][0] -> \valid_sum_out [4]
+Add systolic_array/$auto$insbuf.cc:97:execute$26939: \vld[5][0] -> \valid_act_out [0]
+Add systolic_array/$auto$insbuf.cc:97:execute$26940: \vld[11][0] -> \valid_act_out [1]
+Add systolic_array/$auto$insbuf.cc:97:execute$26941: \vld[17][0] -> \valid_act_out [2]
+Add systolic_array/$auto$insbuf.cc:97:execute$26942: \vld[23][0] -> \valid_act_out [3]
+Add systolic_array/$auto$insbuf.cc:97:execute$26943: \vld[29][0] -> \valid_act_out [4]
+Add systolic_array/$auto$insbuf.cc:97:execute$26944: \vld[25][0] -> \valid_sum_out [0]
+Add systolic_array/$auto$insbuf.cc:97:execute$26945: \vld[26][0] -> \valid_sum_out [1]
+Add systolic_array/$auto$insbuf.cc:97:execute$26946: \vld[27][0] -> \valid_sum_out [2]
+Add systolic_array/$auto$insbuf.cc:97:execute$26947: \vld[28][0] -> \valid_sum_out [3]
+Add systolic_array/$auto$insbuf.cc:97:execute$26948: \vld[29][0] -> \valid_sum_out [4]
 
 16. Executing OPT_CLEAN pass (remove unused cells and wires).
 Finding unused cells or wires in module \systolic_array..
@@ -2194,48 +2187,70 @@ Found and reported 0 problems.
         +----------Local Count, excluding submodules.
         |        +-Local Area, excluding submodules.
         |        | 
-    16987        - wires
-    17434        - wire bits
+    13745        - wires
+    14192        - wire bits
      1036        - public wires
      1483        - public wire bits
        11        - ports
       458        - port bits
-    15961 2.23E+04 cells
-      933  992.712   AND2_X1
-      268   356.44   AND3_X1
-      201  320.796   AND4_X1
-      225   538.65   AOI211_X2
-     1808 1.92E+03   AOI21_X1
-      152  242.592   AOI221_X1
-        1    2.128   AOI222_X1
-      267   355.11   AOI22_X1
-       10     7.98   BUF_X1
-     1225  5539.45   DFF_X1
-      798  424.536   INV_X1
-      140   260.68   MUX2_X1
-     2063 1.65E+03   NAND2_X1
-      245   260.68   NAND3_X1
-      191   254.03   NAND4_X1
-     1662 1.33E+03   NOR2_X1
-      326  346.864   NOR3_X1
-       14    18.62   NOR4_X1
-       24   57.456   OAI211_X2
-     1590  1691.76   OAI21_X1
-       39   62.244   OAI221_X1
-      134   178.22   OAI22_X1
-      236  439.432   OAI33_X1
-      547  582.008   OR2_X1
-      215   285.95   OR3_X1
-       27   43.092   OR4_X1
-     1815  2896.74   XNOR2_X1
-      805  1284.78   XOR2_X1
+    13944 3.17E+04 cells
+      906 1.24E+03   AND2X1
+       73  149.796   AND3XL
+      129  308.826   AND4X1
+       96  229.824   AO21X1
+       58  158.688   AO22X1
+      133  272.916   AOI211XL
+      981  1677.51   AOI21X1
+       29   69.426   AOI221X1
+        1    3.078   AOI222X1
+      244  500.688   AOI22X1
+      124  254.448   AOI2BB1X1
+        4    13.68   AOI2BB2X1
+      155   318.06   AOI31X1
+       39   93.366   AOI32X1
+       42  100.548   AOI33XL
+       10    20.52   BUFX3
+      262  716.832   CLKXOR2X1
+     1225   6703.2   DFFHQX1
+      413  282.492   INVX1
+       87  208.278   MX2X1
+      262  627.228   MXI2XL
+      248  339.264   NAND2BX1
+     1996 2.05E+03   NAND2X1
+      193   330.03   NAND3BXL
+       75   128.25   NAND3X1
+        1    2.394   NAND4BX1
+      204   348.84   NAND4XL
+      308  421.344   NOR2BX1
+     1030  1056.78   NOR2X1
+       23   47.196   NOR3BX1
+      141   241.11   NOR3X1
+        2    5.472   NOR4BBX1
+       26    44.46   NOR4X1
+      142  291.384   OA21X1
+        5    11.97   OA22X1
+      195   333.45   OAI211X1
+     1266  2164.86   OAI21X1
+       11   26.334   OAI221X1
+       46   94.392   OAI22X1
+      426   728.46   OAI2BB1X1
+       11   41.382   OAI2BB2XL
+      190   389.88   OAI31X1
+       14   33.516   OAI32X1
+        7   19.152   OAI33X1
+      249  340.632   OR2X1
+       66  135.432   OR3X1
+        4    8.208   OR4X1
+     1046  2.5E+03   XNOR2X1
+      527 3.97E+03   XNOR3X1
+      219 1.65E+03   XOR3X1
 
-   Chip area for module '\systolic_array': 22339.212000
-     of which used for sequential elements: 5539.450000 (24.80%)
+   Chip area for module '\systolic_array': 31697.928000
+     of which used for sequential elements: 6703.200000 (21.15%)
 
 19. Executing Verilog backend.
 Dumping module `\systolic_array'.
 
-End of script. Logfile hash: 13c3f6211c, time: 5.66s, user: 3.96s, system: 0.32s, MEM: 116.56 MB peak
+End of script. Logfile hash: 1f4789d720, time: 6.41s, user: 4.45s, system: 0.61s, MEM: 116.38 MB peak
 Yosys 0.69+75 (git sha1 f0b945f63, Release, GNU /usr/bin/c++ 11.4.0)
-Time spent: 40% 2x abc (2 sec), 19% 20x opt_clean (1 sec), ...
+Time spent: 36% 2x abc (2 sec), 19% 19x opt_clean (1 sec), ...
