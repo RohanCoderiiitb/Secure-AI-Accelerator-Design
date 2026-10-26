@@ -1,4 +1,4 @@
-security_analyses/unprotected/traces/
+**/traces/
 security_analyses/unprotected/build/
 security_analyses/unprotected/scripts/run_tvla_second_order.py
 security_analyses/unprotected/scripts/tvla_second_order.py
@@ -7,5 +7,17 @@ __pycache__/
 *.py[cod]
 .DS_Store
 /venv
-security_analyses/protected/traces/
 security_analyses/protected/build/
+
+# Simulation trace and derived trace-data files, regardless of output folder.
+*.vcd
+*.vcd.gz
+*.fst
+*.ghw
+*.lxt
+*.lxt2
+*.vpd
+*.fsdb
+*.wlf
+*.npz
+*.meta.csv

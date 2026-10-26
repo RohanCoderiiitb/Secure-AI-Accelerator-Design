@@ -1,0 +1,10 @@
+npz,dut,mode,target,proxy,n_fixed,n_random,cycles,threshold,max_abs_t,argmax_cycle,n_leaking,n_confirmed
+tvla_outputs/pe_wt/traces/pe_masked_wt_null.npz,processing_element_masked,null,wt,P_reg,1000,1000,9,4.500,1.4661,5,0,0
+tvla_outputs/pe_wt/traces/pe_masked_wt_null.npz,processing_element_masked,null,wt,P_comb,1000,1000,9,4.500,2.1422,7,0,0
+tvla_outputs/pe_wt/traces/pe_masked_wt_null.npz,processing_element_masked,null,wt,P_tot,1000,1000,9,4.500,2.1213,7,0,0
+tvla_outputs/pe_wt/traces/pe_masked_wt.npz,processing_element_masked,tvla,wt,P_reg,1000,1000,9,4.500,1.3936,7,0,0
+tvla_outputs/pe_wt/traces/pe_masked_wt.npz,processing_element_masked,tvla,wt,P_comb,1000,1000,9,4.500,1.4197,7,0,0
+tvla_outputs/pe_wt/traces/pe_masked_wt.npz,processing_element_masked,tvla,wt,P_tot,1000,1000,9,4.500,1.4590,7,0,0
+tvla_outputs/pe_wt/traces/pe_masked_wt_maskoff.npz,processing_element_masked,tvla,wt,P_reg,1000,1000,9,4.500,66.9167,5,9,9
+tvla_outputs/pe_wt/traces/pe_masked_wt_maskoff.npz,processing_element_masked,tvla,wt,P_comb,1000,1000,9,4.500,42.3099,5,9,9
+tvla_outputs/pe_wt/traces/pe_masked_wt_maskoff.npz,processing_element_masked,tvla,wt,P_tot,1000,1000,9,4.500,43.0954,5,9,9

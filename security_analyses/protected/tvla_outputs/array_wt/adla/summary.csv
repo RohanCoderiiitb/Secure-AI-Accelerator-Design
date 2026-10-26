@@ -1,0 +1,7 @@
+npz,dut,mode,target,proxy,n_fixed,n_random,cycles,alpha,threshold,max_A2,argmax_cycle,n_leaking,n_confirmed,degenerate
+tvla_outputs/array_wt/traces/array_masked_wt_null.npz,systolic_array_masked,null,wt,P_reg,1000,1000,14,1e-05,20.9423,6.2354,11,0,0,0
+tvla_outputs/array_wt/traces/array_masked_wt_null.npz,systolic_array_masked,null,wt,P_comb,1000,1000,14,1e-05,24.4820,1.1963,4,0,0,0
+tvla_outputs/array_wt/traces/array_masked_wt_null.npz,systolic_array_masked,null,wt,P_tot,1000,1000,14,1e-05,23.8847,1.3182,4,0,0,0
+tvla_outputs/array_wt/traces/array_masked_wt.npz,systolic_array_masked,tvla,wt,P_reg,1000,1000,14,1e-05,20.7407,3.9683,0,0,0,0
+tvla_outputs/array_wt/traces/array_masked_wt.npz,systolic_array_masked,tvla,wt,P_comb,1000,1000,14,1e-05,19.3020,5.1849,0,0,0,0
+tvla_outputs/array_wt/traces/array_masked_wt.npz,systolic_array_masked,tvla,wt,P_tot,1000,1000,14,1e-05,19.3717,4.9965,0,0,0,0

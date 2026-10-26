@@ -1,0 +1,10 @@
+npz,dut,mode,target,order,proxy,n_fixed,n_random,cycles,threshold,max_abs_t,argmax_cycle,n_leaking,n_confirmed
+tvla_outputs/array_wt/traces/array_masked_wt_null.npz,systolic_array_masked,null,wt,2,P_reg,1000,1000,14,4.500,2.2122,0,0,0
+tvla_outputs/array_wt/traces/array_masked_wt_null.npz,systolic_array_masked,null,wt,2,P_comb,1000,1000,14,4.500,1.2915,2,0,0
+tvla_outputs/array_wt/traces/array_masked_wt_null.npz,systolic_array_masked,null,wt,2,P_tot,1000,1000,14,4.500,1.2434,2,0,0
+tvla_outputs/array_wt/traces/array_masked_wt.npz,systolic_array_masked,tvla,wt,1,P_reg,1000,1000,14,4.500,1.6381,1,0,0
+tvla_outputs/array_wt/traces/array_masked_wt.npz,systolic_array_masked,tvla,wt,1,P_comb,1000,1000,14,4.500,1.8786,4,0,0
+tvla_outputs/array_wt/traces/array_masked_wt.npz,systolic_array_masked,tvla,wt,1,P_tot,1000,1000,14,4.500,1.8974,4,0,0
+tvla_outputs/array_wt/traces/array_masked_wt.npz,systolic_array_masked,tvla,wt,2,P_reg,1000,1000,14,4.500,3.8774,0,0,0
+tvla_outputs/array_wt/traces/array_masked_wt.npz,systolic_array_masked,tvla,wt,2,P_comb,1000,1000,14,4.500,4.5384,0,1,0
+tvla_outputs/array_wt/traces/array_masked_wt.npz,systolic_array_masked,tvla,wt,2,P_tot,1000,1000,14,4.500,4.4670,0,0,0

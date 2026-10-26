@@ -1,0 +1,16 @@
+npz,dut,mode,target,proxy,n_fixed,n_random,cycles,alpha,threshold,max_A2,argmax_cycle,n_leaking,n_confirmed,degenerate
+tvla_outputs/multiplier_wt/traces/multiplier_masked_wt_null.npz,share_multiplier,null,wt,P_reg,1000,1000,1,1e-05,-1.3146,-1.3146,0,0,0,1
+tvla_outputs/multiplier_wt/traces/multiplier_masked_wt_null.npz,share_multiplier,null,wt,P_comb,1000,1000,1,1e-05,0.0000,0.0000,0,0,0,0
+tvla_outputs/multiplier_wt/traces/multiplier_masked_wt_null.npz,share_multiplier,null,wt,P_tot,1000,1000,1,1e-05,0.0000,0.0000,0,0,0,0
+tvla_outputs/multiplier_wt/traces/multiplier_masked_wt_null.npz,share_multiplier,null,wt,P_reg,1000,1000,1,1e-05,-1.3146,-1.3146,0,0,0,1
+tvla_outputs/multiplier_wt/traces/multiplier_masked_wt_null.npz,share_multiplier,null,wt,P_comb,1000,1000,1,1e-05,0.0000,0.0000,0,0,0,0
+tvla_outputs/multiplier_wt/traces/multiplier_masked_wt_null.npz,share_multiplier,null,wt,P_tot,1000,1000,1,1e-05,0.0000,0.0000,0,0,0,0
+tvla_outputs/multiplier_wt/traces/multiplier_masked_wt.npz,share_multiplier,tvla,wt,P_reg,1000,1000,1,1e-05,-1.3146,-1.3146,0,0,0,1
+tvla_outputs/multiplier_wt/traces/multiplier_masked_wt.npz,share_multiplier,tvla,wt,P_comb,1000,1000,1,1e-05,22.5285,397.7561,0,1,1,0
+tvla_outputs/multiplier_wt/traces/multiplier_masked_wt.npz,share_multiplier,tvla,wt,P_tot,1000,1000,1,1e-05,22.5285,397.7561,0,1,1,0
+tvla_outputs/multiplier_wt/traces/multiplier_masked_wt_null.npz,masked_mult_dut,null,wt,P_reg,1000,1000,5,1e-05,21.5413,1.6228,1,0,0,0
+tvla_outputs/multiplier_wt/traces/multiplier_masked_wt_null.npz,masked_mult_dut,null,wt,P_comb,1000,1000,5,1e-05,17.6905,3.4506,0,0,0,0
+tvla_outputs/multiplier_wt/traces/multiplier_masked_wt_null.npz,masked_mult_dut,null,wt,P_tot,1000,1000,5,1e-05,16.5231,2.7933,0,0,0,0
+tvla_outputs/multiplier_wt/traces/multiplier_masked_wt.npz,masked_mult_dut,tvla,wt,P_reg,1000,1000,5,1e-05,23.2612,1.3777,1,0,0,0
+tvla_outputs/multiplier_wt/traces/multiplier_masked_wt.npz,masked_mult_dut,tvla,wt,P_comb,1000,1000,5,1e-05,20.0965,3.8378,4,0,0,0
+tvla_outputs/multiplier_wt/traces/multiplier_masked_wt.npz,masked_mult_dut,tvla,wt,P_tot,1000,1000,5,1e-05,19.4984,3.3775,4,0,0,0
