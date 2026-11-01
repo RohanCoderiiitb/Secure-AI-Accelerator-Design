@@ -1,0 +1,4 @@
+npz,dut,mode,target,proxy,n_fixed,n_random,cycles,threshold,max_abs_t,argmax_cycle,n_leaking,n_confirmed
+protected_designs\protect_array_acc\protect_array_acc_whole_top_wt.npz,flexnn_top,tvla,wt,P_reg,1000,1000,18,4.500,49.9829,16,8,7
+protected_designs\protect_array_acc\protect_array_acc_whole_top_wt.npz,flexnn_top,tvla,wt,P_comb,1000,1000,18,4.500,51.0215,16,7,4
+protected_designs\protect_array_acc\protect_array_acc_whole_top_wt.npz,flexnn_top,tvla,wt,P_tot,1000,1000,18,4.500,51.8885,16,6,5
