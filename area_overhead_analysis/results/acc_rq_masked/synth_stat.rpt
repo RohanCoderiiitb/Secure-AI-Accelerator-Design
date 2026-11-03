@@ -1,0 +1,75 @@
+
+31. Printing statistics.
+
+=== flexnn_top_rq_masked ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+   130044        - wires
+   130483        - wire bits
+    34962        - public wires
+    35401        - public wire bits
+       23        - ports
+      462        - port bits
+   130073 3.24E+05 cells
+     6179 8.45E+03   AND2X1
+      628 1.29E+03   AND3XL
+      497 1.19E+03   AND4X1
+      343  821.142   AO21X1
+       61  166.896   AO22X1
+      888 1.82E+03   AOI211XL
+     3017  5159.07   AOI21X1
+      119  284.886   AOI221X1
+       62  190.836   AOI222X1
+     2222 4.56E+03   AOI22X1
+     1210  2482.92   AOI2BB1X1
+        3    10.26   AOI2BB2X1
+      493 1.01E+03   AOI31X1
+      261  624.834   AOI32X1
+       15    35.91   AOI33XL
+        5    10.26   BUFX3
+     5751 1.57E+04   CLKXOR2X1
+    22075 1.21E+05   DFFHQX1
+      776   6634.8   EDFFHQX1
+     2377 1.63E+03   INVX1
+     1620  3878.28   MX2X1
+        5    35.91   MX4XL
+     1482 3.55E+03   MXI2XL
+        1    7.182   MXI4X1
+     4029 5.51E+03   NAND2BX1
+    16278 1.67E+04   NAND2X1
+      594  1015.74   NAND3BXL
+      472   807.12   NAND3X1
+        2    4.788   NAND4BX1
+     1068  1826.28   NAND4XL
+     3956 5.41E+03   NOR2BX1
+     9148 9.39E+03   NOR2X1
+      113  231.876   NOR3BX1
+      695  1188.45   NOR3X1
+        2    5.472   NOR4BBX1
+        2    4.788   NOR4BX1
+       75   128.25   NOR4X1
+      766 1.57E+03   OA21X1
+      122  292.068   OA22X1
+     3367  5757.57   OAI211X1
+     2966  5071.86   OAI21X1
+      142  339.948   OAI221X1
+      105   287.28   OAI222X1
+      366  751.032   OAI22X1
+     2315  3958.65   OAI2BB1X1
+        2    7.524   OAI2BB2XL
+      207  424.764   OAI31X1
+       77  184.338   OAI32X1
+        6   16.416   OAI33X1
+     1902  2.6E+03   OR2X1
+      214  439.128   OR3X1
+       22   45.144   OR4X1
+        1    1.026   TIELO
+    29897 7.16E+04   XNOR2X1
+      713 5.36E+03   XNOR3X1
+      359  2.7E+03   XOR3X1
+
+   Chip area for module '\flexnn_top_rq_masked': 323983.782000
+     of which used for sequential elements: 127429.200000 (39.33%)
+

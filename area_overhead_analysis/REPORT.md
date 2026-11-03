@@ -28,18 +28,27 @@
 | Processing element (weight-masked) | 1,364.2 | 6,371.5 | **4.67×** | 276.3 → 783.9 | **2.84×** | 1,070.8 → 5,491.8 | **5.13×** | 2,942 → 12,556 | **4.27×** |
 | 5×5 systolic array (act-masked) | 35,406.6 | 160,098.8 | **4.52×** | 6,898.1 → 19,948.2 | **2.89×** | 27,913.7 → 138,843.8 | **4.97×** | 65,426 → 280,958 | **4.29×** |
 | 5×5 systolic array (weight-masked) | 35,406.6 | 166,220.9 | **4.70×** | 6,898.1 → 19,726.6 | **2.86×** | 27,913.7 → 145,224.1 | **5.20×** | 65,426 → 293,022 | **4.48×** |
-| 5×5 systolic array (activation-link-masked, plain PEs) ² | 35,406.6 | 42,613.9 | **1.20×** | 6,898.1 → 9,646.5 | **1.40×** | 27,913.7 → 32,363.8 | **1.16×** | 65,426 → 78,221 | **1.20×** |
+| 5×5 systolic array (weight-masked, shared mask column) ² | 35,406.6 | 60,452.9 | **1.71×** | 6,898.1 → 8,709.4 | **1.26×** | 27,913.7 → 51,045.2 | **1.83×** | 65,426 → 107,902 | **1.65×** |
+| Full accelerator, 5×5: array masked only ³ | 117,291.3 | 152,386.3 | **1.30×** | 19,215.6 → 22,443.8 | **1.17×** | 96,777.4 → 128,671.7 | **1.33×** | 209,329 → 269,314 | **1.29×** |
+| Full accelerator, 5×5: requantizer masked only ³ | 117,291.3 | 390,025.0 | **3.33×** | 19,215.6 → 129,591.3 | **6.74×** | 96,777.4 → 249,288.2 | **2.58×** | 209,329 → 654,424 | **3.13×** |
+| Full accelerator, 5×5: array + requantizer masked ³ | 117,291.3 | 422,202.1 | **3.60×** | 19,215.6 → 134,965.5 | **7.02×** | 96,777.4 → 276,145.2 | **2.85×** | 209,329 → 715,631 | **3.42×** |
 
 ¹ The multiplier baseline is the unmasked Baugh-Wooley multiplier **plus its weight
 register** (`bw_multiplier_wreg`), because every masked multiplier stores its weight
 (shares) internally. Against the bare, purely combinational `baugh_wooley_multiplier`
 (632.7 µm² total, no registers), the total-area ratios are 3.10× / 3.98× / 11.84×.
 
-² `systolic_array_actlink_masked` keeps the 25 **unmodified** `processing_element`s
-(plain multipliers) and masks only the west→east activation links between them. It
-includes its own mask generator (`act_masker`, 8-bit shares). Each PE's multiplier
-still sees the recombined plaintext activation, so this design protects less than
-the fully masked arrays (§4.5).
+² `systolic_array_wmask_shared` gives each PE **one** 19-bit weight share
+(w − R_r, with one random R_r per row). The mask's contribution, Σ a_r·R_r, is
+computed once in a shadow column and added back at the bottom of each column. It
+includes its own mask generator. It is not like-for-like with the two-share arrays:
+narrower shares, one share per PE, and a mask shared across each row (§4.5).
+
+³ The complete `complete_accelerator/` design at 5×5, against the unprotected
+`flexnn_top`. Buffers, controllers, activation unit and maxpool are identical and
+unmasked in all four; the three masked variants differ only in which block is
+masked: the shared-mask-column array (`flexnn_top_arr_masked`), the requantizer
+(`flexnn_top_rq_masked`), or both (`flexnn_top_protected`) (§4.6).
 
 **Findings:**
 - **Combinational logic drives the overhead everywhere.** Masking duplicates
@@ -53,26 +62,32 @@ the fully masked arrays (§4.5).
     plus 32-bit partial-sum shares.
   - **Weight-masked and act + weight masked multipliers:** 4.0× and 13×, from the
     16-bit weight shares and registered term outputs.
-  - **Activation-link-masked array:** 1.40×, from the mask generator's RNG state and
-    the 8-bit link share registers.
 - **Activation and weight masking cost about the same at PE and array level:**
   - PE: 4.24× vs 4.67×.
   - Array: 4.52× vs 4.70×.
 
   Both duplicate the same datapath, so the 5–10 % gap is a synthesis effect rather
   than an architectural one (§4.3).
-- **Masking only the activation links (plain PEs) is far cheaper:** 1.20× total area
-  against about 4.5–4.7× for the fully masked arrays. It leaves each PE's multiplier
-  working on plaintext activations (§4.5).
+- **A shared mask column cuts weight-masking cost to 1.71×,** against 4.70× for the
+  two-share weight-masked array (60,453 vs 166,221 µm², about 36 %). It avoids
+  duplicating the multiplier in every PE, but it protects against less (§4.5).
+- **In the full accelerator, the masked requantizer is the cost, not the array:**
+  - array masked only: 1.30× (+35,095 µm²)
+  - requantizer masked only: 3.33× (+272,734 µm²)
+  - both: 3.60× (+304,911 µm²)
+
+  Masking the array on top of a masked requantizer adds only 0.27× (§4.6).
 - **Die area tracks total area.** It is slightly lower for the small designs because
   the 2 µm core margin weighs less as the die grows.
 
 **Timing:**
-- **Fast corner:** all 13 designs meet 100 MHz with at least 3.3 ns setup slack and
-  positive hold slack.
+- **Fast corner:** all 17 designs meet setup at 100 MHz with at least 2.6 ns slack.
+  Hold slack is positive everywhere except the array + requantizer masked
+  accelerator, which misses by 0.002 ns (a marginal violation, §4.8).
 - **Slow corner:** **none of them meet 100 MHz**, with setup slack between −3.0 and
-  −18.2 ns (§4.7). The masked designs miss by the most.
-- **Routing:** all 13 route with **0 DRC violations**.
+  −24.0 ns (§4.8). The accelerators (−19.1 to −24.0 ns) and the two-share masked
+  blocks miss by the most.
+- **Routing:** all 17 route with **0 DRC violations**.
 
 ![Post-route area](results/area_postroute.png)
 
@@ -98,7 +113,11 @@ Parameters match the configurations used by the design testbenches
 | `sa_unmasked` | `systolic_array` | `source/systolic_array.sv` | 5×5, N=8, ACCW=32 | 25 × `processing_element` |
 | `sa_act_masked` | `systolic_array_masked_act` | `systolic_array_masked_act.sv` | 5×5, N=8, SHARE_W=32 | 25 × `processing_element_masked_act` |
 | `sa_wt_masked` | `systolic_array_masked` | `systolic_array_masked_wt.sv` | 5×5, N=8, SHARE_W=32 | 25 × `processing_element_masked` |
-| `sa_actlink_masked` | `systolic_array_actlink_masked` | `systolic_array_actlink_masked.sv` + `source/processing_element.sv`, `source/multiplier.sv`, `act_masker.sv` | 5×5, N=8, ACCW=32, SHARE_W=8 (RTL defaults, as in its testbench) | 25 unmodified PEs; activations travel between PEs as two 8-bit shares (`act_link_masked` registers) and are recombined at each PE input; includes `act_masker` |
+| `sa_wmask_shared` | `systolic_array_wmask_shared` | `systolic_array_wmask_shared.sv` + `source/multiplier.sv` (adders) | 5×5, N=8, SW=19 (RTL defaults) | 25 × `processing_element_wshare` (one 19-bit weight share each) + 5 × `shadow_pe` + S delay line + `wmask_gen` (xorshift64, one mask per row) |
+| `acc_unmasked` | `flexnn_top` | `complete_accelerator/complete_accelerator/top.sv` + its submodules (identical to `source/`) | ARRAY_ROWS=ARRAY_COLS=5; WAVES=4, POOL_LEN=1, MW=32, SW=6 (RTL defaults) | Complete unprotected accelerator: IF/FL global buffers, load controller, activation scratchpads, address generator, `systolic_array`, `psum_accum`, 5 × (`requantize` + `activation_unit` + `maxpool_unit`), output scratchpads |
+| `acc_arr_masked` | `flexnn_top_arr_masked` | `top_protected_arr_only.sv` + `systolic_array_wmask_shared.sv` | as `acc_unmasked`; array SW=19 | **Array masked only:** shared-mask-column array (shares recombined at the column outputs); plain `psum_accum` and `requantize` |
+| `acc_rq_masked` | `flexnn_top_rq_masked` | `top_protected_rq_only.sv` + `requantize_masked.sv`, `masking_gadgets.sv` | as `acc_unmasked`; XW=19, DOM_REG=1 | **Requantizer masked only:** plain array and `psum_accum`; each accumulator output split into two fresh arithmetic shares, then `requantize_masked` + `rng_bank` per column |
+| `acc_both_masked` | `flexnn_top_protected` | `top_protected.sv` + `systolic_array_wmask_shares.sv`, `systolic_array_wmask_shared.sv`, `psum_accum_masked.sv`, `requantize_masked.sv`, `masking_gadgets.sv` | as `acc_unmasked`; XW=19, DOM_REG=1 | **Array + requantizer masked:** shared-mask-column array (two output shares), `psum_accum_masked`, 5 × (`requantize_masked` + `rng_bank`) |
 | `act_masker` | `act_masker` | `act_masker.sv` | 5 rows, SHARE_W=32 | West-boundary share generator (xorshift64 RNG + splitter per row) |
 
 The wrapper in `rtl/area_ref_wrappers.sv` changes no design under test. It only adds
@@ -106,7 +125,8 @@ the weight register that a fair multiplier comparison would otherwise leave out.
 
 The fully masked arrays (`sa_act_masked`, `sa_wt_masked`) do **not** include a share
 generator: their shares are module inputs. The cost of the activation mask generator
-is shown separately in the `act_masker` row.
+is shown separately in the `act_masker` row. `sa_wmask_shared` **does** include its
+own mask generator (`wmask_gen`) and the north-edge share subtractors.
 
 ---
 
@@ -127,7 +147,11 @@ is shown separately in the `act_masker` row.
 | Systolic array | Unmasked 5×5 (**baseline**) | 35,406.6 | 6,898.1 | 27,913.7 | 594.7 | 65,426 | — | — | — | — |
 | Systolic array | Activation-masked 5×5 | 160,098.8 | 19,948.2 | 138,843.8 | 1,306.8 | 280,958 | 4.52× | 2.89× | 4.97× | 4.29× |
 | Systolic array | Weight-masked 5×5 | 166,220.9 | 19,726.6 | 145,224.1 | 1,270.2 | 293,022 | 4.70× | 2.86× | 5.20× | 4.48× |
-| Systolic array | Activation-link-masked 5×5 (plain PEs, incl. `act_masker`) | 42,613.9 | 9,646.5 | 32,363.8 | 603.6 | 78,221 | 1.20× | 1.40× | 1.16× | 1.20× |
+| Systolic array | Weight-masked 5×5, shared mask column (incl. `wmask_gen`) | 60,452.9 | 8,709.4 | 51,045.2 | 698.4 | 107,902 | 1.71× | 1.26× | 1.83× | 1.65× |
+| Accelerator | Unprotected, 5×5 array (**baseline**) | 117,291.3 | 19,215.6 | 96,777.4 | 1,298.2 | 209,329 | — | — | — | — |
+| Accelerator | Array masked only | 152,386.3 | 22,443.8 | 128,671.7 | 1,270.9 | 269,314 | 1.30× | 1.17× | 1.33× | 1.29× |
+| Accelerator | Requantizer masked only | 390,025.0 | 129,591.3 | 249,288.2 | 11,145.4 | 654,424 | 3.33× | 6.74× | 2.58× | 3.13× |
+| Accelerator | Array + requantizer masked | 422,202.1 | 134,965.5 | 276,145.2 | 11,091.4 | 715,631 | 3.60× | 7.02× | 2.85× | 3.42× |
 | Support | `act_masker` alone (5 rows, 32-bit shares) | 7,114.6 | 1,754.1 | 5,191.2 | 169.3 | 13,407 | — | — | — | — |
 
 Total = register + combinational + clock-tree/tie cells (gsclib045 is a tapless
@@ -149,7 +173,11 @@ component of the baseline marked **baseline** in its level.
 | sa_unmasked | 6,898.1 | 24,991.3 | 2,922.4 | 594.7 | 0.0 | **35,406.6** | 31,697.9 | 14,547 | 56.4 % | +5.253 | +0.078 | −9.127 | 0 |
 | sa_act_masked | 19,948.2 | 116,602.2 | 22,241.6 | 1,306.8 | 0.0 | **160,098.8** | 138,367.7 | 76,870 | 58.2 % | +4.259 | +0.069 | −15.377 | 0 |
 | sa_wt_masked | 19,726.6 | 125,584.8 | 19,639.3 | 1,270.2 | 0.0 | **166,220.9** | 144,354.8 | 75,404 | 57.8 % | +3.472 | +0.075 | −18.244 | 0 |
-| sa_actlink_masked | 9,646.5 | 28,685.9 | 3,677.9 | 603.6 | 0.0 | **42,613.9** | 38,000.3 | 17,861 | 56.5 % | +5.273 | +0.066 | −9.120 | 0 |
+| sa_wmask_shared | 8,709.4 | 44,166.9 | 6,878.3 | 697.3 | 1.0 | **60,452.9** | 52,645.8 | 25,806 | 58.0 % | +5.528 | +0.047 | −5.337 | 0 |
+| acc_unmasked | 19,215.6 | 85,042.1 | 11,735.4 | 1,298.2 | 0.0 | **117,291.3** | 102,841.4 | 54,595 | 57.3 % | +3.261 | +0.025 | −23.277 | 0 |
+| acc_arr_masked | 22,443.8 | 111,830.2 | 16,841.5 | 1,269.8 | 1.0 | **152,386.3** | 132,589.6 | 68,119 | 57.7 % | +3.106 | +0.050 | −24.013 | 0 |
+| acc_rq_masked | 129,591.3 | 199,007.8 | 50,280.5 | 11,144.4 | 1.0 | **390,025.0** | 323,983.8 | 140,559 | 60.4 % | +2.674 | +0.003 | −19.113 | 0 |
+| acc_both_masked | 134,965.5 | 223,917.0 | 52,228.2 | 11,090.4 | 1.0 | **422,202.1** | 354,439.6 | 154,191 | 59.7 % | +3.016 | −0.002 | −19.101 | 0 |
 | act_masker | 1,754.1 | 4,431.6 | 759.6 | 169.3 | 0.0 | **7,114.6** | 6,248.3 | 2,945 | 58.3 % | +3.299 | +0.097 | −7.420 | 0 |
 
 - **Comb. logic + Buf/Inv** gives the combinational column of §3.1. "Buf/Inv" covers
@@ -262,33 +290,94 @@ component of the baseline marked **baseline** in its level.
   and a 32-bit splitter per row) is 7,115 µm² standalone, about +0.20× of the
   unmasked array, and it shrinks relative to the array as COLS grows.
 
-### 4.5 Activation-link-masked array, plain PEs (total 1.20× / register 1.40× / comb. 1.16×)
-- **What it is.** `systolic_array_actlink_masked` keeps the 25 unmodified
-  `processing_element`s. Masking lives only in the array:
-  - `act_masker` splits each row's activation into two 8-bit shares.
-  - `act_link_masked` registers carry the shares from column to column.
-  - An 8-bit adder recombines them right before each PE's `act_in`.
+### 4.5 Weight-masked array with a shared mask column (total 1.71× / register 1.26× / comb. 1.83×)
+- **What it is.** `systolic_array_wmask_shared` stores one share per PE,
+  w1 = w − R_r, where R_r is one random number per row shared by all five columns.
+  Column c's output is Σ a_r·w1_rc + Σ a_r·R_r. The second sum is the same for
+  every column (only delayed by c), so it is computed once:
+  - a 5-PE shadow column multiplies each row's public activation by R_r
+  - a delay line gives column c that sum c cycles later
+  - one 19-bit adder per column recombines it with the masked partial sum.
 
-  The PEs' own `act_out` registers are left unconnected, so synthesis removes them.
-- **Total area 42,614 µm², +7,207 µm² over the unprotected array (1.20×).** This is
-  about a quarter of the fully masked arrays' cost (about 4.5–4.7×).
-- **Register: 6,898 → 9,646 µm² (1.40×).** The flop count goes from 1,225 to 1,745,
+  `wmask_gen` (64-bit xorshift) draws the five masks before each weight load. A
+  cycle-accurate simulation against the unprotected array matched on every cycle
+  (200 random tiles, masks on and off).
+- **Total area 60,453 µm², +25,046 µm² over the unprotected array (1.71×).** Pre-layout
+  (Yosys), the area splits into:
+
+  | Block | Count | Area (µm², pre-layout) |
+  |---|---:|---:|
+  | One-share PE (`processing_element_wshare`) | 25 × 1,656 | 41,399 |
+  | Shadow PE (`shadow_pe`) | 5 × 1,429 | 7,144 |
+  | Top level: `wmask_gen`, S delay line, edge subtractors, recombine adders, load counter | 1 | 4,102 |
+  | **Total** | | **52,646** (unprotected array: 31,698) |
+
+  Each one-share PE is 31 % larger than the unprotected PE (1,656 vs 1,262 µm²
+  pre-layout). Its multiplier is 8×19 mod 2¹⁹ instead of the 8×8 Baugh–Wooley, and
+  its weight register is 19 bits instead of 8. The psum register is narrower
+  (19 instead of 32 bits).
+- **Register: 6,898 → 8,709 µm² (1.26×).** The flop count goes from 1,225 to 1,508,
   which matches the RTL exactly:
-  - +320 RNG state bits (5 rows × 64-bit xorshift)
-  - +400 link share registers (5 rows × 5 links × 2 × 8 bits)
-  - −200 removed PE `act_out` registers (25 × 8)
-- **Combinational: 27,914 → 32,364 µm² (1.16×).** The additions are the xorshift
-  update logic, five 8-bit share splitters, and thirty 8-bit recombine adders (six
-  links per row). The 25 multipliers and psum adders are unchanged.
-- **Why it is cheap, and what it does not cover.** It never duplicates the
-  multiplier or the 32-bit partial-sum datapath, which are what make the fully
-  masked arrays about 4.5×. The flip side is that each PE's multiplier still
-  computes on the **plaintext** activation, and the partial sums stay unmasked.
-  Only the activation transport between PEs is protected. The 1.20× buys a
-  narrower protection scope than the 4.5× designs, and this report measures area
-  only, not that security difference.
+  - 25 PEs × 47 = 1,175 (19 weight + 8 activation + 19 psum + 1 valid)
+  - 95 shadow-column psum
+  - 76 delay line
+  - 159 mask generator (64 RNG state + 5 × 19 masks)
+  - 3 load counter
+- **Why it is about a third of the two-share weight-masked array** (60,453 vs
+  166,221 µm²):
+  - **No duplicated datapath per PE.** The two-share array has two 8×32 share
+    multipliers and two 32-bit psum adders in every PE. Here each PE has one 8×19
+    multiplier, and the mask path costs 5 extra multipliers in total instead of 25.
+  - **Narrower shares.** 19 bits (2N + clog2(ROWS), enough for a 5-term INT8 dot
+    product) against 32 bits.
+- **Not like-for-like with `sa_wt_masked`:**
+  - It **includes** its mask generator; `sa_wt_masked` takes shares as inputs.
+  - Its 19-bit width is tied to a single 5-row tile. The output is sign-extended to
+    32 bits, and multi-tile accumulation happens after recombination, in the clear.
+  - **Protection scope is narrower, and this report does not measure it.** One mask
+    per row is reused by all five PEs in that row and held for the whole tile, so
+    two shares in the same row differ by exactly w_rc − w_rc'. The shadow column
+    computes a_r·R_r from public activations. Both are second-order (bivariate)
+    concerns. The design needs first- and second-order TVLA before its 1.71× can be
+    compared with the 4.70× design on security.
 
-### 4.6 Physical-design effects
+### 4.6 Full accelerator: which block to mask (array only 1.30× / requantizer only 3.33× / both 3.60×)
+- **What is compared.** Four complete accelerators from `complete_accelerator/` at
+  5×5. Buffers, controllers, activation units and maxpools are identical and
+  unmasked in all four. The masked variants differ only in which block is masked:
+
+  | Variant | Total (µm²) | × | Flops | What is masked |
+  |---|---:|---:|---:|---|
+  | Unprotected (baseline) | 117,291 | — | 2,901 | nothing |
+  | Array masked only | 152,386 | 1.30× | 3,437 | shared-mask-column array (shares recombined at its output) |
+  | Requantizer masked only | 390,025 | 3.33× | 22,851 | fresh-share split + `requantize_masked` + `rng_bank` per column |
+  | Array + requantizer masked | 422,202 | 3.60× | 23,737 | array with two-share output + `psum_accum_masked` + `requantize_masked` + `rng_bank` |
+
+- **Functional check.** RTL simulation of all four on the same 40 random jobs
+  (random activations, weights, bias, M0, shift and activation mode): the three
+  masked variants' output buffers matched the unprotected one exactly (800 bytes
+  each, 0 mismatches).
+- **The requantizer is the cost.** Masking it adds 272,734 µm² and ~19,950 flops:
+  per column, a registered DOM masked adder and AND trees (`DOM_REG=1`), the
+  per-share multipliers, the pipeline and the RNG state. Masking the array adds
+  35,095 µm² on its own, the same order as the standalone shared-column array
+  (+25,046 µm², §4.5) plus the wider 19-bit share path into the accumulator.
+- **The two costs simply add up** (3.60× vs. 1.30× + 3.33× − 1 = 3.63×; the 0.03×
+  gap is within mapping noise). Feeding the array's shares straight into the
+  requantizer neither saves nor costs anything measurable.
+- **Any further area reduction has to come from the requantizer** (e.g.
+  `DOM_REG=0`, which drops the registered gadget layers but is first-order secure
+  only in a glitch-free model).
+- **Caveats:**
+  - Memories (global buffers, scratchpads, `psum_accum` storage) are synthesised as
+    flops in all four, since the PDK has no SRAM macros. They are identical across
+    the variants, so they dilute the ratios rather than inflate them.
+  - Protection scope: §4.5 applies to the array; the requantizer masking has not
+    been TVLA-tested here.
+  - These numbers come from single-threaded Yosys (§5 caveats). Multithreaded runs
+    of the requantizer-masked designs crashed, hung or deleted output buffers.
+
+### 4.7 Physical-design effects
 - **Post-route area exceeds the Yosys estimate** by 0.5–9.4 % for multipliers and
   PEs and 12–16 % for the arrays and the mask generator. The difference is mostly
   buffers inserted for this library's slew/capacitance limits and for timing, plus
@@ -301,7 +390,7 @@ component of the baseline marked **baseline** in its level.
 - **Clock-tree area grows with flop count.** In the activation-masked array it is
   2.2× the baseline (1,307 vs 595 µm²).
 
-### 4.7 Timing at 100 MHz
+### 4.8 Timing at 100 MHz
 - **Fast corner** (`fast_vdd1v0`, 1.1 V, 0 °C): the implementation corner, as in the
   lab Genus/Innovus flow.
   - Every design meets 10 ns, with at least 3.3 ns setup slack and positive hold
@@ -314,10 +403,14 @@ component of the baseline marked **baseline** in its level.
     baseline) to −18.2 ns (weight-masked array). Even the bare 8×8 multiplier needs
     about 9.8 ns of logic delay in this corner, against 6 ns left after the 20 %
     input and output delays.
-  - The masked PEs and arrays miss by the most (−13 to −18 ns), because their 8×32
-    share multipliers and 32-bit adders form much longer paths.
-  - Hold slack is also slightly negative in the slow corner for the four arrays
-    (down to −1.0 ns), since hold was fixed in the fast corner only.
+  - The two-share masked PEs and arrays miss by the most (−13 to −18 ns), because
+    their 8×32 share multipliers and 32-bit adders form much longer paths. The
+    shared-column array misses by −5.3 ns, close to the unprotected array (−9.1 ns),
+    because its PEs keep a single 8×19 multiplier.
+  - Hold slack is also slightly negative in the slow corner for the four arrays and
+    all four accelerators (down to −1.07 ns), since hold was fixed in the fast
+    corner only. The array + requantizer masked accelerator also misses hold by
+    0.002 ns in the fast corner.
 - **What it means.** Meeting 100 MHz at worst-case PVT would need pipelining or a
   slower clock. Closing timing in the slow corner would also make timing repair
   upsize cells, which would add area beyond the numbers here.
@@ -395,9 +488,8 @@ component of the baseline marked **baseline** in its level.
   not depend on this.
 - **Randomness generation is mostly excluded:**
   - Excluded from the multiplier, PE and fully masked array rows, where the shares
-    are inputs.
-  - Included in the activation-link-masked array, which contains its own
-    `act_masker`.
+    are inputs. The activation mask generator is reported on its own (`act_masker`).
+  - Included in the shared-mask-column array, which contains its own `wmask_gen`.
   - Weight-share generation (once per tile load) is outside the weight-masked array
     and not counted.
 - **Weight-masked RTL synthesised as supplied.** `processing_element_masked_wt.sv`
@@ -407,11 +499,19 @@ component of the baseline marked **baseline** in its level.
 - **Physical leakage not covered.** OpenROAD links the netlist flat, so the share
   domains are logically separate but can be placed next to each other. That has no
   effect on area, but it matters for physical leakage, which is out of scope here.
+- **Yosys runs single-threaded.** The installed Yosys dev build parallelises some
+  optimisation passes (`OPT_CLEAN`, memory passes), and on the requantizer-masked
+  accelerators they race: from identical input, runs segfaulted, hung, or deleted
+  an output buffer as "const-x" (a different column each time). `run_design.sh`
+  therefore sets `YOSYS_MAX_THREADS=1` and stops a run if Yosys reports
+  "removing const-x". All earlier designs synthesised cleanly multithreaded and
+  were not re-run.
 - **Yosys workaround.** In the installed Yosys dev build, `chparam` and
-  `hierarchy -chparam` hit an internal assertion on the array tops. All three array
+  `hierarchy -chparam` hit an internal assertion on the array tops. All four array
   tops are therefore elaborated with their RTL defaults, which are already the
-  intended configuration (5×5, N=8; SHARE_W=32 for the fully masked arrays,
-  SHARE_W=8 for the activation-link-masked array, matching its testbench).
+  intended configuration (5×5, N=8; SHARE_W=32 for the fully masked arrays; SW=19
+  for the shared-mask-column array). The two accelerator tops do accept `chparam`
+  and are set to 5×5 that way.
 
 ---
 

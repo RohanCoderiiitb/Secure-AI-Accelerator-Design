@@ -40,7 +40,19 @@ export OUT_DIR=$ANALYSIS/results/$name
 rm -rf "$OUT_DIR"; mkdir -p "$OUT_DIR"
 
 echo "[$name] yosys"
+# The installed Yosys dev build runs some optimisation passes multithreaded and
+# they race on the large masked accelerators (segfaults, hangs, or memories
+# wrongly deleted, varying run to run). Single-threaded Yosys is deterministic.
+export YOSYS_MAX_THREADS=${YOSYS_MAX_THREADS:-1}
 yosys -q -l "$OUT_DIR/yosys.log" -c "$HERE/synth.tcl"
+# The installed Yosys dev build sometimes (nondeterministically) treats the
+# write data of a small memory as undefined and deletes it, which silently
+# removes an output buffer from the masked accelerators. Stop here instead of
+# reporting a wrong area; simply re-run the design.
+if grep -q "removing const-x" "$OUT_DIR/yosys.log"; then
+    echo "[$name] yosys removed memory lanes as constant-x (known Yosys issue): netlist is wrong, re-run" >&2
+    exit 2
+fi
 echo "[$name] openroad"
 openroad -no_splash -exit -log "$OUT_DIR/openroad.log" "$HERE/pnr.tcl" > /dev/null
 echo "[$name] opensta (slow + fast corner)"

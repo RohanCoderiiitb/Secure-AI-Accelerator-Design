@@ -1,0 +1,54 @@
+Startpoint: act_flat[33] (input port clocked by clk)
+Endpoint: g_shadow[4].sh_inst/_1371_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock clk (rise edge)
+   0.000    0.000   clock network delay (propagated)
+   2.000    2.000 ^ input external delay
+   0.012    2.012 ^ act_flat[33] (in)
+   0.047    2.059 ^ wire742/Y (BUFX20)
+   0.188    2.246 ^ fanout739/Y (BUFX4)
+   0.283    2.529 v g_shadow[4].sh_inst/_0754_/Y (NAND4XL)
+   0.177    2.707 ^ g_shadow[4].sh_inst/_0762_/Y (OAI22X1)
+   0.119    2.826 v g_shadow[4].sh_inst/_0763_/Y (NAND4XL)
+   0.099    2.925 v g_shadow[4].sh_inst/_0773_/Y (AO21X1)
+   0.057    2.982 ^ g_shadow[4].sh_inst/_0796_/Y (OAI21X1)
+   0.255    3.238 v g_shadow[4].sh_inst/_0798_/Y (NAND3BXL)
+   0.170    3.408 ^ g_shadow[4].sh_inst/_0822_/Y (AOI21X1)
+   0.046    3.454 ^ g_shadow[4].sh_inst/_0852_/Y (OR3X1)
+   0.091    3.545 v g_shadow[4].sh_inst/_0890_/Y (AOI21X1)
+   0.187    3.731 ^ g_shadow[4].sh_inst/_0963_/Y (OAI32X1)
+   0.181    3.912 v g_shadow[4].sh_inst/_0993_/Y (AOI31X1)
+   0.189    4.102 ^ g_shadow[4].sh_inst/_1016_/Y (OAI21X1)
+   0.162    4.263 v g_shadow[4].sh_inst/_1040_/Y (AOI31X1)
+   0.130    4.393 ^ g_shadow[4].sh_inst/_1053_/Y (OAI31X1)
+   0.128    4.521 v g_shadow[4].sh_inst/_1061_/Y (AOI31X1)
+   0.186    4.707 ^ g_shadow[4].sh_inst/_1065_/Y (OAI31X1)
+   0.128    4.834 v g_shadow[4].sh_inst/_1203_/Y (AOI31X1)
+   0.110    4.944 ^ g_shadow[4].sh_inst/_1204_/Y (NOR2X1)
+   0.117    5.061 v g_shadow[4].sh_inst/_1242_/Y (XNOR3X1)
+   0.062    5.124 ^ g_shadow[4].sh_inst/_1246_/Y (XNOR2X1)
+   0.048    5.171 v g_shadow[4].sh_inst/_1291_/Y (OAI21X1)
+   0.192    5.363 ^ g_shadow[4].sh_inst/_1292_/Y (AOI21X1)
+   0.000    5.363 ^ g_shadow[4].sh_inst/_1371_/D (DFFHQX1)
+            5.363   data arrival time
+
+  10.000   10.000   clock clk (rise edge)
+   0.537   10.537   clock network delay (propagated)
+   0.000   10.537   clock reconvergence pessimism
+           10.537 ^ g_shadow[4].sh_inst/_1371_/CK (DFFHQX1)
+  -0.068   10.469   library setup time
+           10.469   data required time
+-----------------------------------------------------------
+           10.469   data required time
+           -5.363   data arrival time
+-----------------------------------------------------------
+            5.105   slack (MET)
+
+
+wns max 0.00
+tns max 0.00

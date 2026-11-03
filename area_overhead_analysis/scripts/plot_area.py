@@ -39,15 +39,21 @@ NAME = {
     "pe_wt_masked":              "Weight-masked",
     "sa_unmasked":               "Unprotected  (baseline)",
     "sa_act_masked":             "Activation-masked",
-    "sa_actlink_masked":         "Activation-link-masked (plain PEs)",
     "sa_wt_masked":              "Weight-masked",
+    "sa_wmask_shared":           "Weight-masked, shared mask column",
+    "acc_unmasked":              "Unprotected accelerator  (baseline)",
+    "acc_arr_masked":            "Array masked only\n(plain requantizer)",
+    "acc_rq_masked":             "Requantizer masked only\n(plain array)",
+    "acc_both_masked":           "Array + requantizer\nmasked",
 }
 PANELS = [
     ("8×8 multiplier", ["mult_unmasked", "mult_unmasked_wreg", "mult_wt_masked",
                         "mult_act_masked", "mult_act_wt_masked"]),
     ("Processing element (PE)", ["pe_unmasked", "pe_act_masked", "pe_wt_masked"]),
     ("5×5 systolic array", ["sa_unmasked", "sa_act_masked", "sa_wt_masked",
-                            "sa_actlink_masked"]),
+                            "sa_wmask_shared"]),
+    ("Full accelerator (5×5 array): which blocks are masked",
+     ["acc_unmasked", "acc_arr_masked", "acc_rq_masked", "acc_both_masked"]),
 ]
 COMPONENTS = [("Register (flip-flops)", "reg_um2", REG),
               ("Combinational logic", "comb_um2", COMB),
@@ -64,7 +70,11 @@ OVERHEAD_ROWS = [
     None,
     ("Array", "sa_act_masked", "Activation-masked"),
     ("Array", "sa_wt_masked", "Weight-masked"),
-    ("Array", "sa_actlink_masked", "Act.-link-masked (plain PEs)"),
+    ("Array", "sa_wmask_shared", "Weight-masked, shared column"),
+    None,
+    ("Accelerator", "acc_arr_masked", "array masked only"),
+    ("Accelerator", "acc_rq_masked", "requantizer masked only"),
+    ("Accelerator", "acc_both_masked", "array + requantizer masked"),
 ]
 METRICS = [("Total cell area", "total_x", TOTAL),
            ("Register area", "reg_x", REG),
@@ -91,7 +101,7 @@ def fig_area(rows):
     bars = [("Total", "total_um2", TOTAL), ("Register", "reg_um2", REG),
             ("Combinational", "comb_um2", COMB)]
     w = 0.26
-    fig, axes = plt.subplots(len(panels), 1, figsize=(13, 13.5), facecolor=SURFACE,
+    fig, axes = plt.subplots(len(panels), 1, figsize=(13, 4.5 * len(panels)), facecolor=SURFACE,
                              gridspec_kw={"hspace": 0.75})
     for ax, (title, designs) in zip(axes, panels):
         top = max(float(rows[d]["total_um2"]) for d in designs)
@@ -142,7 +152,7 @@ def fig_overhead(rows):
         y += 1.0
     xmax = max(float(rows[k][m]) for k in keys for _, m, _ in METRICS)
 
-    fig, axes = plt.subplots(1, len(METRICS), figsize=(16, 6.4), sharey=True, facecolor=SURFACE)
+    fig, axes = plt.subplots(1, len(METRICS), figsize=(16, max(6.4, 0.62 * len(entries) + 0.2)), sharey=True, facecolor=SURFACE)
     for ax, (title, m, col) in zip(axes, METRICS):
         v = [float(rows[k][m]) for k in keys]
         ax.barh(ypos, v, height=0.68, color=col, edgecolor=SURFACE)
@@ -158,9 +168,9 @@ def fig_overhead(rows):
     fig.suptitle("Masking overhead by area component — post-route, 45nm PDK (fast corner)",
                  x=0.01, y=0.985, ha="left", fontsize=FS + 4, color=INK, fontweight="bold")
     fig.text(0.01, 0.905, "Dashed line = 1× (no overhead).  Baselines: multipliers vs. unprotected "
-             "multiplier + weight register; PEs vs. unprotected PE; arrays vs. unprotected array.",
+             "multiplier + weight register; PEs vs. unprotected PE; arrays vs. unprotected array; accelerator vs. unprotected accelerator.",
              fontsize=FS - 0.5, color=INK2)
-    fig.subplots_adjust(left=0.20, right=0.99, top=0.83, bottom=0.10, wspace=0.12)
+    fig.subplots_adjust(left=0.22, right=0.99, top=0.83, bottom=0.10, wspace=0.12)
     fig.savefig(RES / "area_overhead.png", dpi=200, facecolor=SURFACE)
     plt.close(fig)
 
