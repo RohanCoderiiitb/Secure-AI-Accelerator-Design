@@ -71,7 +71,7 @@ def do_plots(outprefix, res_by_proxy, ttd_by_proxy, P_by_proxy, labels, thr):
         ax.set_ylabel("|t| (%s)" % p)
         ax.grid(alpha=0.3)
     np.atleast_1d(axes)[-1].set_xlabel("clock cycle within capture window")
-    fig.suptitle("Welch t-statistic, fixed vs random")
+    fig.suptitle("Welch t-statistic, fixed vs random" + (("\n" + os.environ["PLOT_TITLE_SUFFIX"]) if os.environ.get("PLOT_TITLE_SUFFIX") else ""))
     fig.tight_layout()
     fig.savefig(outprefix + "_t.png", dpi=140)
     plt.close(fig)

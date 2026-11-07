@@ -4,7 +4,9 @@
 //                           accelerator, weights as the secret
 //
 //   default : flexnn_top            (source/top.sv)          unprotected
-//   -DPROT  : flexnn_top_protected  (complete_accelerator)   protected
+//   -DPROT     : flexnn_top_protected  array + requantizer masked
+//   -DRQ_ONLY  : flexnn_top_rq_masked  requantizer masked only
+//   -DARR_ONLY : flexnn_top_arr_masked array masked only
 //
 // Per trace (both groups follow the same steps):
 //   1. draw a random weight matrix AND a random activation tile (R5)
@@ -26,7 +28,7 @@
 //           +FIXSEED=<n>   seed of the fixed weight matrix only
 //=====================================================================
 module tb_tvla_accelerator;
-    parameter N = 8, ACCW = 32, ROWS = 4, COLS = 4, WAVES = 4;
+    parameter N = 8, ACCW = 32, ROWS = 5, COLS = 5, WAVES = 4;
     parameter MW = 32, SW = 6, POOL_LEN = 1;
     parameter DOM_REG = 1;
 
@@ -42,6 +44,8 @@ module tb_tvla_accelerator;
 
     `include "msk_counts.vh"
 `ifdef PROT
+    localparam RQ_LAT = mskf_rq_lat(XW, XW + MW + 2, DOM_REG);
+`elsif RQ_ONLY
     localparam RQ_LAT = mskf_rq_lat(XW, XW + MW + 2, DOM_REG);
 `else
     localparam RQ_LAT = 3;
@@ -67,6 +71,12 @@ module tb_tvla_accelerator;
 `ifdef PROT
     flexnn_top_protected #(.N(N), .ACCW(ACCW), .ARRAY_ROWS(ROWS), .ARRAY_COLS(COLS), .WAVES(WAVES),
                            .MW(MW), .SW(SW), .POOL_LEN(POOL_LEN), .DOM_REG(DOM_REG)) u_top (
+`elsif RQ_ONLY
+    flexnn_top_rq_masked #(.N(N), .ACCW(ACCW), .ARRAY_ROWS(ROWS), .ARRAY_COLS(COLS), .WAVES(WAVES),
+                           .MW(MW), .SW(SW), .POOL_LEN(POOL_LEN), .DOM_REG(DOM_REG)) u_top (
+`elsif ARR_ONLY
+    flexnn_top_arr_masked #(.N(N), .ACCW(ACCW), .ARRAY_ROWS(ROWS), .ARRAY_COLS(COLS), .WAVES(WAVES),
+                            .MW(MW), .SW(SW), .POOL_LEN(POOL_LEN)) u_top (
 `else
     flexnn_top #(.N(N), .ACCW(ACCW), .ARRAY_ROWS(ROWS), .ARRAY_COLS(COLS), .WAVES(WAVES),
                  .MW(MW), .SW(SW), .POOL_LEN(POOL_LEN)) u_top (
@@ -83,6 +93,12 @@ module tb_tvla_accelerator;
     genvar gr, gc, gp;
     generate
 `ifdef PROT
+  `define MASKED_ARRAY
+`elsif ARR_ONLY
+  `define MASKED_ARRAY
+`endif
+`ifdef MASKED_ARRAY
+        // masked array: PEs + shadow column (mask generator / edge masking not dumped)
         for (gr = 0; gr < ROWS; gr = gr + 1) begin : g_dr
             for (gc = 0; gc < COLS; gc = gc + 1) begin : g_dc
                 initial begin #1; $dumpvars(0, u_top.u_array.g_row[gr].g_col[gc].pe_inst); end
@@ -130,6 +146,10 @@ module tb_tvla_accelerator;
         $dumpfile({OUTDIR, "/", TAG, ".vcd"});
 `ifdef PROT
         sca_open_meta("flexnn_top_protected", CLK_NS, CAPTURE);
+`elsif RQ_ONLY
+        sca_open_meta("flexnn_top_rq_masked", CLK_NS, CAPTURE);
+`elsif ARR_ONLY
+        sca_open_meta("flexnn_top_arr_masked", CLK_NS, CAPTURE);
 `else
         sca_open_meta("flexnn_top", CLK_NS, CAPTURE);
 `endif

@@ -67,7 +67,7 @@ def do_plots(outprefix, ad_by, t_by, ttd_by, thr_t):
         ax.legend(fontsize=7, loc="upper right")
         ax.grid(alpha=0.3)
     np.atleast_1d(axes)[-1].set_xlabel("clock cycle within capture window")
-    fig.suptitle("Anderson-Darling statistic, fixed vs random")
+    fig.suptitle("Anderson-Darling statistic, fixed vs random" + (("\n" + os.environ["PLOT_TITLE_SUFFIX"]) if os.environ.get("PLOT_TITLE_SUFFIX") else ""))
     fig.tight_layout()
     fig.savefig(outprefix + "_adla.png", dpi=140)
     plt.close(fig)

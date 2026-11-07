@@ -407,8 +407,12 @@ ACC_PROT   := $(ACC_DIR)/systolic_array_wmask_shared.sv $(ACC_DIR)/masking_gadge
               $(ACC_DIR)/systolic_array_wmask_shares.sv $(ACC_DIR)/top_protected.sv
 ACC_SRCS_unprotected := $(ACC_COMMON) $(ACC_UNP)
 ACC_SRCS_protected   := $(ACC_COMMON) $(ACC_PROT)
-ACC_DEF_unprotected  :=
-ACC_DEF_protected    := -DPROT -Ptb_tvla_accelerator.DOM_REG=$(ACC_DOM_REG)
+# array geometry of the complete-accelerator TVLA runs (5x5, as in the area flow)
+ACC_ROWS     ?= 5
+ACC_COLS     ?= 5
+ACC_SIZE     := -Ptb_tvla_accelerator.ROWS=$(ACC_ROWS) -Ptb_tvla_accelerator.COLS=$(ACC_COLS)
+ACC_DEF_unprotected  := $(ACC_SIZE)
+ACC_DEF_protected    := -DPROT -Ptb_tvla_accelerator.DOM_REG=$(ACC_DOM_REG) $(ACC_SIZE)
 # latency testbench: complete_accelerator/ if present, else protected_designs/sim/
 ACC_TB_LAT  := $(firstword $(wildcard $(ACC_DIR)/tb_requant_latency.sv) \
                            $(ROOT)/protected_designs/sim/tb_requant_latency.sv)
@@ -557,9 +561,9 @@ CASE_SRCS_rq   := $(ACC_DIR)/processing_element.sv $(ACC_DIR)/systolic_array.sv 
                   $(ACC_DIR)/requantize_masked.sv $(ACC_DIR)/top_protected_rq_only.sv
 CASE_SRCS_arr  := $(ACC_DIR)/systolic_array_wmask_shared.sv $(ACC_DIR)/partial_sum_accumulators.sv \
                   $(ACC_DIR)/requantization_block.sv $(ACC_DIR)/top_protected_arr_only.sv
-CASE_DEF_both  := -DPROT     -Ptb_tvla_accelerator.DOM_REG=$(ACC_DOM_REG)
-CASE_DEF_rq    := -DRQ_ONLY  -Ptb_tvla_accelerator.DOM_REG=$(ACC_DOM_REG)
-CASE_DEF_arr   := -DARR_ONLY
+CASE_DEF_both  := -DPROT     -Ptb_tvla_accelerator.DOM_REG=$(ACC_DOM_REG) $(ACC_SIZE)
+CASE_DEF_rq    := -DRQ_ONLY  -Ptb_tvla_accelerator.DOM_REG=$(ACC_DOM_REG) $(ACC_SIZE)
+CASE_DEF_arr   := -DARR_ONLY $(ACC_SIZE)
 CASE_NAME_both := both_masked
 CASE_NAME_rq   := rq_masked
 CASE_NAME_arr  := arr_masked
@@ -613,3 +617,86 @@ acc_case:
 	@$(call NAME_AD,$(CPFXA))
 	@find $(COUTA) -type f -name '*.png' ! -name '*adla__statistic.png' -delete
 	@rm -f $(CTR)/$(CTAG)_summary.csv $(CTR)/$(CTAG)_tvla2.csv $(CTR)/$(CTAG)_adla.csv
+
+# =====================================================================
+# Array-size sweep: 1st-order TVLA, 2nd-order TVLA and ADLA, for the
+# unprotected array and the weight-masked (wmask_shared) array, at
+# SWEEP_SIZES x SWEEP_SIZES. Secret = weights (TARGET=wt).
+#
+#   make array_sweep                       2x2 .. 8x8, N=10000 traces each
+#   make array_sweep SWEEP_N=4000 SWEEP_SIZES="2 4 8"
+#
+# RTL (both designs): protected_designs/complete_accelerator/
+#   unprotected : multiplier, processing_element, systolic_array
+#                 TB = security_analyses/unprotected/tb/tb_tvla_array.sv
+#   protected   : multiplier, systolic_array_wmask_shared
+#                 TB = security_analyses/protected/tb/tb_tvla_wmask_shared_array.sv
+#
+# Output: ONE flat folder, images only, no sub-directories:
+#   out/array_size_sweep_plots/<design>_<R>x<R>_<test>.png            (per-size t/A^2 traces)
+#   out/array_size_sweep_plots/summary_*_vs_array_size.png            (cross-size paper plots:
+#       peak statistic, % leaking cycles, leakage-reduction factor)
+# VCDs (and the per-run .npz/.csv scratch) are deleted as soon as each run
+# finishes, even on failure; only one VCD exists at a time.
+# =====================================================================
+SWEEP_SIZES ?= 2 3 4 5 6 7 8
+SWEEP_N     ?= 10000
+SWEEP_PLOTS ?= $(HERE)/$(OUT)/array_size_sweep_plots
+
+SW_SRC_unprotected := $(ACC_DIR)/multiplier.sv $(ACC_DIR)/processing_element.sv $(ACC_DIR)/systolic_array.sv
+SW_TB_unprotected  := $(UNP)/tb/tb_tvla_array.sv
+SW_PRM_unprotected  = -Ptb_tvla_array.ROWS=$(SZ) -Ptb_tvla_array.COLS=$(SZ)
+SW_NAME_unprotected := Unprotected
+SW_SRC_protected   := $(ACC_DIR)/multiplier.sv $(ACC_DIR)/systolic_array_wmask_shared.sv
+SW_TB_protected    := $(HERE)/$(TB)/tb_tvla_wmask_shared_array.sv
+SW_PRM_protected    = -Ptb_tvla_wmask_shared_array.ROWS=$(SZ) -Ptb_tvla_wmask_shared_array.COLS=$(SZ)
+SW_NAME_protected  := Protected (weight-masked, wmask_shared)
+
+SW_ACC ?= protected
+SZ     ?= 4
+SW_DIR  = $(HERE)/$(BUILD)/sweep_$(SW_ACC)_$(SZ)x$(SZ)
+SW_BASE = $(SWEEP_PLOTS)/$(SW_ACC)_$(SZ)x$(SZ)
+SW_METRICS ?= $(HERE)/$(BUILD)/sweep_metrics.csv
+
+# one (design, size): simulate, run the three tests, keep only the PNGs
+sweep_one:
+	@mkdir -p $(SWEEP_PLOTS) $(SW_DIR)
+	@for f in $(SW_SRC_$(SW_ACC)) $(SW_TB_$(SW_ACC)) $(UNP)/sca_capture.vh; do \
+	  test -f $$f || { echo "  [FAIL] $$f missing"; exit 1; }; done
+	@trap 'rm -rf "$(SW_DIR)"' EXIT; set -e; \
+	echo "=== $(SW_ACC) $(SZ)x$(SZ), N=$(SWEEP_N) ==="; \
+	$(IVERILOG) -g2012 -I $(UNP) -I $(HERE)/$(TB) $(SW_PRM_$(SW_ACC)) \
+	    -o $(SW_DIR)/sim.vvp $(SW_SRC_$(SW_ACC)) $(SW_TB_$(SW_ACC)); \
+	$(VVP) $(SW_DIR)/sim.vvp +NTRACES=$(SWEEP_N) +SEED=$(SEED) +MODE=tvla \
+	    +TVLA_TARGET=wt $(FIXARGS) +TAG=sweep +OUTDIR=$(SW_DIR) > $(SW_DIR)/sim.log; \
+	$(PY) $(USCRIPTS)/vcd_power.py --vcd $(SW_DIR)/sweep.vcd \
+	    --meta $(SW_DIR)/sweep.meta.csv --out $(SW_DIR)/sweep.npz > $(SW_DIR)/power.log; \
+	rm -f $(SW_DIR)/sweep.vcd; \
+	export PLOT_TITLE_SUFFIX="$(SW_NAME_$(SW_ACC)) design - $(SZ)x$(SZ) systolic array (N=$(SWEEP_N) traces)"; \
+	( cd $(USCRIPTS) && $(PY) run_tvla.py --npz $(SW_DIR)/sweep.npz \
+	    --plot $(SW_DIR)/p1 --csv $(SW_DIR)/s1.csv ) > $(SW_DIR)/t1.log; \
+	$(PY) $(SCRIPTS)/run_tvla_second_order.py --npz $(SW_DIR)/sweep.npz --compare \
+	    --plot $(SW_DIR)/p2 --csv $(SW_DIR)/s2.csv > $(SW_DIR)/t2.log; \
+	( cd $(USCRIPTS) && $(PY) run_adla.py --npz $(SW_DIR)/sweep.npz --perm $(PERM) \
+	    --plot $(SW_DIR)/pa --csv $(SW_DIR)/sa.csv ) > $(SW_DIR)/ta.log; \
+	$(PY) $(SCRIPTS)/sweep_summary.py collect --metrics $(SW_METRICS) --acc $(SW_ACC) --size $(SZ) \
+	    --t1 $(SW_DIR)/s1.csv --t2 $(SW_DIR)/s2.csv --adla $(SW_DIR)/sa.csv; \
+	cp $(SW_DIR)/p1_t.png    $(SW_BASE)_first_order_tvla_t_statistic.png; \
+	cp $(SW_DIR)/p2_t.png    $(SW_BASE)_second_order_tvla_t_statistic.png; \
+	cp $(SW_DIR)/pa_adla.png $(SW_BASE)_adla_statistic.png; \
+	echo "    max|t| 1st/2nd and ADLA verdicts:"; \
+	grep -hE "max\|t\||detected|LEAK|PASS|FAIL" $(SW_DIR)/t1.log $(SW_DIR)/t2.log $(SW_DIR)/ta.log | head -12 | sed 's/^/    /'
+
+array_sweep:
+	@rm -rf $(SWEEP_PLOTS); mkdir -p $(SWEEP_PLOTS) $(HERE)/$(BUILD); rm -f $(SW_METRICS)
+	@for sz in $(SWEEP_SIZES); do \
+	  for acc in unprotected protected; do \
+	    $(MAKE) --no-print-directory sweep_one SW_ACC=$$acc SZ=$$sz \
+	            SWEEP_N=$(SWEEP_N) SEED=$(SEED) PERM=$(PERM) || exit 1; \
+	  done; \
+	done
+	$(PY) $(SCRIPTS)/sweep_summary.py plot --metrics $(SW_METRICS) --outdir $(SWEEP_PLOTS) --n $(SWEEP_N)
+	@rm -f $(SW_METRICS); find $(HERE)/$(BUILD) -maxdepth 1 -name 'sweep_*' -exec rm -rf {} + 2>/dev/null; true
+	@echo ""; echo "plots in $(SWEEP_PLOTS):"; ls -1 $(SWEEP_PLOTS)
+
+.PHONY: sweep_one array_sweep
