@@ -1,0 +1,21 @@
+rank	slack_ns	arrival_ns	startpoint	endpoint	instances
+1	-11.505	21.358	bias_flat[0]	g_post[0].u_requant/u_rm/q[211]_reg/D	g_post[0].u_requant/u_rm g_post[0].u_requant
+2	-11.505	21.358	bias_flat[32]	g_post[1].u_requant/u_rm/q[211]_reg/D	g_post[1].u_requant/u_rm g_post[1].u_requant
+3	-11.505	21.358	bias_flat[64]	g_post[2].u_requant/u_rm/q[211]_reg/D	g_post[2].u_requant/u_rm g_post[2].u_requant
+4	-11.505	21.358	bias_flat[96]	g_post[3].u_requant/u_rm/q[211]_reg/D	g_post[3].u_requant/u_rm g_post[3].u_requant
+5	-11.505	21.358	bias_flat[128]	g_post[4].u_requant/u_rm/q[211]_reg/D	g_post[4].u_requant/u_rm g_post[4].u_requant
+6	-11.450	21.303	bias_flat[0]	g_post[0].u_requant/u_rm/q[210]_reg/D	g_post[0].u_requant/u_rm g_post[0].u_requant
+7	-11.450	21.303	bias_flat[32]	g_post[1].u_requant/u_rm/q[210]_reg/D	g_post[1].u_requant/u_rm g_post[1].u_requant
+8	-11.450	21.303	bias_flat[64]	g_post[2].u_requant/u_rm/q[210]_reg/D	g_post[2].u_requant/u_rm g_post[2].u_requant
+9	-11.450	21.303	bias_flat[96]	g_post[3].u_requant/u_rm/q[210]_reg/D	g_post[3].u_requant/u_rm g_post[3].u_requant
+10	-11.450	21.303	bias_flat[128]	g_post[4].u_requant/u_rm/q[210]_reg/D	g_post[4].u_requant/u_rm g_post[4].u_requant
+11	-11.164	21.017	bias_flat[0]	g_post[0].u_requant/u_rm/q[209]_reg/D	g_post[0].u_requant/u_rm g_post[0].u_requant
+12	-11.164	21.017	bias_flat[32]	g_post[1].u_requant/u_rm/q[209]_reg/D	g_post[1].u_requant/u_rm g_post[1].u_requant
+13	-11.164	21.017	bias_flat[64]	g_post[2].u_requant/u_rm/q[209]_reg/D	g_post[2].u_requant/u_rm g_post[2].u_requant
+14	-11.164	21.017	bias_flat[96]	g_post[3].u_requant/u_rm/q[209]_reg/D	g_post[3].u_requant/u_rm g_post[3].u_requant
+15	-11.164	21.017	bias_flat[128]	g_post[4].u_requant/u_rm/q[209]_reg/D	g_post[4].u_requant/u_rm g_post[4].u_requant
+16	-10.901	20.754	bias_flat[0]	g_post[0].u_requant/u_rm/q[208]_reg/D	g_post[0].u_requant/u_rm g_post[0].u_requant
+17	-10.901	20.754	bias_flat[32]	g_post[1].u_requant/u_rm/q[208]_reg/D	g_post[1].u_requant/u_rm g_post[1].u_requant
+18	-10.901	20.754	bias_flat[64]	g_post[2].u_requant/u_rm/q[208]_reg/D	g_post[2].u_requant/u_rm g_post[2].u_requant
+19	-10.901	20.754	bias_flat[96]	g_post[3].u_requant/u_rm/q[208]_reg/D	g_post[3].u_requant/u_rm g_post[3].u_requant
+20	-10.901	20.754	bias_flat[128]	g_post[4].u_requant/u_rm/q[208]_reg/D	g_post[4].u_requant/u_rm g_post[4].u_requant

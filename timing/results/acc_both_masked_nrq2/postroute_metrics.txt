@@ -1,0 +1,22 @@
+design flexnn_top_protected
+area_seq 76089.8700
+count_seq 12639
+area_comb 88492.1580
+count_comb 48730
+area_bufinv 27417.7980
+count_bufinv 8762
+area_clkbuf 6200.4600
+count_clkbuf 2049
+area_tap 0.0000
+count_tap 0
+area_tie 1.0260
+count_tie 1
+area_fill 123065.9640
+count_fill 67625
+stdcell_area 198201.3120
+stdcell_count 72181
+core_area 321267.2760
+die_area 326858.0412
+die_wh 571.715 571.715
+core_util 0.6169
+route_drc_violations 0

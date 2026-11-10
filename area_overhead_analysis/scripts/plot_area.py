@@ -41,10 +41,10 @@ NAME = {
     "sa_act_masked":             "Activation-masked",
     "sa_wt_masked":              "Weight-masked",
     "sa_wmask_shared":           "Weight-masked, shared mask column",
-    "acc_unmasked":              "Unprotected accelerator  (baseline)",
+    "acc_unmasked":              "Unprotected accelerator, timing-closed  (baseline)",
     "acc_arr_masked":            "Array masked only\n(plain requantizer)",
-    "acc_rq_masked":             "Requantizer masked only\n(plain array)",
-    "acc_both_masked":           "Array + requantizer\nmasked",
+    "acc_rq_masked":             "Requantizer masked only, NRQ=1\n(plain array)",
+    "acc_both_masked":           "Array + requantizer\nmasked, NRQ=1",
 }
 PANELS = [
     ("8×8 multiplier", ["mult_unmasked", "mult_unmasked_wreg", "mult_wt_masked",

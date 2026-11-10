@@ -1,0 +1,222 @@
+Startpoint: shift_q[2]_reg (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_post[0].u_requant/kr[47]_reg
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock clk (rise edge)
+   0.000    0.000   clock network delay (ideal)
+   0.000    0.000 ^ shift_q[2]_reg/CK (DFFHQX1)
+   0.554    0.554 v shift_q[2]_reg/Q (DFFHQX1)
+   0.652    1.206 ^ g_post[0].u_requant/_4566_/Y (NOR4X1)
+   0.470    1.676 v g_post[0].u_requant/_4569_/Y (AOI21X1)
+   0.418    2.095 ^ g_post[0].u_requant/_4571_/Y (NOR2X1)
+   0.639    2.733 v g_post[0].u_requant/_4743_/Y (NAND3BXL)
+   0.415    3.149 ^ g_post[0].u_requant/_4754_/Y (OAI21X1)
+   0.281    3.429 v g_post[0].u_requant/_4755_/Y (AOI21X1)
+   0.270    3.699 ^ g_post[0].u_requant/_4757_/Y (OAI21X1)
+   0.281    3.980 v g_post[0].u_requant/_4758_/Y (AOI21X1)
+   0.271    4.251 ^ g_post[0].u_requant/_4759_/Y (OAI21X1)
+   0.287    4.538 v g_post[0].u_requant/_4760_/Y (AOI21X1)
+   0.272    4.810 ^ g_post[0].u_requant/_4761_/Y (OAI21X1)
+   0.287    5.097 v g_post[0].u_requant/_4762_/Y (AOI21X1)
+   0.272    5.368 ^ g_post[0].u_requant/_4764_/Y (OAI21X1)
+   0.287    5.656 v g_post[0].u_requant/_4765_/Y (AOI21X1)
+   0.266    5.922 ^ g_post[0].u_requant/_4766_/Y (OAI21X1)
+   0.292    6.214 v g_post[0].u_requant/_4769_/Y (AOI21X1)
+   0.262    6.477 ^ g_post[0].u_requant/_4770_/Y (OAI21X1)
+   0.292    6.768 v g_post[0].u_requant/_4773_/Y (AOI21X1)
+   0.266    7.035 ^ g_post[0].u_requant/_4775_/Y (OAI21X1)
+   0.292    7.327 v g_post[0].u_requant/_4778_/Y (AOI21X1)
+   0.268    7.595 ^ g_post[0].u_requant/_4779_/Y (OAI21X1)
+   0.287    7.882 v g_post[0].u_requant/_4780_/Y (AOI21X1)
+   0.266    8.148 ^ g_post[0].u_requant/_4781_/Y (OAI21X1)
+   0.292    8.440 v g_post[0].u_requant/_4784_/Y (AOI21X1)
+   0.262    8.702 ^ g_post[0].u_requant/_4786_/Y (OAI21X1)
+   0.292    8.994 v g_post[0].u_requant/_4789_/Y (AOI21X1)
+   0.267    9.261 ^ g_post[0].u_requant/_4790_/Y (OAI21X1)
+   0.292    9.554 v g_post[0].u_requant/_4793_/Y (AOI21X1)
+   0.272    9.826 ^ g_post[0].u_requant/_4794_/Y (OAI21X1)
+   0.298   10.124 v g_post[0].u_requant/_4795_/Y (AOI21X1)
+   0.295   10.418 ^ g_post[0].u_requant/_4798_/Y (OAI211X1)
+   0.383   10.802 v g_post[0].u_requant/_4801_/Y (AOI31X1)
+   0.540   11.342 ^ g_post[0].u_requant/_4803_/Y (AOI211XL)
+   0.532   11.874 v g_post[0].u_requant/_4805_/Y (OAI211X1)
+   0.348   12.222 ^ g_post[0].u_requant/_4806_/Y (AOI21X1)
+   0.277   12.499 v g_post[0].u_requant/_4810_/Y (OAI21X1)
+   0.291   12.790 v g_post[0].u_requant/_4811_/Y (OAI2BB1X1)
+   0.266   13.056 ^ g_post[0].u_requant/_4813_/Y (AOI31X1)
+   0.424   13.481 v g_post[0].u_requant/_4816_/Y (AOI211XL)
+   0.430   13.910 ^ g_post[0].u_requant/_4819_/Y (OAI31X1)
+   0.354   14.264 v g_post[0].u_requant/_4822_/Y (AOI21X1)
+   0.269   14.533 ^ g_post[0].u_requant/_4823_/Y (OAI21X1)
+   0.298   14.831 v g_post[0].u_requant/_4826_/Y (AOI21X1)
+   0.338   15.168 ^ g_post[0].u_requant/_4831_/Y (OAI31X1)
+   0.328   15.497 v g_post[0].u_requant/_4832_/Y (AOI21X1)
+   0.320   15.817 ^ g_post[0].u_requant/_4836_/Y (XNOR2X1)
+   0.000   15.817 ^ g_post[0].u_requant/kr[47]_reg/D (DFFHQX1)
+           15.817   data arrival time
+
+  10.000   10.000   clock clk (rise edge)
+   0.000   10.000   clock network delay (ideal)
+   0.000   10.000   clock reconvergence pessimism
+           10.000 ^ g_post[0].u_requant/kr[47]_reg/CK (DFFHQX1)
+  -0.147    9.853   library setup time
+            9.853   data required time
+-----------------------------------------------------------
+            9.853   data required time
+          -15.817   data arrival time
+-----------------------------------------------------------
+           -5.965   slack (VIOLATED)
+
+
+Startpoint: shift_q[8]_reg (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_post[1].u_requant/kr[47]_reg
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock clk (rise edge)
+   0.000    0.000   clock network delay (ideal)
+   0.000    0.000 ^ shift_q[8]_reg/CK (DFFHQX1)
+   0.554    0.554 v shift_q[8]_reg/Q (DFFHQX1)
+   0.652    1.206 ^ g_post[1].u_requant/_4566_/Y (NOR4X1)
+   0.470    1.676 v g_post[1].u_requant/_4569_/Y (AOI21X1)
+   0.418    2.095 ^ g_post[1].u_requant/_4571_/Y (NOR2X1)
+   0.639    2.733 v g_post[1].u_requant/_4743_/Y (NAND3BXL)
+   0.415    3.149 ^ g_post[1].u_requant/_4754_/Y (OAI21X1)
+   0.281    3.429 v g_post[1].u_requant/_4755_/Y (AOI21X1)
+   0.270    3.699 ^ g_post[1].u_requant/_4757_/Y (OAI21X1)
+   0.281    3.980 v g_post[1].u_requant/_4758_/Y (AOI21X1)
+   0.271    4.251 ^ g_post[1].u_requant/_4759_/Y (OAI21X1)
+   0.287    4.538 v g_post[1].u_requant/_4760_/Y (AOI21X1)
+   0.272    4.810 ^ g_post[1].u_requant/_4761_/Y (OAI21X1)
+   0.287    5.097 v g_post[1].u_requant/_4762_/Y (AOI21X1)
+   0.272    5.368 ^ g_post[1].u_requant/_4764_/Y (OAI21X1)
+   0.287    5.656 v g_post[1].u_requant/_4765_/Y (AOI21X1)
+   0.266    5.922 ^ g_post[1].u_requant/_4766_/Y (OAI21X1)
+   0.292    6.214 v g_post[1].u_requant/_4769_/Y (AOI21X1)
+   0.262    6.477 ^ g_post[1].u_requant/_4770_/Y (OAI21X1)
+   0.292    6.768 v g_post[1].u_requant/_4773_/Y (AOI21X1)
+   0.266    7.035 ^ g_post[1].u_requant/_4775_/Y (OAI21X1)
+   0.292    7.327 v g_post[1].u_requant/_4778_/Y (AOI21X1)
+   0.268    7.595 ^ g_post[1].u_requant/_4779_/Y (OAI21X1)
+   0.287    7.882 v g_post[1].u_requant/_4780_/Y (AOI21X1)
+   0.266    8.148 ^ g_post[1].u_requant/_4781_/Y (OAI21X1)
+   0.292    8.440 v g_post[1].u_requant/_4784_/Y (AOI21X1)
+   0.262    8.702 ^ g_post[1].u_requant/_4786_/Y (OAI21X1)
+   0.292    8.994 v g_post[1].u_requant/_4789_/Y (AOI21X1)
+   0.267    9.261 ^ g_post[1].u_requant/_4790_/Y (OAI21X1)
+   0.292    9.554 v g_post[1].u_requant/_4793_/Y (AOI21X1)
+   0.272    9.826 ^ g_post[1].u_requant/_4794_/Y (OAI21X1)
+   0.298   10.124 v g_post[1].u_requant/_4795_/Y (AOI21X1)
+   0.295   10.418 ^ g_post[1].u_requant/_4798_/Y (OAI211X1)
+   0.383   10.802 v g_post[1].u_requant/_4801_/Y (AOI31X1)
+   0.540   11.342 ^ g_post[1].u_requant/_4803_/Y (AOI211XL)
+   0.532   11.874 v g_post[1].u_requant/_4805_/Y (OAI211X1)
+   0.348   12.222 ^ g_post[1].u_requant/_4806_/Y (AOI21X1)
+   0.277   12.499 v g_post[1].u_requant/_4810_/Y (OAI21X1)
+   0.291   12.790 v g_post[1].u_requant/_4811_/Y (OAI2BB1X1)
+   0.266   13.056 ^ g_post[1].u_requant/_4813_/Y (AOI31X1)
+   0.424   13.481 v g_post[1].u_requant/_4816_/Y (AOI211XL)
+   0.430   13.910 ^ g_post[1].u_requant/_4819_/Y (OAI31X1)
+   0.354   14.264 v g_post[1].u_requant/_4822_/Y (AOI21X1)
+   0.269   14.533 ^ g_post[1].u_requant/_4823_/Y (OAI21X1)
+   0.298   14.831 v g_post[1].u_requant/_4826_/Y (AOI21X1)
+   0.338   15.168 ^ g_post[1].u_requant/_4831_/Y (OAI31X1)
+   0.328   15.497 v g_post[1].u_requant/_4832_/Y (AOI21X1)
+   0.320   15.817 ^ g_post[1].u_requant/_4836_/Y (XNOR2X1)
+   0.000   15.817 ^ g_post[1].u_requant/kr[47]_reg/D (DFFHQX1)
+           15.817   data arrival time
+
+  10.000   10.000   clock clk (rise edge)
+   0.000   10.000   clock network delay (ideal)
+   0.000   10.000   clock reconvergence pessimism
+           10.000 ^ g_post[1].u_requant/kr[47]_reg/CK (DFFHQX1)
+  -0.147    9.853   library setup time
+            9.853   data required time
+-----------------------------------------------------------
+            9.853   data required time
+          -15.817   data arrival time
+-----------------------------------------------------------
+           -5.965   slack (VIOLATED)
+
+
+Startpoint: shift_q[14]_reg (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_post[2].u_requant/kr[47]_reg
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock clk (rise edge)
+   0.000    0.000   clock network delay (ideal)
+   0.000    0.000 ^ shift_q[14]_reg/CK (DFFHQX1)
+   0.554    0.554 v shift_q[14]_reg/Q (DFFHQX1)
+   0.652    1.206 ^ g_post[2].u_requant/_4566_/Y (NOR4X1)
+   0.470    1.676 v g_post[2].u_requant/_4569_/Y (AOI21X1)
+   0.418    2.095 ^ g_post[2].u_requant/_4571_/Y (NOR2X1)
+   0.639    2.733 v g_post[2].u_requant/_4743_/Y (NAND3BXL)
+   0.415    3.149 ^ g_post[2].u_requant/_4754_/Y (OAI21X1)
+   0.281    3.429 v g_post[2].u_requant/_4755_/Y (AOI21X1)
+   0.270    3.699 ^ g_post[2].u_requant/_4757_/Y (OAI21X1)
+   0.281    3.980 v g_post[2].u_requant/_4758_/Y (AOI21X1)
+   0.271    4.251 ^ g_post[2].u_requant/_4759_/Y (OAI21X1)
+   0.287    4.538 v g_post[2].u_requant/_4760_/Y (AOI21X1)
+   0.272    4.810 ^ g_post[2].u_requant/_4761_/Y (OAI21X1)
+   0.287    5.097 v g_post[2].u_requant/_4762_/Y (AOI21X1)
+   0.272    5.368 ^ g_post[2].u_requant/_4764_/Y (OAI21X1)
+   0.287    5.656 v g_post[2].u_requant/_4765_/Y (AOI21X1)
+   0.266    5.922 ^ g_post[2].u_requant/_4766_/Y (OAI21X1)
+   0.292    6.214 v g_post[2].u_requant/_4769_/Y (AOI21X1)
+   0.262    6.477 ^ g_post[2].u_requant/_4770_/Y (OAI21X1)
+   0.292    6.768 v g_post[2].u_requant/_4773_/Y (AOI21X1)
+   0.266    7.035 ^ g_post[2].u_requant/_4775_/Y (OAI21X1)
+   0.292    7.327 v g_post[2].u_requant/_4778_/Y (AOI21X1)
+   0.268    7.595 ^ g_post[2].u_requant/_4779_/Y (OAI21X1)
+   0.287    7.882 v g_post[2].u_requant/_4780_/Y (AOI21X1)
+   0.266    8.148 ^ g_post[2].u_requant/_4781_/Y (OAI21X1)
+   0.292    8.440 v g_post[2].u_requant/_4784_/Y (AOI21X1)
+   0.262    8.702 ^ g_post[2].u_requant/_4786_/Y (OAI21X1)
+   0.292    8.994 v g_post[2].u_requant/_4789_/Y (AOI21X1)
+   0.267    9.261 ^ g_post[2].u_requant/_4790_/Y (OAI21X1)
+   0.292    9.554 v g_post[2].u_requant/_4793_/Y (AOI21X1)
+   0.272    9.826 ^ g_post[2].u_requant/_4794_/Y (OAI21X1)
+   0.298   10.124 v g_post[2].u_requant/_4795_/Y (AOI21X1)
+   0.295   10.418 ^ g_post[2].u_requant/_4798_/Y (OAI211X1)
+   0.383   10.802 v g_post[2].u_requant/_4801_/Y (AOI31X1)
+   0.540   11.342 ^ g_post[2].u_requant/_4803_/Y (AOI211XL)
+   0.532   11.874 v g_post[2].u_requant/_4805_/Y (OAI211X1)
+   0.348   12.222 ^ g_post[2].u_requant/_4806_/Y (AOI21X1)
+   0.277   12.499 v g_post[2].u_requant/_4810_/Y (OAI21X1)
+   0.291   12.790 v g_post[2].u_requant/_4811_/Y (OAI2BB1X1)
+   0.266   13.056 ^ g_post[2].u_requant/_4813_/Y (AOI31X1)
+   0.424   13.481 v g_post[2].u_requant/_4816_/Y (AOI211XL)
+   0.430   13.910 ^ g_post[2].u_requant/_4819_/Y (OAI31X1)
+   0.354   14.264 v g_post[2].u_requant/_4822_/Y (AOI21X1)
+   0.269   14.533 ^ g_post[2].u_requant/_4823_/Y (OAI21X1)
+   0.298   14.831 v g_post[2].u_requant/_4826_/Y (AOI21X1)
+   0.338   15.168 ^ g_post[2].u_requant/_4831_/Y (OAI31X1)
+   0.328   15.497 v g_post[2].u_requant/_4832_/Y (AOI21X1)
+   0.320   15.817 ^ g_post[2].u_requant/_4836_/Y (XNOR2X1)
+   0.000   15.817 ^ g_post[2].u_requant/kr[47]_reg/D (DFFHQX1)
+           15.817   data arrival time
+
+  10.000   10.000   clock clk (rise edge)
+   0.000   10.000   clock network delay (ideal)
+   0.000   10.000   clock reconvergence pessimism
+           10.000 ^ g_post[2].u_requant/kr[47]_reg/CK (DFFHQX1)
+  -0.147    9.853   library setup time
+            9.853   data required time
+-----------------------------------------------------------
+            9.853   data required time
+          -15.817   data arrival time
+-----------------------------------------------------------
+           -5.965   slack (VIOLATED)
+
+

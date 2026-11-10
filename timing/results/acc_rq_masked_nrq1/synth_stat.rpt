@@ -1,0 +1,71 @@
+
+32. Printing statistics.
+
+=== flexnn_top_rq_masked ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+    33051        - wires
+    33410        - wire bits
+    10054        - public wires
+    10413        - public wire bits
+       23        - ports
+      382        - port bits
+    33080  8.9E+04 cells
+     1504 2.06E+03   AND2X1
+      301  617.652   AND3XL
+       46  110.124   AND4X1
+      233  557.802   AO21X1
+       35    95.76   AO22X1
+      206  422.712   AOI211XL
+     1098  1877.58   AOI21X1
+       57  136.458   AOI221X1
+        4   12.312   AOI222X1
+      720  1477.44   AOI22X1
+      222  455.544   AOI2BB1X1
+       86  176.472   AOI31X1
+       47  112.518   AOI32X1
+        2    4.788   AOI33XL
+        5    10.26   BUFX3
+      750     2052   CLKXOR2X1
+     6090 3.33E+04   DFFHQX1
+     1346  11508.3   EDFFHQX1
+      798  545.832   INVX1
+     1357 3.25E+03   MX2X1
+        9   64.638   MX4XL
+      761 1.82E+03   MXI2XL
+        2   14.364   MXI4X1
+      859 1.18E+03   NAND2BX1
+     3522 3.61E+03   NAND2X1
+      182   311.22   NAND3BXL
+      204   348.84   NAND3X1
+        1    2.394   NAND4BX1
+      212   362.52   NAND4XL
+      974 1.33E+03   NOR2BX1
+     2803 2.88E+03   NOR2X1
+       34   69.768   NOR3BX1
+      118   201.78   NOR3X1
+        1    2.394   NOR4BX1
+       19    32.49   NOR4X1
+      184  377.568   OA21X1
+       18   43.092   OA22X1
+      767  1311.57   OAI211X1
+      781  1335.51   OAI21X1
+       64  153.216   OAI221X1
+        6   16.416   OAI222X1
+      126  258.552   OAI22X1
+      876  1497.96   OAI2BB1X1
+       32   65.664   OAI31X1
+       15    35.91   OAI32X1
+      483  660.744   OR2X1
+       79  162.108   OR3X1
+       10    20.52   OR4X1
+        1    1.026   TIELO
+     5028  1.2E+04   XNOR2X1
+        1    7.524   XNOR3X1
+        1    7.524   XOR3X1
+
+   Chip area for module '\flexnn_top_rq_masked': 89025.336000
+     of which used for sequential elements: 44832.780000 (50.36%)
+

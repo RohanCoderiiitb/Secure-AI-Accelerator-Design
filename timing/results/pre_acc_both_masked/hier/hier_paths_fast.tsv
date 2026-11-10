@@ -1,0 +1,21 @@
+rank	slack_ns	arrival_ns	startpoint	endpoint	instances
+1	4.029	5.947	bias_flat[1]	g_post[0].u_requant/u_rm/q[211]_reg/D	g_post[0].u_requant/u_rm g_post[0].u_requant
+2	4.029	5.947	bias_flat[33]	g_post[1].u_requant/u_rm/q[211]_reg/D	g_post[1].u_requant/u_rm g_post[1].u_requant
+3	4.029	5.947	bias_flat[65]	g_post[2].u_requant/u_rm/q[211]_reg/D	g_post[2].u_requant/u_rm g_post[2].u_requant
+4	4.029	5.947	bias_flat[97]	g_post[3].u_requant/u_rm/q[211]_reg/D	g_post[3].u_requant/u_rm g_post[3].u_requant
+5	4.029	5.947	bias_flat[129]	g_post[4].u_requant/u_rm/q[211]_reg/D	g_post[4].u_requant/u_rm g_post[4].u_requant
+6	4.033	5.943	bias_flat[1]	g_post[0].u_requant/u_rm/q[210]_reg/D	g_post[0].u_requant/u_rm g_post[0].u_requant
+7	4.033	5.943	bias_flat[33]	g_post[1].u_requant/u_rm/q[210]_reg/D	g_post[1].u_requant/u_rm g_post[1].u_requant
+8	4.033	5.943	bias_flat[65]	g_post[2].u_requant/u_rm/q[210]_reg/D	g_post[2].u_requant/u_rm g_post[2].u_requant
+9	4.033	5.943	bias_flat[97]	g_post[3].u_requant/u_rm/q[210]_reg/D	g_post[3].u_requant/u_rm g_post[3].u_requant
+10	4.033	5.943	bias_flat[129]	g_post[4].u_requant/u_rm/q[210]_reg/D	g_post[4].u_requant/u_rm g_post[4].u_requant
+11	4.095	5.881	bias_flat[1]	g_post[0].u_requant/u_rm/q[209]_reg/D	g_post[0].u_requant/u_rm g_post[0].u_requant
+12	4.095	5.881	bias_flat[33]	g_post[1].u_requant/u_rm/q[209]_reg/D	g_post[1].u_requant/u_rm g_post[1].u_requant
+13	4.095	5.881	bias_flat[65]	g_post[2].u_requant/u_rm/q[209]_reg/D	g_post[2].u_requant/u_rm g_post[2].u_requant
+14	4.095	5.881	bias_flat[97]	g_post[3].u_requant/u_rm/q[209]_reg/D	g_post[3].u_requant/u_rm g_post[3].u_requant
+15	4.095	5.881	bias_flat[129]	g_post[4].u_requant/u_rm/q[209]_reg/D	g_post[4].u_requant/u_rm g_post[4].u_requant
+16	4.148	5.828	bias_flat[1]	g_post[0].u_requant/u_rm/q[208]_reg/D	g_post[0].u_requant/u_rm g_post[0].u_requant
+17	4.148	5.828	bias_flat[33]	g_post[1].u_requant/u_rm/q[208]_reg/D	g_post[1].u_requant/u_rm g_post[1].u_requant
+18	4.148	5.828	bias_flat[65]	g_post[2].u_requant/u_rm/q[208]_reg/D	g_post[2].u_requant/u_rm g_post[2].u_requant
+19	4.148	5.828	bias_flat[97]	g_post[3].u_requant/u_rm/q[208]_reg/D	g_post[3].u_requant/u_rm g_post[3].u_requant
+20	4.148	5.828	bias_flat[129]	g_post[4].u_requant/u_rm/q[208]_reg/D	g_post[4].u_requant/u_rm g_post[4].u_requant

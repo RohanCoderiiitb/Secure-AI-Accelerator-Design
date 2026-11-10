@@ -1,19 +1,4 @@
-//=====================================================================
-// systolic_array_wmask_shares.sv -- weight-masked array that hands its
-//                                    result out as TWO SHARES
-//
-// Identical to systolic_array_wmask_shared (protected_designs/source)
-// except there is no recombination adder at the bottom: each column
-// outputs
-//     psum0 = masked partial sum   sum_r a_r*(w_rc - R_r)
-//     psum1 = shadow correction    sum_r a_r*R_r   (delayed by c cycles)
-// with psum0 + psum1 = real column sum (mod 2^SW). Each share alone is
-// independent of the weights, so the masked accumulator / requantizer
-// can consume them directly: no extra masker, no extra randomness.
-//
-// Reuses wmask_gen, processing_element_wshare, shadow_pe and
-// wsm_share_multiplier from systolic_array_wmask_shared.sv.
-//=====================================================================
+// Weight-masked array that outputs its result as two shares
 module systolic_array_wmask_shares #(
     parameter N    = 8,
     parameter ROWS = 5,
@@ -35,7 +20,6 @@ module systolic_array_wmask_shares #(
     output wire [ROWS*N-1:0]     act_out,
     output wire [ROWS-1:0]       valid_act_out
 );
-    // ---------------- masks ----------------
     wire [ROWS*SW-1:0] r_flat;
     wmask_gen #(.SW(SW), .ROWS(ROWS), .SEED(MASK_SEED)) u_mgen (
         .clk(clk), .reset_n(reset_n), .refresh(mask_refresh),
@@ -49,11 +33,10 @@ module systolic_array_wmask_shares #(
         end
     endgenerate
 
-    // ---------------- north-edge masking (load step k -> row ROWS-1-k) ----------------
+    // north-edge masking (load step k -> row ROWS-1-k)
     localparam CW = (ROWS > 1) ? $clog2(ROWS) : 1;
     reg [CW-1:0] ld_cnt;
-    // counts wt_load PULSES (gaps between pulses are allowed, as with the
-    // load controller); restarts on every mask refresh
+    // counts wt_load PULSES (gaps between pulses are allowed, as with the load controller)
     always @(posedge clk) begin
         if (!reset_n || mask_refresh)            ld_cnt <= {CW{1'b0}};
         else if (wt_load && ld_cnt != ROWS-1)    ld_cnt <= ld_cnt + 1'b1;
@@ -80,7 +63,7 @@ module systolic_array_wmask_shares #(
         end
     endgenerate
 
-    // ---------------- PE grid ----------------
+    // PE grid
     generate
         for (r = 0; r < ROWS; r = r + 1) begin : g_row
             for (c = 0; c < COLS; c = c + 1) begin : g_col
@@ -105,7 +88,7 @@ module systolic_array_wmask_shares #(
         end
     endgenerate
 
-    // ---------------- shadow column: S = sum_r a_r*R_r ----------------
+    // shadow column
     wire [SW-1:0] sh [0:ROWS];
     assign sh[0] = {SW{1'b0}};
     generate
@@ -130,12 +113,17 @@ module systolic_array_wmask_shares #(
         end
     endgenerate
 
-    // ---------------- outputs: two shares, no recombination ----------------
+    localparam MUL_LAT = 2;
     generate
         for (c = 0; c < COLS; c = c + 1) begin : g_out
+            reg [MUL_LAT-1:0] vd;
+            always @(posedge clk) begin
+                if (!reset_n) vd <= {MUL_LAT{1'b0}};
+                else          vd <= {vd[MUL_LAT-2:0], vld[ROWS-1][c+1]};
+            end
             assign psum0_out[c*SW +: SW] = ps[ROWS][c];
             assign psum1_out[c*SW +: SW] = s_col[c];
-            assign valid_sum_out[c]      = vld[ROWS-1][c+1];
+            assign valid_sum_out[c]      = vd[MUL_LAT-1];
         end
     endgenerate
 endmodule

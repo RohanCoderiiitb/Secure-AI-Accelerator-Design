@@ -63,32 +63,49 @@
 #   make all                     everything above in that order
 #
 # ---------------------------------------------------------------------
-# COMPLETE ACCELERATOR (weights as the secret) -- two commands
-#   make latency    masked requantizer: latency / throughput vs the original
-#                   requantize (and the 29-cycle reference), value-by-value
-#                   equivalence; then end-to-end functional check of the
-#                   protected accelerator against the unprotected one
-#   make tvla_all   1st-order TVLA, 2nd-order TVLA and ADLA of BOTH accelerators
-#                   (both live in protected_designs/complete_accelerator),
-#                   only the t-statistic plot is kept:
-#                     ../unprotected/out/tvla_outputs/complete_accelerator/tvla_wt/...t-statistic.png
-#                     ./out/tvla_outputs/complete_accelerator/tvla_wt/...t-statistic.png
-#   make tvla_cases protected accelerator, three cases, each simulated once
-#                   (CASES_N=10000 traces) and analysed with 1st-order TVLA,
-#                   2nd-order TVLA and ADLA:
-#                     both    top_protected.sv          array + requantizer masked
-#                     rq      top_protected_rq_only.sv  requantizer masked only
-#                     arr     top_protected_arr_only.sv array masked only
+# COMPLETE ACCELERATOR (weights as the secret) -- protected_designs/complete_accelerator
+#   make acc_all    func_acc, then acc_random, then acc_fixed, in one command
+#                   (stops at the first failure); knobs ACC_TRACES, ACC_NRQ as below
+#   make func_acc   every functional bench (also: make latency)
+#   make acc_random four builds (unprotected, arr, rq, both), ACTS=random,
+#                   ACC_TRACES=10000 each: 1st-order TVLA, 2nd-order TVLA, ADLA
+#   make acc_fixed  same, ACTS=fixed (attacker knows and fixes the inputs), DUMP_TAIL=1
 #                   plots: ./out/{tvla_outputs,second_order_tvla_outputs,adla_outputs}/
-#                          complete_accelerator_{both_masked,rq_masked,arr_masked}/tvla_wt/
+#                          complete_accelerator_<build>_<acts>/
+#   make acc_build ABUILD=<build> ACTS=<acts>   one build (details at the section below)
 #   make requant_tvla  stand-alone masked requantizer: 1st-order TVLA,
 #                   2nd-order TVLA and ADLA on acc_in (one dataset):
 #                     ./out/tvla_outputs/requantize_masked/tvla_act/...t-statistic.png
 #                   knobs: RQ_N=2000 traces, RQ_MASK_OFF=1 (sanity control)
 #   make requant_2nd_adla  2nd-order TVLA + ADLA only, reusing the existing
 #                   traces/requantize_masked_act.npz (no new simulation)
-#   Knobs: ACC_N=2000 traces per design, ACC_DOM_REG=1 (0 = low-latency
-#          requantizer), ACC_KEEP_VCD=0, FUNC_NTEST=100, LAT_NBURST=300
+#   make shuffle_func  shuffled (unmasked) requantizer, functional check vs
+#                   requantize + latency + shuffle statistics
+#                   (protected_designs/source/requantize_shuffled.sv,
+#                    protected_designs/sim/tb_func_requantize_shuffled.sv)
+#   make shuffle_tvla  shuffled requantizer: 1st-order TVLA, 2nd-order TVLA
+#                   and ADLA on acc_in (one dataset, SH_N=10000 traces):
+#                     ./out/{tvla_outputs,second_order_tvla_outputs,adla_outputs}/
+#                       requantize_shuffled/tvla_act/
+#                   knobs: SH_N=10000, SH_OFF=1 (same hardware, shuffling off:
+#                   the comparison run), SH_INORDER=0 (default: results
+#                   leave unordered with a slot index; folder
+#                   requantize_shuffled_ooo) or SH_INORDER=1 (results put
+#                   back in arrival order; folder requantize_shuffled)
+#   make shuffle_2nd_adla  2nd-order TVLA + ADLA only, reusing the existing
+#                   shuffled-requantizer dataset (same SH_OFF / SH_INORDER)
+#   make shuffle_cpa   does shuffling lower the CORRELATION per cycle?
+#                   simulates SH_N traces with the value / issue-order log,
+#                   then correlates the power at every cycle with each value
+#                   in ARRIVAL order (attacker's view) and in the true ISSUE
+#                   order, for four leakage models (bit count of acc+bias /
+#                   of the product, and bit CHANGES from the previous value
+#                   for both: hd_acc, hd_prod). Plots + per-cycle tables in
+#                     ./out/cpa_outputs/<requantize_shuffled[_ooo]>/tvla_act/
+#   make shuffle_cpa_only  same analysis, no new simulation (reuses the npz and
+#                   _values.csv of the last run); SH_MODELS="hd_acc hd_prod"
+#   Knobs: ACC_TRACES=10000 traces per build, ACC_NRQ=1, ACC_DOM_REG=1 (0 = low-latency
+#          requantizer), ACC_KEEP_VCD=0 (requant/shuffle targets), FUNC_NTEST=100, LAT_NBURST=300
 # ---------------------------------------------------------------------
 # Knobs
 #   N=           traces. Default is per DUT: 131072 for the multipliers and
@@ -248,8 +265,8 @@ TTDF  := $(if $(filter 1,$(TTD)),--ttd --repeats $(REPEATS),)
 
 .PHONY: dirs check build null tvla tvla2_selftest tvla2_null tvla2 \
         adla_null adla maskoff all main clean func \
-        latency tvla_all acc_tvla requant_tvla requant_2nd_adla \
-        tvla_cases acc_case
+        latency func_acc acc_all acc_random acc_fixed acc_build acc_list requant_tvla requant_2nd_adla \
+        shuffle_func shuffle_tvla shuffle_2nd_adla shuffle_cpa shuffle_cpa_only
 
 dirs:
 	@mkdir -p $(BUILD) $(TR) $(OUT_T1)/$(RUN_SUB) $(OUT_T2)/$(RUN_SUB) $(OUT_AD)/$(RUN_SUB)
@@ -361,7 +378,8 @@ FUNC_VVP := $(BUILD)/func_wmask_shared$(ROWS)x$(COLS).vvp
 NTILES   ?= 200
 func: dirs
 	@for f in $(FUNC_SRCS) $(FUNC_TB); do test -f $$f || { echo "  [FAIL] $$f missing"; exit 1; }; done
-	$(IVERILOG) -g2012 -Ptb_func_wmask_shared.ROWS=$(ROWS) -Ptb_func_wmask_shared.COLS=$(COLS) \
+	$(IVERILOG) -g2012 -Ptb_func_wmask_shared.N=$(ACC_N) -Ptb_func_wmask_shared.ACCW=$(ACC_ACCW) \
+	       -Ptb_func_wmask_shared.ROWS=$(ACC_ROWS) -Ptb_func_wmask_shared.COLS=$(ACC_COLS) \
 	       -o $(FUNC_VVP) $(FUNC_SRCS) $(FUNC_TB)
 	$(VVP) $(FUNC_VVP) +NTILES=$(NTILES) +SEED=$(SEED)
 
@@ -385,106 +403,186 @@ clean:
 	rm -rf $(BUILD) $(TR) $(OUT_T1) $(OUT_T2) $(OUT_AD)
 
 # =====================================================================
-# Complete accelerator: protected vs unprotected, weights as the secret.
-# All RTL and the functional/TVLA testbenches live in
-# protected_designs/complete_accelerator/; tb_requant_latency.sv may sit in
-# protected_designs/sim/. Run from security_analyses/protected.
+# Complete accelerator, weights as the secret: four builds, two attacker
+# models. All RTL and the functional / TVLA testbenches live in
+# protected_designs/complete_accelerator/ (5x5 array, WAVES = 4).
+#
+#   make func_acc      every functional bench (prints PASS/FAIL, latency,
+#                      throughput): tb_accel_func (both / rq-only / arr-only,
+#                      rq and both for NRQ = 1 2 5), tb_requant_latency,
+#                      tb_func_wmask_shared (accelerator copies of the arrays)
+#   make acc_random    ACTS=random (new random activations every trace, both
+#                      groups), DUMP_TAIL=0, all four builds
+#   make acc_fixed     ACTS=fixed (one activation tile drawn once, used in every
+#                      trace of both groups: the attacker knows and fixes the
+#                      inputs), DUMP_TAIL=1, all four builds
+#   make acc_build ABUILD=unprotected|arr|rq|both ACTS=random|fixed   one build
+#
+# Capture window: from the start pulse (weight load included) until the design is
+# back to idle, measured per build (94 / 100 / 137 / 143 cycles at NRQ = 1).
+# Each build: one simulation of ACC_TRACES traces -> power proxy (npz) ->
+# VCD deleted -> capture-window check (last 3 captured cycles idle, else the
+# make stops) -> 1st-order TVLA, 2nd-order TVLA, ADLA on the same dataset.
+# Only the t-statistic and adla__statistic plots are kept:
+#   out/tvla_outputs/complete_accelerator_<build>_<acts>/              ..._1st-order__t-statistic.png
+#   out/second_order_tvla_outputs/complete_accelerator_<build>_<acts>/ ..._2nd-order__t-statistic.png
+#   out/adla_outputs/complete_accelerator_<build>_<acts>/              ..._adla__statistic.png
+# Knobs: ACC_TRACES=10000  ACC_NRQ=1 (shared masked requantizer cores in the
+#        rq / both builds)  ACC_DOM_REG=1  SEED=1  PERM=500
+#        DUMP_TAIL (default 1 for ACTS=fixed, 0 for ACTS=random)
+#        FUNC_NTEST=100 LAT_NBURST=300 NTILES=200
 # =====================================================================
 ACC_DIR      := $(ROOT)/protected_designs/complete_accelerator
-ACC_N        ?= 2000
+ACC_TRACES   ?= 10000
+ACC_NRQ      ?= 1
 ACC_DOM_REG  ?= 1
-ACC_KEEP_VCD ?= 0
 FUNC_NTEST   ?= 100
 LAT_NBURST   ?= 300
+ABUILD       ?= both
+ACTS         ?= random
+DUMP_TAIL    ?= $(if $(filter fixed,$(ACTS)),1,0)
 
 ACC_COMMON := $(ACC_DIR)/multiplier.sv $(ACC_DIR)/activation_unit.sv $(ACC_DIR)/maxpool_unit.sv \
               $(ACC_DIR)/address_generator.sv $(ACC_DIR)/load_controller.sv $(ACC_DIR)/sram_2p.sv \
-              $(ACC_DIR)/scratchpad.sv $(ACC_DIR)/global_buffer.sv
+              $(ACC_DIR)/scratchpad.sv $(ACC_DIR)/global_buffer.sv $(ACC_DIR)/bias_scale.sv
 ACC_UNP    := $(ACC_DIR)/processing_element.sv $(ACC_DIR)/systolic_array.sv \
               $(ACC_DIR)/partial_sum_accumulators.sv $(ACC_DIR)/requantization_block.sv $(ACC_DIR)/top.sv
-ACC_PROT   := $(ACC_DIR)/systolic_array_wmask_shared.sv $(ACC_DIR)/masking_gadgets.sv \
-              $(ACC_DIR)/requantize_masked.sv $(ACC_DIR)/psum_accum_masked.sv \
-              $(ACC_DIR)/systolic_array_wmask_shares.sv $(ACC_DIR)/top_protected.sv
-ACC_SRCS_unprotected := $(ACC_COMMON) $(ACC_UNP)
-ACC_SRCS_protected   := $(ACC_COMMON) $(ACC_PROT)
-# array geometry of the complete-accelerator TVLA runs (5x5, as in the area flow)
-ACC_ROWS     ?= 5
-ACC_COLS     ?= 5
-ACC_SIZE     := -Ptb_tvla_accelerator.ROWS=$(ACC_ROWS) -Ptb_tvla_accelerator.COLS=$(ACC_COLS)
-ACC_DEF_unprotected  := $(ACC_SIZE)
-ACC_DEF_protected    := -DPROT -Ptb_tvla_accelerator.DOM_REG=$(ACC_DOM_REG) $(ACC_SIZE)
-# latency testbench: complete_accelerator/ if present, else protected_designs/sim/
-ACC_TB_LAT  := $(firstword $(wildcard $(ACC_DIR)/tb_requant_latency.sv) \
-                           $(ROOT)/protected_designs/sim/tb_requant_latency.sv)
+ACC_PROT   := $(ACC_DIR)/systolic_array_wmask_shared.sv $(ACC_DIR)/systolic_array_wmask_shares.sv \
+              $(ACC_DIR)/psum_accum_masked.sv $(ACC_DIR)/masking_gadgets.sv $(ACC_DIR)/requantize_masked.sv \
+              $(ACC_DIR)/rq_share_server.sv $(ACC_DIR)/top_protected.sv \
+              $(ACC_DIR)/top_protected_rq_only.sv $(ACC_DIR)/top_protected_arr_only.sv
+ACC_TB_LAT  := $(ACC_DIR)/tb_requant_latency.sv
 ACC_TB_FUNC := $(ACC_DIR)/tb_accel_func.sv
 ACC_TB_TVLA := $(ACC_DIR)/tb_tvla_accelerator.sv
 
-# ---- command 1: requantizer latency + full-accelerator functional check ----
-latency:
+# per-build sources / defines / parameters
+BSRC_unprotected := $(ACC_UNP)
+BSRC_arr  := $(ACC_DIR)/systolic_array_wmask_shared.sv $(ACC_DIR)/partial_sum_accumulators.sv \
+             $(ACC_DIR)/requantization_block.sv $(ACC_DIR)/top_protected_arr_only.sv
+BSRC_rq   := $(ACC_DIR)/processing_element.sv $(ACC_DIR)/systolic_array.sv \
+             $(ACC_DIR)/partial_sum_accumulators.sv $(ACC_DIR)/masking_gadgets.sv \
+             $(ACC_DIR)/requantize_masked.sv $(ACC_DIR)/rq_share_server.sv $(ACC_DIR)/top_protected_rq_only.sv
+BSRC_both := $(ACC_DIR)/systolic_array_wmask_shared.sv $(ACC_DIR)/systolic_array_wmask_shares.sv \
+             $(ACC_DIR)/psum_accum_masked.sv $(ACC_DIR)/masking_gadgets.sv $(ACC_DIR)/requantize_masked.sv \
+             $(ACC_DIR)/rq_share_server.sv $(ACC_DIR)/top_protected.sv
+# One parameter set for every accelerator build and bench (fair comparison):
+# the same values are passed explicitly to all four builds, so a changed RTL or
+# testbench default cannot make the builds diverge. Fixed by the brief (5x5,
+# WAVES=4); ACCW = 2N + clog2(ROWS) = 19 in all builds.
+ACC_N    := 8
+ACC_ROWS := 5
+ACC_COLS := 5
+ACC_WAVES:= 4
+ACC_ACCW := 19
+ACC_MW   := 16
+ACC_SW   := 6
+ACC_BW   := 32
+ACC_POOL := 1
+accp = -P$(1).N=$(ACC_N) -P$(1).ROWS=$(ACC_ROWS) -P$(1).COLS=$(ACC_COLS) -P$(1).WAVES=$(ACC_WAVES) \
+       -P$(1).ACCW=$(ACC_ACCW) -P$(1).MW=$(ACC_MW) -P$(1).SW=$(ACC_SW) -P$(1).BW=$(ACC_BW) \
+       -P$(1).POOL_LEN=$(ACC_POOL) -P$(1).DOM_REG=$(ACC_DOM_REG) -P$(1).NRQ=$(ACC_NRQ)
+BDEF_unprotected := $(call accp,tb_tvla_accelerator)
+BDEF_arr  := -DARR_ONLY $(call accp,tb_tvla_accelerator)
+BDEF_rq   := -DRQ_ONLY  $(call accp,tb_tvla_accelerator)
+BDEF_both := -DPROT     $(call accp,tb_tvla_accelerator)
+
+# ---- every functional bench ----
+FNRQS ?= 1 2 5
+func_acc:
 	@mkdir -p $(BUILD)
-	@for f in $(ACC_COMMON) $(ACC_UNP) $(ACC_PROT) $(ACC_DIR)/msk_counts.vh $(ACC_TB_LAT) $(ACC_TB_FUNC); do \
+	@for f in $(ACC_COMMON) $(ACC_UNP) $(ACC_PROT) $(ACC_DIR)/msk_counts.vh $(ACC_TB_LAT) $(ACC_TB_FUNC) $(FUNC_TB); do \
 	  test -f $$f || { echo "  [FAIL] $$f missing"; exit 1; }; done
+	@for v in PROT RQ_ONLY ARR_ONLY; do \
+	  nl="$(FNRQS)"; [ $$v = ARR_ONLY ] && nl=5; \
+	  for n in $$nl; do \
+	    echo "=== tb_accel_func $$v NRQ=$$n"; \
+	    $(IVERILOG) -g2012 -I $(ACC_DIR) $$( [ $$v = PROT ] || echo -D$$v ) $(call accp,tb_accel_func) \
+	      -Ptb_accel_func.NRQ=$$n -o $(BUILD)/tb_accel_func_$$v$$n.vvp \
+	      $(ACC_COMMON) $(ACC_UNP) $(ACC_PROT) $(ACC_TB_FUNC) || exit 1; \
+	    $(VVP) -n $(BUILD)/tb_accel_func_$$v$$n.vvp +NTEST=$(FUNC_NTEST) +SEED=$(SEED) | sed -n '/=====/,$$p'; \
+	  done; done
+	@echo "=== tb_requant_latency"
 	$(IVERILOG) -g2012 -I $(ACC_DIR) -o $(BUILD)/tb_requant_latency.vvp \
 	       $(ACC_DIR)/requantization_block.sv $(ACC_DIR)/masking_gadgets.sv \
 	       $(ACC_DIR)/requantize_masked.sv $(ACC_TB_LAT)
-	$(VVP) $(BUILD)/tb_requant_latency.vvp +NBURST=$(LAT_NBURST) +SEED=$(SEED)
-	$(IVERILOG) -g2012 -I $(ACC_DIR) -Ptb_accel_func.DOM_REG=$(ACC_DOM_REG) \
-	       -o $(BUILD)/tb_accel_func.vvp $(ACC_COMMON) $(ACC_UNP) $(ACC_PROT) $(ACC_TB_FUNC)
-	$(VVP) $(BUILD)/tb_accel_func.vvp +NTEST=$(FUNC_NTEST) +SEED=$(SEED)
+	$(VVP) -n $(BUILD)/tb_requant_latency.vvp +NBURST=$(LAT_NBURST) +SEED=$(SEED)
+	@echo "=== tb_func_wmask_shared (accelerator copies of the arrays)"
+	$(IVERILOG) -g2012 -Ptb_func_wmask_shared.N=$(ACC_N) -Ptb_func_wmask_shared.ACCW=$(ACC_ACCW) \
+	       -Ptb_func_wmask_shared.ROWS=$(ACC_ROWS) -Ptb_func_wmask_shared.COLS=$(ACC_COLS) \
+	       -o $(BUILD)/func_wmask_shared_acc.vvp $(ACC_DIR)/multiplier.sv $(ACC_DIR)/processing_element.sv \
+	       $(ACC_DIR)/systolic_array.sv $(ACC_DIR)/systolic_array_wmask_shared.sv $(FUNC_TB)
+	$(VVP) -n $(BUILD)/func_wmask_shared_acc.vvp +NTILES=$(NTILES) +SEED=$(SEED)
+latency: func_acc
 
-# ---- command 2: TVLA of both accelerators, t-statistic plot only ----
-tvla_all:
-	$(MAKE) --no-print-directory acc_tvla ACC=unprotected
-	$(MAKE) --no-print-directory acc_tvla ACC=protected
+# ---- everything in one command: functional benches, then both attacker models ----
+acc_all:
+	$(MAKE) --no-print-directory func_acc SEED=$(SEED)
+	$(MAKE) --no-print-directory acc_random ACC_TRACES=$(ACC_TRACES) ACC_NRQ=$(ACC_NRQ) SEED=$(SEED) PERM=$(PERM)
+	$(MAKE) --no-print-directory acc_fixed  ACC_TRACES=$(ACC_TRACES) ACC_NRQ=$(ACC_NRQ) SEED=$(SEED) PERM=$(PERM)
+
+# ---- one command per attacker model: all four builds ----
+acc_random:
+	@for b in unprotected arr rq both; do \
+	  $(MAKE) --no-print-directory acc_build ABUILD=$$b ACTS=random ACC_TRACES=$(ACC_TRACES) \
+	          ACC_NRQ=$(ACC_NRQ) SEED=$(SEED) PERM=$(PERM) || exit 1; done
+	@$(MAKE) --no-print-directory acc_list ACTS=random
+
+acc_fixed:
+	@for b in unprotected arr rq both; do \
+	  $(MAKE) --no-print-directory acc_build ABUILD=$$b ACTS=fixed ACC_TRACES=$(ACC_TRACES) \
+	          ACC_NRQ=$(ACC_NRQ) SEED=$(SEED) PERM=$(PERM) || exit 1; done
+	@$(MAKE) --no-print-directory acc_list ACTS=fixed
+
+acc_list:
 	@echo ""
-	@echo "plots:"
-	@for side in $(UNP) $(HERE); do \
-	  ls -1 $$side/out/tvla_outputs/complete_accelerator/tvla_wt/*.png \
-	        $$side/out/second_order_tvla_outputs/complete_accelerator/tvla_wt/*.png \
-	        $$side/out/adla_outputs/complete_accelerator/tvla_wt/*.png; done
+	@echo "plots (ACTS=$(ACTS)):"
+	@for b in unprotected arr rq both; do \
+	  ls -1 $(HERE)/out/tvla_outputs/complete_accelerator_$${b}_$(ACTS)/*.png \
+	        $(HERE)/out/second_order_tvla_outputs/complete_accelerator_$${b}_$(ACTS)/*.png \
+	        $(HERE)/out/adla_outputs/complete_accelerator_$${b}_$(ACTS)/*.png 2>/dev/null; done
 
-# one design (ACC=unprotected | protected); used by tvla_all.
-# Outputs follow each side's own folder layout:
-#   unprotected -> security_analyses/unprotected/{traces,out/tvla_outputs}
-#   protected   -> security_analyses/protected/{traces,out/tvla_outputs}
-ACC        ?= protected
-ASIDE_unprotected := $(UNP)
-ASIDE_protected   := $(HERE)
-ASIDE  := $(ASIDE_$(ACC))
-ATR    := $(ASIDE)/traces
-ATAG   := complete_accelerator_wt
-AOUT   := $(ASIDE)/out/tvla_outputs/complete_accelerator/tvla_wt
-APFX   := $(AOUT)/complete_accelerator_$(ACC)__target-wt__1st-order
-A2OUT  := $(ASIDE)/out/second_order_tvla_outputs/complete_accelerator/tvla_wt
-A2PFX  := $(A2OUT)/complete_accelerator_$(ACC)__target-wt__2nd-order
-AAOUT  := $(ASIDE)/out/adla_outputs/complete_accelerator/tvla_wt
-AAPFX  := $(AAOUT)/complete_accelerator_$(ACC)__target-wt
-acc_tvla:
-	@mkdir -p $(BUILD) $(ATR) $(AOUT) $(A2OUT) $(AAOUT)
-	@for f in $(ACC_SRCS_$(ACC)) $(ACC_TB_TVLA) $(ACC_DIR)/msk_counts.vh $(UNP)/sca_capture.vh; do \
+# ---- one build, one attacker model ----
+BNAME := complete_accelerator_$(ABUILD)_$(ACTS)
+BTR   := $(HERE)/traces
+BTAG  := $(BNAME)
+BOUT1 := $(HERE)/out/tvla_outputs/$(BNAME)
+BOUT2 := $(HERE)/out/second_order_tvla_outputs/$(BNAME)
+BOUTA := $(HERE)/out/adla_outputs/$(BNAME)
+BPFX1 := $(BOUT1)/$(BNAME)__target-wt__1st-order
+BPFX2 := $(BOUT2)/$(BNAME)__target-wt__2nd-order
+BPFXA := $(BOUTA)/$(BNAME)__target-wt
+acc_build:
+	@test -n "$(filter unprotected arr rq both,$(ABUILD))" || { echo "  [FAIL] ABUILD=$(ABUILD): use unprotected, arr, rq or both"; exit 1; }
+	@test -n "$(filter random fixed,$(ACTS))" || { echo "  [FAIL] ACTS=$(ACTS): use random or fixed"; exit 1; }
+	@mkdir -p $(BUILD) $(BTR) $(BOUT1) $(BOUT2) $(BOUTA)
+	@for f in $(ACC_COMMON) $(BSRC_$(ABUILD)) $(ACC_TB_TVLA) $(ACC_DIR)/msk_counts.vh $(UNP)/sca_capture.vh; do \
 	  test -f $$f || { echo "  [FAIL] $$f missing"; exit 1; }; done
-	$(IVERILOG) -g2012 -I $(UNP) -I $(ACC_DIR) $(ACC_DEF_$(ACC)) -o $(BUILD)/tb_tvla_acc_$(ACC).vvp \
-	       $(ACC_SRCS_$(ACC)) $(ACC_TB_TVLA)
-	$(VVP) $(BUILD)/tb_tvla_acc_$(ACC).vvp +NTRACES=$(ACC_N) +SEED=$(SEED) +MODE=tvla \
-	       +TVLA_TARGET=wt +TAG=$(ATAG) +OUTDIR=$(ATR)
-	$(PY) $(USCRIPTS)/vcd_power.py --vcd $(ATR)/$(ATAG).vcd \
-	       --meta $(ATR)/$(ATAG).meta.csv --out $(ATR)/$(ATAG).npz
-	$(if $(filter 1,$(ACC_KEEP_VCD)),,rm -f $(ATR)/$(ATAG).vcd)
-	cd $(USCRIPTS) && $(PY) run_tvla.py --npz $(ATR)/$(ATAG).npz \
-	       --plot $(APFX)_ --csv $(ATR)/$(ATAG)_summary.csv
-	@$(call NAME,$(APFX))
-	@find $(AOUT) -type f -name '*.png' ! -name '*t-statistic.png' -delete
-	@# ---- second-order TVLA (same dataset) ----
-	$(PY) $(HERE)/$(SCRIPTS)/run_tvla_second_order.py --npz $(ATR)/$(ATAG).npz --compare \
-	       --plot $(A2PFX) --csv $(ATR)/$(ATAG)_tvla2.csv
-	@$(call NAME,$(A2PFX))
-	@find $(A2OUT) -type f -name '*.png' ! -name '*t-statistic.png' -delete
+	@echo "=== $(BNAME): $(ACC_TRACES) traces, $(ACC_ROWS)x$(ACC_COLS) WAVES=$(ACC_WAVES) ACCW=$(ACC_ACCW) MW=$(ACC_MW) NRQ=$(ACC_NRQ) DOM_REG=$(ACC_DOM_REG), DUMP_TAIL=$(DUMP_TAIL)"
+	$(IVERILOG) -g2012 -I $(UNP) -I $(ACC_DIR) $(BDEF_$(ABUILD)) -o $(BUILD)/tb_tvla_$(BNAME).vvp \
+	       $(ACC_COMMON) $(BSRC_$(ABUILD)) $(ACC_TB_TVLA)
+	$(VVP) -n $(BUILD)/tb_tvla_$(BNAME).vvp +NTRACES=$(ACC_TRACES) +SEED=$(SEED) +MODE=tvla \
+	       +TVLA_TARGET=wt +ACTS=$(ACTS) +DUMP_TAIL=$(DUMP_TAIL) +TAG=$(BTAG) +OUTDIR=$(BTR)
+	$(PY) $(USCRIPTS)/vcd_power.py --vcd $(BTR)/$(BTAG).vcd \
+	       --meta $(BTR)/$(BTAG).meta.csv --out $(BTR)/$(BTAG).npz
+	rm -f $(BTR)/$(BTAG).vcd
+	@# ---- capture-window check: last 3 captured cycles must be idle ----
+	$(PY) $(HERE)/$(SCRIPTS)/check_capture_idle.py --npz $(BTR)/$(BTAG).npz --idle 3
+	@# ---- 1st-order TVLA ----
+	cd $(USCRIPTS) && $(PY) run_tvla.py --npz $(BTR)/$(BTAG).npz \
+	       --plot $(BPFX1)_ --csv $(BTR)/$(BTAG)_summary.csv
+	@$(call NAME,$(BPFX1))
+	@find $(BOUT1) -type f -name '*.png' ! -name '*t-statistic.png' -delete
+	@# ---- 2nd-order TVLA (same dataset) ----
+	$(PY) $(HERE)/$(SCRIPTS)/run_tvla_second_order.py --npz $(BTR)/$(BTAG).npz --compare \
+	       --plot $(BPFX2) --csv $(BTR)/$(BTAG)_tvla2.csv
+	@$(call NAME,$(BPFX2))
+	@find $(BOUT2) -type f -name '*.png' ! -name '*t-statistic.png' -delete
 	@# ---- ADLA (same dataset) ----
-	cd $(USCRIPTS) && $(PY) run_adla.py --npz $(ATR)/$(ATAG).npz --compare --perm $(PERM) \
-	       --plot $(AAPFX) --csv $(ATR)/$(ATAG)_adla.csv
-	@$(call NAME_AD,$(AAPFX))
-	@find $(AAOUT) -type f -name '*.png' ! -name '*adla__statistic.png' -delete
-	@rm -f $(ATR)/$(ATAG)_summary.csv $(ATR)/$(ATAG)_tvla2.csv $(ATR)/$(ATAG)_adla.csv
+	cd $(USCRIPTS) && $(PY) run_adla.py --npz $(BTR)/$(BTAG).npz --compare --perm $(PERM) \
+	       --plot $(BPFXA) --csv $(BTR)/$(BTAG)_adla.csv
+	@$(call NAME_AD,$(BPFXA))
+	@find $(BOUTA) -type f -name '*.png' ! -name '*adla__statistic.png' -delete
+	@rm -f $(BTR)/$(BTAG)_summary.csv $(BTR)/$(BTAG)_tvla2.csv $(BTR)/$(BTAG)_adla.csv
 
 # =====================================================================
 # Stand-alone masked requantizer TVLA (fixed vs random acc_in),
@@ -548,155 +646,97 @@ requant_2nd_adla:
 	@echo "plots:" && ls -1 $(RQ_PFX2)__t-statistic.png $(RQ_PFXA)__adla__statistic.png
 
 # =====================================================================
-# Protected accelerator, three masking cases (one top file each).
-# make tvla_cases   -> both, rq, arr; CASES_N traces each (default 10000)
-# make acc_case CASE=both|rq|arr  -> one case
+# Shuffled (unmasked) requantizer -- protected_designs/source/
+#   make shuffle_func        functional check + latency + shuffle statistics
+#   make shuffle_tvla        1st-order TVLA, 2nd-order TVLA, ADLA (SH_N traces)
+#   make shuffle_2nd_adla    2nd-order TVLA + ADLA on the existing dataset
+# Knobs: SH_N=10000  SH_OFF=0|1  SH_INORDER=0|1 (default 0)  SH_NTEST=300
 # =====================================================================
-CASES_N ?= 10000
-CASE    ?= both
+SH_N       ?= 10000
+SH_OFF     ?= 0
+SH_INORDER ?= 0
+SH_NTEST   ?= 300
+SH_RTL   := $(SRC)/requantization_block.sv $(RTL_P)/requantize_shuffled.sv
+SH_TB    := $(TB)/tb_tvla_requantize_shuffled.sv
+SH_FTB   := $(SIM_P)/tb_func_requantize_shuffled.sv
+SH_NAME  := requantize_shuffled$(if $(filter 0,$(SH_INORDER)),_ooo,)
+SH_TAG   := $(SH_NAME)_act$(if $(filter 1,$(SH_OFF)),_shufoff,)
+SH_TR    := $(HERE)/traces
+SH_BASE  := $(SH_NAME)__target-act$(if $(filter 1,$(SH_OFF)),__shuffling-off,)
+SH_OUT1  := $(HERE)/out/tvla_outputs/$(SH_NAME)/tvla_act
+SH_OUT2  := $(HERE)/out/second_order_tvla_outputs/$(SH_NAME)/tvla_act
+SH_OUTA  := $(HERE)/out/adla_outputs/$(SH_NAME)/tvla_act
+SH_PFX1  := $(SH_OUT1)/$(SH_BASE)__1st-order
+SH_PFX2  := $(SH_OUT2)/$(SH_BASE)__2nd-order
+SH_PFXA  := $(SH_OUTA)/$(SH_BASE)
 
-CASE_SRCS_both := $(ACC_PROT)
-CASE_SRCS_rq   := $(ACC_DIR)/processing_element.sv $(ACC_DIR)/systolic_array.sv \
-                  $(ACC_DIR)/partial_sum_accumulators.sv $(ACC_DIR)/masking_gadgets.sv \
-                  $(ACC_DIR)/requantize_masked.sv $(ACC_DIR)/top_protected_rq_only.sv
-CASE_SRCS_arr  := $(ACC_DIR)/systolic_array_wmask_shared.sv $(ACC_DIR)/partial_sum_accumulators.sv \
-                  $(ACC_DIR)/requantization_block.sv $(ACC_DIR)/top_protected_arr_only.sv
-CASE_DEF_both  := -DPROT     -Ptb_tvla_accelerator.DOM_REG=$(ACC_DOM_REG) $(ACC_SIZE)
-CASE_DEF_rq    := -DRQ_ONLY  -Ptb_tvla_accelerator.DOM_REG=$(ACC_DOM_REG) $(ACC_SIZE)
-CASE_DEF_arr   := -DARR_ONLY $(ACC_SIZE)
-CASE_NAME_both := both_masked
-CASE_NAME_rq   := rq_masked
-CASE_NAME_arr  := arr_masked
+shuffle_func:
+	@mkdir -p $(BUILD)
+	@for f in $(SH_RTL) $(SH_FTB); do test -f $$f || { echo "  [FAIL] $$f missing"; exit 1; }; done
+	$(IVERILOG) -g2012 -o $(BUILD)/tb_func_requantize_shuffled.vvp $(SH_RTL) $(SH_FTB)
+	$(VVP) $(BUILD)/tb_func_requantize_shuffled.vvp +NTEST=$(SH_NTEST) +SEED=$(SEED)
 
-CNAME := complete_accelerator_$(CASE_NAME_$(CASE))
-CTR   := $(HERE)/traces
-CTAG  := $(CNAME)_wt
-COUT1 := $(HERE)/out/tvla_outputs/$(CNAME)/tvla_wt
-COUT2 := $(HERE)/out/second_order_tvla_outputs/$(CNAME)/tvla_wt
-COUTA := $(HERE)/out/adla_outputs/$(CNAME)/tvla_wt
-CPFX1 := $(COUT1)/$(CNAME)__target-wt__1st-order
-CPFX2 := $(COUT2)/$(CNAME)__target-wt__2nd-order
-CPFXA := $(COUTA)/$(CNAME)__target-wt
-
-tvla_cases:
-	$(MAKE) --no-print-directory acc_case CASE=both ACC_N=$(CASES_N)
-	$(MAKE) --no-print-directory acc_case CASE=rq   ACC_N=$(CASES_N)
-	$(MAKE) --no-print-directory acc_case CASE=arr  ACC_N=$(CASES_N)
-	@echo ""
-	@echo "plots:"
-	@for c in both_masked rq_masked arr_masked; do \
-	  ls -1 $(HERE)/out/tvla_outputs/complete_accelerator_$$c/tvla_wt/*.png \
-	        $(HERE)/out/second_order_tvla_outputs/complete_accelerator_$$c/tvla_wt/*.png \
-	        $(HERE)/out/adla_outputs/complete_accelerator_$$c/tvla_wt/*.png; done
-
-acc_case:
-	@test -n "$(CASE_NAME_$(CASE))" || { echo "  [FAIL] CASE=$(CASE): use both, rq or arr"; exit 1; }
-	@mkdir -p $(BUILD) $(CTR) $(COUT1) $(COUT2) $(COUTA)
-	@for f in $(ACC_COMMON) $(CASE_SRCS_$(CASE)) $(ACC_TB_TVLA) $(ACC_DIR)/msk_counts.vh $(UNP)/sca_capture.vh; do \
+shuffle_tvla:
+	@mkdir -p $(BUILD) $(SH_TR) $(SH_OUT1) $(SH_OUT2) $(SH_OUTA)
+	@for f in $(SH_RTL) $(SH_TB) $(UNP)/sca_capture.vh; do \
 	  test -f $$f || { echo "  [FAIL] $$f missing"; exit 1; }; done
-	$(IVERILOG) -g2012 -I $(UNP) -I $(ACC_DIR) $(CASE_DEF_$(CASE)) -o $(BUILD)/tb_tvla_$(CNAME).vvp \
-	       $(ACC_COMMON) $(CASE_SRCS_$(CASE)) $(ACC_TB_TVLA)
-	$(VVP) $(BUILD)/tb_tvla_$(CNAME).vvp +NTRACES=$(ACC_N) +SEED=$(SEED) +MODE=tvla \
-	       +TVLA_TARGET=wt +TAG=$(CTAG) +OUTDIR=$(CTR)
-	$(PY) $(USCRIPTS)/vcd_power.py --vcd $(CTR)/$(CTAG).vcd \
-	       --meta $(CTR)/$(CTAG).meta.csv --out $(CTR)/$(CTAG).npz
-	$(if $(filter 1,$(ACC_KEEP_VCD)),,rm -f $(CTR)/$(CTAG).vcd)
+	$(IVERILOG) -g2012 -I $(UNP) -Ptb_tvla_requantize_shuffled.INORDER=$(SH_INORDER) \
+	       -o $(BUILD)/tb_tvla_$(SH_NAME).vvp $(SH_RTL) $(SH_TB)
+	$(VVP) $(BUILD)/tb_tvla_$(SH_NAME).vvp +NTRACES=$(SH_N) +SEED=$(SEED) +MODE=tvla \
+	       +TVLA_TARGET=act +SHUF_OFF=$(SH_OFF) +VALLOG=1 +TAG=$(SH_TAG) +OUTDIR=$(SH_TR)
+	$(PY) $(USCRIPTS)/vcd_power.py --vcd $(SH_TR)/$(SH_TAG).vcd \
+	       --meta $(SH_TR)/$(SH_TAG).meta.csv --out $(SH_TR)/$(SH_TAG).npz
+	$(if $(filter 1,$(ACC_KEEP_VCD)),,rm -f $(SH_TR)/$(SH_TAG).vcd)
 	@# ---- 1st-order TVLA ----
-	cd $(USCRIPTS) && $(PY) run_tvla.py --npz $(CTR)/$(CTAG).npz \
-	       --plot $(CPFX1)_ --csv $(CTR)/$(CTAG)_summary.csv
-	@$(call NAME,$(CPFX1))
-	@find $(COUT1) -type f -name '*.png' ! -name '*t-statistic.png' -delete
+	cd $(USCRIPTS) && $(PY) run_tvla.py --npz $(SH_TR)/$(SH_TAG).npz \
+	       --plot $(SH_PFX1)_ --csv $(SH_TR)/$(SH_TAG)_summary.csv
+	@$(call NAME,$(SH_PFX1))
+	@find $(SH_OUT1) -type f -name '*.png' ! -name '*t-statistic.png' -delete
+	@$(MAKE) --no-print-directory shuffle_2nd_adla SH_OFF=$(SH_OFF) SH_INORDER=$(SH_INORDER)
+	@rm -f $(SH_TR)/$(SH_TAG)_summary.csv
+	@echo "plots:" && ls -1 $(SH_PFX1)__t-statistic.png $(SH_PFX2)__t-statistic.png $(SH_PFXA)__adla__statistic.png
+
+shuffle_2nd_adla:
+	@test -f $(SH_TR)/$(SH_TAG).npz || { echo "  [FAIL] $(SH_TR)/$(SH_TAG).npz missing -- run 'make shuffle_tvla' first"; exit 1; }
+	@mkdir -p $(SH_OUT2) $(SH_OUTA)
 	@# ---- 2nd-order TVLA (same dataset) ----
-	$(PY) $(HERE)/$(SCRIPTS)/run_tvla_second_order.py --npz $(CTR)/$(CTAG).npz --compare \
-	       --plot $(CPFX2) --csv $(CTR)/$(CTAG)_tvla2.csv
-	@$(call NAME,$(CPFX2))
-	@find $(COUT2) -type f -name '*.png' ! -name '*t-statistic.png' -delete
+	$(PY) $(HERE)/$(SCRIPTS)/run_tvla_second_order.py --npz $(SH_TR)/$(SH_TAG).npz --compare \
+	       --plot $(SH_PFX2) --csv $(SH_TR)/$(SH_TAG)_tvla2.csv
+	@$(call NAME,$(SH_PFX2))
+	@find $(SH_OUT2) -type f -name '*.png' ! -name '*t-statistic.png' -delete
 	@# ---- ADLA (same dataset) ----
-	cd $(USCRIPTS) && $(PY) run_adla.py --npz $(CTR)/$(CTAG).npz --compare --perm $(PERM) \
-	       --plot $(CPFXA) --csv $(CTR)/$(CTAG)_adla.csv
-	@$(call NAME_AD,$(CPFXA))
-	@find $(COUTA) -type f -name '*.png' ! -name '*adla__statistic.png' -delete
-	@rm -f $(CTR)/$(CTAG)_summary.csv $(CTR)/$(CTAG)_tvla2.csv $(CTR)/$(CTAG)_adla.csv
+	cd $(USCRIPTS) && $(PY) run_adla.py --npz $(SH_TR)/$(SH_TAG).npz --compare --perm $(PERM) \
+	       --plot $(SH_PFXA) --csv $(SH_TR)/$(SH_TAG)_adla.csv
+	@$(call NAME_AD,$(SH_PFXA))
+	@find $(SH_OUTA) -type f -name '*.png' ! -name '*adla__statistic.png' -delete
+	@rm -f $(SH_TR)/$(SH_TAG)_tvla2.csv $(SH_TR)/$(SH_TAG)_adla.csv
 
-# =====================================================================
-# Array-size sweep: 1st-order TVLA, 2nd-order TVLA and ADLA, for the
-# unprotected array and the weight-masked (wmask_shared) array, at
-# SWEEP_SIZES x SWEEP_SIZES. Secret = weights (TARGET=wt).
-#
-#   make array_sweep                       2x2 .. 8x8, N=10000 traces each
-#   make array_sweep SWEEP_N=4000 SWEEP_SIZES="2 4 8"
-#
-# RTL (both designs): protected_designs/complete_accelerator/
-#   unprotected : multiplier, processing_element, systolic_array
-#                 TB = security_analyses/unprotected/tb/tb_tvla_array.sv
-#   protected   : multiplier, systolic_array_wmask_shared
-#                 TB = security_analyses/protected/tb/tb_tvla_wmask_shared_array.sv
-#
-# Output: ONE flat folder, images only, no sub-directories:
-#   out/array_size_sweep_plots/<design>_<R>x<R>_<test>.png            (per-size t/A^2 traces)
-#   out/array_size_sweep_plots/summary_*_vs_array_size.png            (cross-size paper plots:
-#       peak statistic, % leaking cycles, leakage-reduction factor)
-# VCDs (and the per-run .npz/.csv scratch) are deleted as soon as each run
-# finishes, even on failure; only one VCD exists at a time.
-# =====================================================================
-SWEEP_SIZES ?= 2 3 4 5 6 7 8
-SWEEP_N     ?= 10000
-SWEEP_PLOTS ?= $(HERE)/$(OUT)/array_size_sweep_plots
+# ---- correlation (CPA) view of the shuffled requantizer ----
+SH_OUTC  := $(HERE)/out/cpa_outputs/$(SH_NAME)/tvla_act
+SH_PFXC  := $(SH_OUTC)/$(SH_BASE)
 
-SW_SRC_unprotected := $(ACC_DIR)/multiplier.sv $(ACC_DIR)/processing_element.sv $(ACC_DIR)/systolic_array.sv
-SW_TB_unprotected  := $(UNP)/tb/tb_tvla_array.sv
-SW_PRM_unprotected  = -Ptb_tvla_array.ROWS=$(SZ) -Ptb_tvla_array.COLS=$(SZ)
-SW_NAME_unprotected := Unprotected
-SW_SRC_protected   := $(ACC_DIR)/multiplier.sv $(ACC_DIR)/systolic_array_wmask_shared.sv
-SW_TB_protected    := $(HERE)/$(TB)/tb_tvla_wmask_shared_array.sv
-SW_PRM_protected    = -Ptb_tvla_wmask_shared_array.ROWS=$(SZ) -Ptb_tvla_wmask_shared_array.COLS=$(SZ)
-SW_NAME_protected  := Protected (weight-masked, wmask_shared)
-
-SW_ACC ?= protected
-SZ     ?= 4
-SW_DIR  = $(HERE)/$(BUILD)/sweep_$(SW_ACC)_$(SZ)x$(SZ)
-SW_BASE = $(SWEEP_PLOTS)/$(SW_ACC)_$(SZ)x$(SZ)
-SW_METRICS ?= $(HERE)/$(BUILD)/sweep_metrics.csv
-
-# one (design, size): simulate, run the three tests, keep only the PNGs
-sweep_one:
-	@mkdir -p $(SWEEP_PLOTS) $(SW_DIR)
-	@for f in $(SW_SRC_$(SW_ACC)) $(SW_TB_$(SW_ACC)) $(UNP)/sca_capture.vh; do \
+shuffle_cpa:
+	@mkdir -p $(BUILD) $(SH_TR) $(SH_OUTC)
+	@for f in $(SH_RTL) $(SH_TB) $(UNP)/sca_capture.vh $(HERE)/$(SCRIPTS)/run_cpa_shuffle.py; do \
 	  test -f $$f || { echo "  [FAIL] $$f missing"; exit 1; }; done
-	@trap 'rm -rf "$(SW_DIR)"' EXIT; set -e; \
-	echo "=== $(SW_ACC) $(SZ)x$(SZ), N=$(SWEEP_N) ==="; \
-	$(IVERILOG) -g2012 -I $(UNP) -I $(HERE)/$(TB) $(SW_PRM_$(SW_ACC)) \
-	    -o $(SW_DIR)/sim.vvp $(SW_SRC_$(SW_ACC)) $(SW_TB_$(SW_ACC)); \
-	$(VVP) $(SW_DIR)/sim.vvp +NTRACES=$(SWEEP_N) +SEED=$(SEED) +MODE=tvla \
-	    +TVLA_TARGET=wt $(FIXARGS) +TAG=sweep +OUTDIR=$(SW_DIR) > $(SW_DIR)/sim.log; \
-	$(PY) $(USCRIPTS)/vcd_power.py --vcd $(SW_DIR)/sweep.vcd \
-	    --meta $(SW_DIR)/sweep.meta.csv --out $(SW_DIR)/sweep.npz > $(SW_DIR)/power.log; \
-	rm -f $(SW_DIR)/sweep.vcd; \
-	export PLOT_TITLE_SUFFIX="$(SW_NAME_$(SW_ACC)) design - $(SZ)x$(SZ) systolic array (N=$(SWEEP_N) traces)"; \
-	( cd $(USCRIPTS) && $(PY) run_tvla.py --npz $(SW_DIR)/sweep.npz \
-	    --plot $(SW_DIR)/p1 --csv $(SW_DIR)/s1.csv ) > $(SW_DIR)/t1.log; \
-	$(PY) $(SCRIPTS)/run_tvla_second_order.py --npz $(SW_DIR)/sweep.npz --compare \
-	    --plot $(SW_DIR)/p2 --csv $(SW_DIR)/s2.csv > $(SW_DIR)/t2.log; \
-	( cd $(USCRIPTS) && $(PY) run_adla.py --npz $(SW_DIR)/sweep.npz --perm $(PERM) \
-	    --plot $(SW_DIR)/pa --csv $(SW_DIR)/sa.csv ) > $(SW_DIR)/ta.log; \
-	$(PY) $(SCRIPTS)/sweep_summary.py collect --metrics $(SW_METRICS) --acc $(SW_ACC) --size $(SZ) \
-	    --t1 $(SW_DIR)/s1.csv --t2 $(SW_DIR)/s2.csv --adla $(SW_DIR)/sa.csv; \
-	cp $(SW_DIR)/p1_t.png    $(SW_BASE)_first_order_tvla_t_statistic.png; \
-	cp $(SW_DIR)/p2_t.png    $(SW_BASE)_second_order_tvla_t_statistic.png; \
-	cp $(SW_DIR)/pa_adla.png $(SW_BASE)_adla_statistic.png; \
-	echo "    max|t| 1st/2nd and ADLA verdicts:"; \
-	grep -hE "max\|t\||detected|LEAK|PASS|FAIL" $(SW_DIR)/t1.log $(SW_DIR)/t2.log $(SW_DIR)/ta.log | head -12 | sed 's/^/    /'
+	$(IVERILOG) -g2012 -I $(UNP) -Ptb_tvla_requantize_shuffled.INORDER=$(SH_INORDER) \
+	       -o $(BUILD)/tb_tvla_$(SH_NAME).vvp $(SH_RTL) $(SH_TB)
+	$(VVP) $(BUILD)/tb_tvla_$(SH_NAME).vvp +NTRACES=$(SH_N) +SEED=$(SEED) +MODE=tvla \
+	       +TVLA_TARGET=act +SHUF_OFF=$(SH_OFF) +VALLOG=1 +TAG=$(SH_TAG) +OUTDIR=$(SH_TR)
+	$(PY) $(USCRIPTS)/vcd_power.py --vcd $(SH_TR)/$(SH_TAG).vcd \
+	       --meta $(SH_TR)/$(SH_TAG).meta.csv --out $(SH_TR)/$(SH_TAG).npz
+	$(if $(filter 1,$(ACC_KEEP_VCD)),,rm -f $(SH_TR)/$(SH_TAG).vcd)
+	@$(MAKE) --no-print-directory shuffle_cpa_only SH_OFF=$(SH_OFF) SH_INORDER=$(SH_INORDER)
 
-array_sweep:
-	@rm -rf $(SWEEP_PLOTS); mkdir -p $(SWEEP_PLOTS) $(HERE)/$(BUILD); rm -f $(SW_METRICS)
-	@for sz in $(SWEEP_SIZES); do \
-	  for acc in unprotected protected; do \
-	    $(MAKE) --no-print-directory sweep_one SW_ACC=$$acc SZ=$$sz \
-	            SWEEP_N=$(SWEEP_N) SEED=$(SEED) PERM=$(PERM) || exit 1; \
-	  done; \
-	done
-	$(PY) $(SCRIPTS)/sweep_summary.py plot --metrics $(SW_METRICS) --outdir $(SWEEP_PLOTS) --n $(SWEEP_N)
-	@rm -f $(SW_METRICS); find $(HERE)/$(BUILD) -maxdepth 1 -name 'sweep_*' -exec rm -rf {} + 2>/dev/null; true
-	@echo ""; echo "plots in $(SWEEP_PLOTS):"; ls -1 $(SWEEP_PLOTS)
-
-.PHONY: sweep_one array_sweep
+# correlation analysis only, on the dataset of the last shuffle_cpa / shuffle_tvla run
+SH_MODELS ?= acc prod hd_acc hd_prod
+shuffle_cpa_only:
+	@test -f $(SH_TR)/$(SH_TAG).npz -a -f $(SH_TR)/$(SH_TAG)_values.csv || \
+	  { echo "  [FAIL] $(SH_TR)/$(SH_TAG).npz or _values.csv missing -- run 'make shuffle_cpa' first"; exit 1; }
+	@mkdir -p $(SH_OUTC)
+	@for m in $(SH_MODELS); do \
+	  $(PY) $(HERE)/$(SCRIPTS)/run_cpa_shuffle.py --npz $(SH_TR)/$(SH_TAG).npz \
+	       --values $(SH_TR)/$(SH_TAG)_values.csv --model $$m \
+	       --plot $(SH_PFXC)__model-$$m --csv $(SH_PFXC)__model-$$m__cpa.csv > /dev/null || exit 1; \
+	  echo "  model $$m done"; done
+	@echo "plots:" && ls -1 $(SH_OUTC)/*.png

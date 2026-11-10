@@ -1,14 +1,4 @@
-//=====================================================================
-// psum_accum_masked.sv -- partial-sum accumulator on arithmetic shares
-//
-// Same behaviour as psum_accum (source/partial_sum_accumulators.sv), but
-// every lane carries TWO XW-bit shares (acc = s0 + s1 mod 2^XW) straight
-// from the weight-masked array. Addition is linear, so each share is
-// accumulated on its own: no masked logic, the real sum never appears.
-// Single-tile use (first_tile = last_tile = 1, as in the top) needs
-// XW = 2N + clog2(ROWS); multi-tile accumulation needs XW widened by
-// clog2(number of tiles).
-//=====================================================================
+// Partial-sum accumulator on arithmetic shares, same behaviour as psum_accum
 module psum_accum_masked #(
     parameter N     = 8,
     parameter XW    = 18,

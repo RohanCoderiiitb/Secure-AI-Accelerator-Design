@@ -1,86 +1,100 @@
-Startpoint: bias_flat[32] (input port clocked by clk)
-Endpoint: _202546_ (rising edge-triggered flip-flop clocked by clk)
+Startpoint: u_rqs.g_core[0].u_core.K0[0]_reg
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_rqs.g_core[0].u_core.a0[35]_reg
+          (rising edge-triggered flip-flop clocked by clk)
 Path Group: clk
 Path Type: max
+Corner: slow
 
    Delay     Time   Description
 -----------------------------------------------------------
    0.000    0.000   clock clk (rise edge)
-   0.000    0.000   clock network delay (propagated)
-   2.000    2.000 ^ input external delay
-   0.011    2.011 ^ bias_flat[32] (in)
-   0.041    2.052 ^ wire6401/Y (BUFX20)
-   0.052    2.104 ^ wire6400/Y (BUFX20)
-   0.063    2.167 v _086275_/Y (NAND2X1)
-   0.122    2.289 ^ _086279_/Y (OAI21X1)
-   0.160    2.449 v _086282_/Y (AOI21X2)
-   0.154    2.603 ^ _086285_/Y (OAI21X1)
-   0.086    2.689 v _086289_/Y (AOI21X1)
-   0.088    2.777 ^ _086292_/Y (OAI21X1)
-   0.108    2.885 v _086295_/Y (AOI21X1)
-   0.098    2.983 ^ _086298_/Y (CLKXOR2X8)
-   0.052    3.035 ^ wire902/Y (BUFX20)
-   0.167    3.203 ^ fanout901/Y (BUFX8)
-   0.266    3.468 v _092092_/Y (NAND4XL)
-   0.150    3.619 ^ _092095_/Y (NAND3BXL)
-   0.122    3.741 v _092101_/Y (AOI21X1)
-   0.120    3.860 v _092103_/Y (NAND2BX1)
-   0.107    3.967 v _092155_/Y (XNOR3X1)
-   0.116    4.083 ^ _092156_/Y (NOR3X1)
-   0.094    4.176 ^ _092163_/Y (XNOR2X1)
-   0.056    4.232 ^ _092166_/Y (CLKXOR2X1)
-   0.125    4.357 v _092214_/Y (XNOR3X1)
-   0.077    4.433 ^ _092346_/Y (XOR3X1)
-   0.048    4.481 v _092347_/Y (OAI21X1)
-   0.057    4.539 v _092348_/Y (OA21X1)
-   0.167    4.705 v _092350_/Y (OA21X1)
-   0.136    4.842 ^ _092352_/Y (OAI21X1)
-   0.076    4.917 ^ _092355_/Y (AO21X1)
-   0.072    4.989 v _092357_/Y (AOI21X1)
-   0.070    5.059 ^ _092359_/Y (OAI21X1)
-   0.073    5.132 v _092361_/Y (AOI21X1)
-   0.073    5.205 ^ _092365_/Y (OAI21X1)
-   0.089    5.294 v _092367_/Y (AOI21X1)
-   0.105    5.400 ^ _092370_/Y (OAI21X1)
-   0.137    5.537 v _092372_/Y (AOI21X1)
-   0.094    5.630 ^ _092374_/Y (OAI21X1)
-   0.089    5.719 v _092377_/Y (AOI21X1)
-   0.096    5.815 ^ _092379_/Y (OAI21X1)
-   0.144    5.959 v _092381_/Y (AOI21X1)
-   0.144    6.104 ^ _092384_/Y (OAI211X1)
-   0.170    6.273 v _092393_/Y (NAND4XL)
-   0.165    6.439 ^ _092396_/Y (AOI21X1)
-   0.120    6.559 v _092399_/Y (OAI31X4)
-   0.103    6.662 ^ _092401_/Y (OAI211X1)
-   0.154    6.816 v _092408_/Y (NAND4X2)
-   0.092    6.908 v _092413_/Y (AO21X1)
-   0.106    7.014 ^ _092415_/Y (AOI31X2)
-   0.150    7.164 v _092423_/Y (AOI31X4)
-   0.093    7.257 ^ _092426_/Y (OAI211X1)
-   0.157    7.414 v _092433_/Y (NAND4XL)
-   0.094    7.508 v _092437_/Y (AO21X1)
-   0.093    7.601 ^ _092439_/Y (AOI31X1)
-   0.198    7.799 v _092446_/Y (AOI31X1)
-   0.099    7.898 ^ _092449_/Y (NOR2X1)
-   0.111    8.010 ^ _159370_/Y (OAI2BB1X1)
-   0.139    8.149 v _159375_/Y (AOI211XL)
-   0.146    8.295 ^ _159377_/Y (OAI31X1)
-   0.069    8.364 v _159504_/Y (XNOR2X1)
-   0.049    8.413 ^ _159505_/Y (XNOR2X1)
-   0.000    8.413 ^ _202546_/D (DFFHQX1)
-            8.413   data arrival time
+   2.663    2.663   clock network delay (propagated)
+   0.000    2.663 ^ u_rqs.g_core[0].u_core.K0[0]_reg/CK (DFFHQX1)
+   0.400    3.063 ^ u_rqs.g_core[0].u_core.K0[0]_reg/Q (DFFHQX1)
+   0.226    3.289 v _18658_/Y (NAND2X4)
+   0.249    3.538 v _18859_/Y (OA21X1)
+   0.236    3.773 ^ _18925_/Y (OAI21X2)
+   0.321    4.095 v _19591_/Y (AOI31X4)
+   0.267    4.362 ^ _19758_/Y (OAI21X2)
+   0.275    4.637 v _20303_/Y (AOI211X2)
+   0.268    4.905 ^ _20325_/Y (NOR3X2)
+   0.293    5.198 v _20536_/Y (OAI31X4)
+   0.205    5.403 ^ _20691_/Y (OAI221X4)
+   0.254    5.657 v _20714_/Y (AOI33X4)
+   0.257    5.914 ^ _20836_/Y (OAI21X2)
+   0.212    6.126 v _20847_/Y (NAND2X1)
+   0.143    6.269 ^ _20902_/Y (OAI21X2)
+   0.268    6.537 ^ _21059_/Y (OAI2BB1X1)
+   0.249    6.786 v _21092_/Y (AOI21X2)
+   0.243    7.029 ^ _21303_/Y (OAI21X4)
+   0.238    7.267 v _21336_/Y (AOI21X2)
+   0.329    7.596 v _21569_/Y (OA21X2)
+   0.179    7.775 ^ _21614_/Y (OAI21X2)
+   0.218    7.993 v _21847_/Y (OAI21X4)
+   0.245    8.238 v _21902_/Y (OA21X1)
+   0.146    8.383 ^ _22146_/Y (NAND2X1)
+   0.309    8.692 v _23469_/Y (AOI31X2)
+   0.244    8.936 v wire5/Y (CLKBUFX20)
+   0.093    9.030 ^ _23480_/Y (NAND2X1)
+   0.231    9.260 v _23492_/Y (NAND3BX2)
+   0.192    9.452 ^ _23536_/Y (OAI2BB1X2)
+   0.175    9.627 v _23747_/Y (OAI21X1)
+   0.167    9.794 ^ _23758_/Y (NOR2X1)
+   0.171    9.965 v _23822_/Y (AOI21X1)
+   0.229   10.194 ^ _23823_/Y (NAND2X2)
+   0.339   10.533 v _23828_/Y (AOI31X4)
+   0.228   10.760 ^ _23850_/Y (NAND2X4)
+   0.255   11.015 v _23851_/Y (NAND3BX2)
+   0.216   11.231 ^ _23877_/Y (OAI2BB1X2)
+   0.270   11.501 v _23878_/Y (AOI21X1)
+   0.266   11.768 ^ _23881_/Y (OAI21X2)
+   0.366   12.133 v _23890_/Y (XNOR2X2)
+   0.247   12.381 ^ _23891_/Y (XNOR2X1)
+   0.000   12.381 ^ u_rqs.g_core[0].u_core.a0[35]_reg/D (DFFHQX1)
+           12.381   data arrival time
 
   10.000   10.000   clock clk (rise edge)
-   0.851   10.851   clock network delay (propagated)
-   0.000   10.851   clock reconvergence pessimism
-           10.851 ^ _202546_/CK (DFFHQX1)
-  -0.021   10.830   library setup time
-           10.830   data required time
+   2.693   12.693   clock network delay (propagated)
+   0.000   12.694   clock reconvergence pessimism
+           12.694 ^ u_rqs.g_core[0].u_core.a0[35]_reg/CK (DFFHQX1)
+  -0.109   12.585   library setup time
+           12.585   data required time
 -----------------------------------------------------------
-           10.830   data required time
-           -8.413   data arrival time
+           12.585   data required time
+          -12.381   data arrival time
 -----------------------------------------------------------
-            2.417   slack (MET)
+            0.204   slack (MET)
+
+
+Startpoint: u_rqs.g_core[0].u_core.u_pfx.Gs0[69][0]_reg
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_rqs.g_core[0].u_core.u_pfx.Gs0[106][0]_reg
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+Corner: fast
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock clk (rise edge)
+   0.694    0.694   clock network delay (propagated)
+   0.000    0.694 ^ u_rqs.g_core[0].u_core.u_pfx.Gs0[69][0]_reg/CK (DFFHQX1)
+   0.057    0.751 v u_rqs.g_core[0].u_core.u_pfx.Gs0[69][0]_reg/Q (DFFHQX1)
+   0.000    0.751 v u_rqs.g_core[0].u_core.u_pfx.Gs0[106][0]_reg/D (DFFHQX1)
+            0.751   data arrival time
+
+   0.000    0.000   clock clk (rise edge)
+   0.704    0.704   clock network delay (propagated)
+  -0.001    0.704   clock reconvergence pessimism
+            0.704 ^ u_rqs.g_core[0].u_core.u_pfx.Gs0[106][0]_reg/CK (DFFHQX1)
+   0.005    0.709   library hold time
+            0.709   data required time
+-----------------------------------------------------------
+            0.709   data required time
+           -0.751   data arrival time
+-----------------------------------------------------------
+            0.042   slack (MET)
 
 
 wns max 0.00

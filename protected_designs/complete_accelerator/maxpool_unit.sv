@@ -1,6 +1,4 @@
-// 1D Maxpooling unit
-// Useful hardware block for CNN workloads
-// In the full accelerator accelerator to simulate the M dimensional max pooling, M number of these units instantiated with FIFOs and delay units
+// 1-D max-pooling unit (one per column)
 
 module maxpool_unit #(
     parameter N = 8,

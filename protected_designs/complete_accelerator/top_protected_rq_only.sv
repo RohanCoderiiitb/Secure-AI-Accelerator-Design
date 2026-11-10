@@ -1,25 +1,17 @@
-//=====================================================================
-// top_protected_rq_only.sv -- flexnn accelerator, ONLY the requantizer
-//                             masked (leakage / area study)
-//
-// Same ports, memories, controllers and dataflow as flexnn_top
-// (source/top.sv). Unprotected array and partial-sum accumulator; each
-// accumulator output is split into two fresh arithmetic shares right
-// before the masked requantizer:
-//   x0 = random, x1 = acc - x0  (mod 2^XW)
-// requantize_masked + rng_bank per column, as in flexnn_top_protected.
-//=====================================================================
+// flexnn accelerator with only the requantizer masked
 module flexnn_top_rq_masked #(
     parameter N          = 8,
-    parameter ACCW       = 32,
-    parameter ARRAY_ROWS = 4,
-    parameter ARRAY_COLS = 4,
+    parameter ACCW       = 19,                 // 2N + clog2(ARRAY_ROWS)
+    parameter ARRAY_ROWS = 5,
+    parameter ARRAY_COLS = 5,
     parameter WAVES      = 4,
 
-    parameter MW         = 32,
+    parameter MW         = 16,
     parameter SW         = 6,
+    parameter BW         = 32,                 // bias width
     parameter POOL_LEN   = 1,
 
+    parameter BMW        = BW + MW,            // bias*m0 width
     parameter IF_DEPTH   = ARRAY_ROWS * WAVES,
     parameter FL_DEPTH   = ARRAY_ROWS * ARRAY_COLS,
     parameter OF_DEPTH   = WAVES / POOL_LEN,
@@ -31,7 +23,8 @@ module flexnn_top_rq_masked #(
     parameter CW         = (POOL_LEN <= 1) ? 1 : $clog2(POOL_LEN+1),
 
     parameter XW         = 2*N + $clog2(ARRAY_ROWS),   // share width of the masked datapath
-    parameter DOM_REG    = 1                           // 1: glitch-robust requant, 0: low latency
+    parameter DOM_REG    = 1,                          // 1: glitch-robust requant, 0: low latency
+    parameter NRQ        = 1                           // shared masked requantizer cores (1..ARRAY_COLS)
 ) (
     input  wire clk,
     input  wire reset_n,
@@ -47,7 +40,7 @@ module flexnn_top_rq_masked #(
     input  wire [FL_ADDR_W-1:0]        fl_wr_addr,
     input  wire [N-1:0]                fl_wr_data,
 
-    input  wire [ARRAY_COLS*ACCW-1:0]  bias_flat,
+    input  wire [ARRAY_COLS*BW-1:0]    bias_flat,
     input  wire [ARRAY_COLS*MW-1:0]    m0_flat,
     input  wire [ARRAY_COLS*SW-1:0]    shift_flat,
 
@@ -65,6 +58,49 @@ module flexnn_top_rq_masked #(
     output wire [ARRAY_COLS*N-1:0]         of_rd_data_flat
 );
 
+    // registered inputs
+    reg                        rst_q;
+    wire                       rst_n = rst_q;
+    reg                        start_q, if_wr_en_q, fl_wr_en_q;
+    reg [IF_ADDR_W-1:0]        if_wr_addr_q;
+    reg [FL_ADDR_W-1:0]        fl_wr_addr_q;
+    reg [N-1:0]                if_wr_data_q, fl_wr_data_q;
+    reg [ARRAY_COLS*BW-1:0]    bias_q;
+    reg [ARRAY_COLS*MW-1:0]    m0_q;
+    reg [ARRAY_COLS*SW-1:0]    shift_q;
+    reg [1:0]                  act_mode_q;
+    reg signed [N-1:0]         act_clamp_high_q;
+    reg [2:0]                  act_leaky_shift_q;
+    reg [CW-1:0]               pool_win_len_q;
+    reg [ARRAY_COLS-1:0]           of_rd_en_q;
+    reg [ARRAY_COLS*OF_ADDR_W-1:0] of_rd_addr_q;
+    always @(posedge clk) begin
+        rst_q <= reset_n;
+        if (!rst_n) begin
+            start_q    <= 1'b0;
+            if_wr_en_q <= 1'b0;
+            fl_wr_en_q <= 1'b0;
+            of_rd_en_q <= {ARRAY_COLS{1'b0}};
+        end else begin
+            start_q    <= start;
+            if_wr_en_q <= if_wr_en;
+            fl_wr_en_q <= fl_wr_en;
+            of_rd_en_q <= of_rd_en;
+        end
+        if_wr_addr_q      <= if_wr_addr;
+        if_wr_data_q      <= if_wr_data;
+        fl_wr_addr_q      <= fl_wr_addr;
+        fl_wr_data_q      <= fl_wr_data;
+        bias_q            <= bias_flat;
+        m0_q              <= m0_flat;
+        shift_q           <= shift_flat;
+        act_mode_q        <= act_mode;
+        act_clamp_high_q  <= act_clamp_high;
+        act_leaky_shift_q <= act_leaky_shift;
+        pool_win_len_q    <= pool_win_len;
+        of_rd_addr_q      <= of_rd_addr_flat;
+    end
+
     wire                if_gb_rd_en;
     wire [IF_ADDR_W-1:0] if_gb_rd_addr;
     wire [N-1:0]         if_gb_rd_data;
@@ -75,9 +111,9 @@ module flexnn_top_rq_masked #(
         .GB_ADDR_WIDTH (IF_ADDR_W)
     ) u_if_gb (
         .clk     (clk),
-        .wr_en   (if_wr_en),
-        .wr_addr (if_wr_addr),
-        .wr_data (if_wr_data),
+        .wr_en   (if_wr_en_q),
+        .wr_addr (if_wr_addr_q),
+        .wr_data (if_wr_data_q),
         .rd_en   (if_gb_rd_en),
         .rd_addr (if_gb_rd_addr),
         .rd_data (if_gb_rd_data)
@@ -93,9 +129,9 @@ module flexnn_top_rq_masked #(
         .GB_ADDR_WIDTH (FL_ADDR_W)
     ) u_fl_gb (
         .clk     (clk),
-        .wr_en   (fl_wr_en),
-        .wr_addr (fl_wr_addr),
-        .wr_data (fl_wr_data),
+        .wr_en   (fl_wr_en_q),
+        .wr_addr (fl_wr_addr_q),
+        .wr_data (fl_wr_data_q),
         .rd_en   (fl_gb_rd_en),
         .rd_addr (fl_gb_rd_addr),
         .rd_data (fl_gb_rd_data)
@@ -111,8 +147,10 @@ module flexnn_top_rq_masked #(
     wire stream_start;
     wire compute_done;
     wire array_done;
+    wire lc_idle;
 
-    wire lc_start = start;      // no weight masks in this variant
+    // a start is accepted only while the array side is idle
+    wire lc_start = start_q & lc_idle;
 
     load_controller #(
         .N          (N),
@@ -121,9 +159,10 @@ module flexnn_top_rq_masked #(
         .WAVES      (WAVES)
     ) u_load_ctrl (
         .clk               (clk),
-        .reset_n           (reset_n),
+        .reset_n           (rst_n),
         .start             (lc_start),
         .done              (array_done),
+        .idle              (lc_idle),
 
         .if_rd_en          (if_gb_rd_en),
         .if_rd_addr        (if_gb_rd_addr),
@@ -144,7 +183,11 @@ module flexnn_top_rq_masked #(
         .compute_done      (compute_done)
     );
 
-    assign array_compute_done = array_done;
+    // bias*m0 per column, once per start
+    wire [ARRAY_COLS*BMW-1:0] bm_flat;
+    bias_scale #(.COLS(ARRAY_COLS), .BW(BW), .MW(MW), .BMW(BMW)) u_bscale (
+        .clk(clk), .reset_n(rst_n), .start(lc_start),
+        .bias_flat(bias_q), .m0_flat(m0_q), .bm_flat(bm_flat), .busy());
 
     wire [ARRAY_ROWS-1:0]         act_rd_en;
     wire [ARRAY_ROWS*WADDR_W-1:0] act_rd_addr_flat;
@@ -181,7 +224,7 @@ module flexnn_top_rq_masked #(
         .COLS (ARRAY_COLS)
     ) u_array (
         .clk           (clk),
-        .reset_n       (reset_n),
+        .reset_n       (rst_n),
         .wt_load       (wt_load),
         .wt_flat       (wt_flat),
         .valid_act_in  (act_valid),
@@ -202,7 +245,7 @@ module flexnn_top_rq_masked #(
         .WAVES      (WAVES)
     ) u_ag (
         .clk               (clk),
-        .reset_n           (reset_n),
+        .reset_n           (rst_n),
         .stream_start      (stream_start),
         .stream_busy       (),
         .compute_done      (compute_done),
@@ -218,6 +261,7 @@ module flexnn_top_rq_masked #(
 
     wire [ARRAY_COLS*ACCW-1:0] psum_acc_out;
     wire [ARRAY_COLS-1:0]      psum_acc_valid;
+    wire [ARRAY_COLS-1:0]      psum_ovf;
 
     psum_accum #(
         .N     (N),
@@ -227,7 +271,7 @@ module flexnn_top_rq_masked #(
         .AW    (WADDR_W)
     ) u_psum_accum (
         .clk        (clk),
-        .reset_n    (reset_n),
+        .reset_n    (rst_n),
         .tile_start (stream_start),
         .first_tile (1'b1),
         .last_tile  (1'b1),
@@ -235,11 +279,13 @@ module flexnn_top_rq_masked #(
         .psum_in    (arr_psum_out),
         .psum_out   (psum_acc_out),
         .valid_out  (psum_acc_valid),
-        .ovf        (psum_ovf_flat)
+        .ovf        (psum_ovf)
     );
 
     wire [ARRAY_COLS-1:0]           rq_valid;
     wire [ARRAY_COLS*N-1:0]         rq_q_flat;
+    wire [ARRAY_COLS*N-1:0]         rq_q0, rq_q1;
+    wire [ARRAY_COLS-1:0]           rq_s0, rq_s1;
     wire [ARRAY_COLS-1:0]           act_valid_stage;
     wire [ARRAY_COLS*N-1:0]         act_y_flat;
     wire [ARRAY_COLS-1:0]           mp_valid;
@@ -249,106 +295,92 @@ module flexnn_top_rq_masked #(
 
     reg [OF_ADDR_W-1:0] post_cnt [0:ARRAY_COLS-1];
 
-    `include "msk_counts.vh"
-    localparam RW_RQ  = XW + MW + 2;
-    localparam RND_RQ = mskf_rq_rnd(XW, RW_RQ);
+    // plain accumulator values (low XW bits)
+    wire [ARRAY_COLS*XW-1:0] rq_x_flat;
+    genvar gx;
+    generate
+        for (gx = 0; gx < ARRAY_COLS; gx = gx + 1) begin : g_rqx
+            assign rq_x_flat[gx*XW +: XW] = psum_acc_out[gx*ACCW +: XW];
+        end
+    endgenerate
+
+    // NRQ shared masked requantizer cores
+    rq_share_server #(
+        .N(N), .XW(XW), .MW(MW), .SW(SW), .BMW(BMW), .COLS(ARRAY_COLS), .WAVES(WAVES),
+        .NRQ(NRQ), .DOM_REG(DOM_REG), .SPLIT(1)
+    ) u_rqs (
+        .clk        (clk),
+        .reset_n    (rst_n),
+        .valid_in   (psum_acc_valid),
+        .x0_flat    (rq_x_flat),
+        .x1_flat    ({(ARRAY_COLS*XW){1'b0}}),
+        .bm_flat    (bm_flat),
+        .m0_flat    (m0_q),
+        .shift_flat (shift_q),
+        .valid_out  (rq_valid),
+        .q0_flat    (rq_q0),
+        .q1_flat    (rq_q1),
+        .sat0_flat  (rq_s0),
+        .sat1_flat  (rq_s1)
+    );
+
+    // sat flag of each column's last value, kept as two share registers
+    reg [ARRAY_COLS-1:0] sat0_q, sat1_q;
+    always @(posedge clk) begin
+        sat0_q <= (rq_valid & rq_s0) | (~rq_valid & sat0_q);
+        sat1_q <= (rq_valid & rq_s1) | (~rq_valid & sat1_q);
+    end
 
     genvar p;
     generate
         for (p = 0; p < ARRAY_COLS; p = p + 1) begin : g_post
-            // Randomness runs while this requantizer has data in flight:
-            // from the cycle BEFORE a new accumulator value appears (out_wr_en
-            // updates the accumulator at the next edge) until the pipeline has
-            // drained. Idle -> bits held -> no switching. Stage registers keep
-            // shifting for RQ_LAT cycles after the last input change, so the
-            // window covers RQ_LAT + 2 cycles.
-            localparam RQ_LAT = mskf_rq_lat(XW, RW_RQ, DOM_REG);
-            reg [7:0] rq_busy;
-            always @(posedge clk) begin
-                if (!reset_n)                rq_busy <= 8'd0;
-                else if (out_wr_en[p])       rq_busy <= RQ_LAT + 2;
-                else if (rq_busy != 8'd0)    rq_busy <= rq_busy - 1'b1;
-            end
-            wire rq_rng_en = out_wr_en[p] | (rq_busy != 8'd0);
-
-            // RND_RQ bits for the requantizer + XW bits to split the plain input
-            wire [RND_RQ+XW-1:0] rq_rnd;
-            rng_bank #(.W(RND_RQ + XW), .SEED(64'hC0FF_EE00_0000_0001 + p)) u_rng (
-                .clk(clk), .reset_n(reset_n), .en(rq_rng_en), .rnd(rq_rnd));
-
-            // split the plain accumulator value into two fresh arithmetic shares
-            wire [XW-1:0] x0 = rq_rnd[RND_RQ +: XW];
-            wire [XW-1:0] x1 = psum_acc_out[p*ACCW +: XW] - x0;
-
-            wire [N-1:0] rq_q0, rq_q1;
-            wire         rq_s0, rq_s1;
-            requantize_masked #(
-                .N(N), .XW(XW), .BW(ACCW), .MW(MW), .SW(SW), .DOM_REG(DOM_REG)
-            ) u_requant (
-                .clk       (clk),
-                .reset_n   (reset_n),
-                .valid_in  (psum_acc_valid[p]),
-                .x0_in     (x0),
-                .x1_in     (x1),
-                .bias_in   (bias_flat[p*ACCW +: ACCW]),
-                .m0_in     (m0_flat[p*MW +: MW]),
-                .shift_in  (shift_flat[p*SW +: SW]),
-                .rnd_in    (rq_rnd[RND_RQ-1:0]),
-                .valid_out (rq_valid[p]),
-                .q0_out    (rq_q0),
-                .q1_out    (rq_q1),
-                .sat0_out  (rq_s0),
-                .sat1_out  (rq_s1)
-            );
             // shares recombined here, at the edge of the masked datapath
-            assign rq_q_flat[p*N +: N] = rq_q0 ^ rq_q1;
-            assign requant_sat_flat[p] = rq_s0 ^ rq_s1;
+            assign rq_q_flat[p*N +: N] = rq_q0[p*N +: N] ^ rq_q1[p*N +: N];
 
             activation_unit #(.N(N)) u_act (
                 .clk         (clk),
-                .reset_n     (reset_n),
-                .mode        (act_mode),
+                .reset_n     (rst_n),
+                .mode        (act_mode_q),
                 .valid_in    (rq_valid[p]),
                 .x_in        (rq_q_flat[p*N +: N]),
-                .clamp_high  (act_clamp_high),
-                .leaky_shift (act_leaky_shift),
+                .clamp_high  (act_clamp_high_q),
+                .leaky_shift (act_leaky_shift_q),
                 .valid_out   (act_valid_stage[p]),
                 .y_out       (act_y_flat[p*N +: N])
             );
 
             maxpool_unit #(.N(N), .CW(CW)) u_pool (
                 .clk       (clk),
-                .reset_n   (reset_n),
+                .reset_n   (rst_n),
                 .valid_in  (act_valid_stage[p]),
-                .win_len   (pool_win_len),
+                .win_len   (pool_win_len_q),
                 .x_in      (act_y_flat[p*N +: N]),
                 .valid_out (mp_valid[p]),
                 .y_out     (mp_y_flat[p*N +: N])
             );
 
-            assign of_wr_en_c[p] = mp_valid[p] && (post_cnt[p] < OF_DEPTH);
+            // OF_DEPTH outputs per column per tile
+            assign of_wr_en_c[p] = mp_valid[p];
             assign of_wr_addr_flat_c[p*OF_ADDR_W +: OF_ADDR_W] = post_cnt[p];
 
             always @(posedge clk) begin
-                if (!reset_n)
-                    post_cnt[p] <= {OF_ADDR_W{1'b0}};
-                else if (stream_start)
+                if (!rst_n)
                     post_cnt[p] <= {OF_ADDR_W{1'b0}};
                 else if (of_wr_en_c[p])
-                    post_cnt[p] <= post_cnt[p] + 1'b1;
+                    post_cnt[p] <= (post_cnt[p] == OF_DEPTH-1) ? {OF_ADDR_W{1'b0}} : post_cnt[p] + 1'b1;
             end
         end
     endgenerate
 
     reg post_done;
     always @(posedge clk) begin
-        if (!reset_n)
+        if (!rst_n)
             post_done <= 1'b0;
         else
             post_done <= of_wr_en_c[ARRAY_COLS-1] && (post_cnt[ARRAY_COLS-1] == OF_DEPTH-1);
     end
-    assign done = post_done;
 
+    wire [ARRAY_COLS*N-1:0] of_rd_data_c;
     genvar c;
     generate
         for (c = 0; c < ARRAY_COLS; c = c + 1) begin : g_of_spad
@@ -360,11 +392,32 @@ module flexnn_top_rq_masked #(
                 .wr_en   (of_wr_en_c[c]),
                 .wr_addr (of_wr_addr_flat_c[c*OF_ADDR_W +: OF_ADDR_W]),
                 .wr_data (mp_y_flat[c*N +: N]),
-                .rd_en   (of_rd_en[c]),
-                .rd_addr (of_rd_addr_flat[c*OF_ADDR_W +: OF_ADDR_W]),
-                .rd_data (of_rd_data_flat[c*N +: N])
+                .rd_en   (of_rd_en_q[c]),
+                .rd_addr (of_rd_addr_q[c*OF_ADDR_W +: OF_ADDR_W]),
+                .rd_data (of_rd_data_c[c*N +: N])
             );
         end
     endgenerate
+
+    // registered outputs
+    reg                    done_q, acd_q;
+    reg [ARRAY_COLS-1:0]   ovf_q;
+    reg [ARRAY_COLS*N-1:0] of_rd_data_q;
+    always @(posedge clk) begin
+        if (!rst_n) begin
+            done_q <= 1'b0;
+            acd_q  <= 1'b0;
+        end else begin
+            done_q <= post_done;
+            acd_q  <= array_done;
+        end
+        ovf_q        <= psum_ovf;
+        of_rd_data_q <= of_rd_data_c;
+    end
+    assign done               = done_q;
+    assign array_compute_done = acd_q;
+    assign psum_ovf_flat      = ovf_q;
+    assign requant_sat_flat   = sat0_q ^ sat1_q;
+    assign of_rd_data_flat    = of_rd_data_q;
 
 endmodule

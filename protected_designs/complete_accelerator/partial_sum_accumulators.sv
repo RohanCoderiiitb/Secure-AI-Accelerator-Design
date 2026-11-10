@@ -1,7 +1,4 @@
-//Partial sum accumulator design
-//Integrated at the southern end of the systolic array to accumulate all of the partial sums
-//Since, the grid can't process the entire matrix of inputs, it's sent in as tiles of smaller sizes
-//So, the module accumulates these partial sums at the end of the array
+// Partial-sum accumulator at the south edge of the array
 
 module psum_accum #(
     parameter N     = 8,
@@ -16,7 +13,6 @@ module psum_accum #(
     input wire                  first_tile,       //Pulse indicating the influx of the first tile
     input wire                  last_tile,        //Pulse indicating the influx of the last tile
 
-    //Flattened inputs (valid, and partial sums) and outputs (valid, and accumulated sums)
     input wire [COLS-1:0]       valid_in,         
     input wire [COLS*ACCW-1:0]  psum_in,
     output wire [COLS*ACCW-1:0] psum_out,

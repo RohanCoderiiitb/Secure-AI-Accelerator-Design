@@ -1,4 +1,3 @@
-// Scratchpad: one localized SRAM sitting between the Global Buffer and the systolic array's operand ports.
 
 module scratchpad #(
     parameter DATA_WIDTH = 8,

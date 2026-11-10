@@ -12,9 +12,7 @@ module full_adder(
     assign cout = a&b | b&cin | cin&a;
 endmodule
 
-// This module generates the partial products generated during the multiplication phase
-// Since it is a signed multiplication, multiplying a regular bit with a signed bit gives a negative mixed term
-// Instead of subtracting them, the BW algorithm flips the bits, adds it, and then adds 1 to compensate for the addition of the flipped term
+// Baugh-Wooley partial-product generator
 module partial_product_generator #(
     parameter N = 8
 )(
@@ -37,9 +35,7 @@ module partial_product_generator #(
     endgenerate
 endmodule
 
-// This module sums the generated partial products using a regular Carry-Save Adder (CSA) array
-// It avoids slow horizontal carry delays by passing carries diagonally down to the next row
-// The two "+1" compensation constants required by the BW algorithm are injected into the final vector merge adder's carry-in and the Most Significant Bit
+// Carry-save adder array summing the partial products
 module baugh_wooley_multiplier #(
     parameter N = 8
 ) (
@@ -124,4 +120,87 @@ module baugh_wooley_multiplier #(
 
     assign p[2*N-1] = vma_c[N-1] ^ c[N-1][N-1] ^ 1'b1;
 
+endmodule
+
+// Two-stage pipelined baugh_wooley_multiplier (registered after CSA row SPLIT and at the output)
+module bw_multiplier_pipe #(
+    parameter N     = 8,
+    parameter SPLIT = 5
+) (
+    input  wire             clk,
+    input  wire [N-1:0]     x,
+    input  wire [N-1:0]     y,
+    output reg  [2*N-1:0]   p
+);
+    reg  [N-1:0]     x_q;              // x bits of the stage-2 rows
+    reg  [N-1:0]     s_q, c_q;         // CSA row SPLIT, carry-save
+    reg  [SPLIT-1:0] pl_q;             // product bits finished in stage 1
+
+    wire [N-1:0] xs;                   // x bit each row sees
+    wire [N-1:0] s [0:N-1];
+    wire [N-1:0] c [0:N-1];
+    wire [N-1:0] pp [0:N-1];
+
+    genvar i, j;
+    generate
+        for (i = 0; i < N; i = i + 1) begin : g_x
+            assign xs[i] = (i <= SPLIT) ? x[i] : x_q[i];
+        end
+        for (i = 0; i < N; i = i + 1) begin : g_pp
+            for (j = 0; j < N; j = j + 1) begin : g_ppj
+                if (i == N-1 && j == N-1)
+                    assign pp[i][j] = xs[i] & y[j];
+                else if (i == N-1 || j == N-1)
+                    assign pp[i][j] = ~(xs[i] & y[j]);
+                else
+                    assign pp[i][j] = xs[i] & y[j];
+            end
+        end
+    endgenerate
+
+    assign s[0] = pp[0];
+    assign c[0] = {N{1'b0}};
+
+    generate
+        for (i = 1; i < N; i = i + 1) begin : g_arr_row
+            // row SPLIT+1 starts from the registered row SPLIT
+            wire [N-1:0] sp = (i == SPLIT + 1) ? s_q : s[i-1];
+            wire [N-1:0] cp = (i == SPLIT + 1) ? c_q : c[i-1];
+            for (j = 0; j < N; j = j + 1) begin : g_arr_col
+                if (j < N-1) begin : g_fa
+                    full_adder u_fa (.a(pp[i][j]), .b(sp[j+1]), .cin(cp[j]),
+                                     .s(s[i][j]), .cout(c[i][j]));
+                end else begin : g_ha
+                    half_adder u_ha (.a(pp[i][N-1]), .b(cp[N-1]),
+                                     .s(s[i][N-1]), .cout(c[i][N-1]));
+                end
+            end
+        end
+    endgenerate
+
+    wire [SPLIT-1:0] pl;
+    generate
+        for (i = 0; i < SPLIT; i = i + 1) begin : g_pl
+            assign pl[i] = s[i][0];
+        end
+    endgenerate
+
+    // vector merge
+    wire [N-1:0] vma = {1'b0, s[N-1][N-1:1]} + {1'b0, c[N-1][N-2:0]} + {{(N-1){1'b0}}, 1'b1};
+    wire [N-1:0] plow;
+    generate
+        for (i = 0; i < N; i = i + 1) begin : g_plow
+            if (i < SPLIT)       assign plow[i] = pl_q[i];
+            else if (i == SPLIT) assign plow[i] = s_q[0];
+            else                 assign plow[i] = s[i][0];
+        end
+    endgenerate
+
+    always @(posedge clk) begin
+        x_q  <= x;
+        s_q  <= s[SPLIT];
+        c_q  <= c[SPLIT];
+        pl_q <= pl;
+        p    <= {vma[N-1] ^ c[N-1][N-1] ^ 1'b1, vma[N-2:0], plow};
+    end
 endmodule

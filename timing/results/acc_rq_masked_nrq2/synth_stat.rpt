@@ -1,0 +1,70 @@
+
+32. Printing statistics.
+
+=== flexnn_top_rq_masked ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+    47125        - wires
+    47484        - wire bits
+    15259        - public wires
+    15618        - public wire bits
+       23        - ports
+      382        - port bits
+    47154 1.26E+05 cells
+     2107 2.88E+03   AND2X1
+      353  724.356   AND3XL
+       79  189.126   AND4X1
+      211  505.134   AO21X1
+       84  229.824   AO22X1
+      212  435.024   AOI211XL
+     1273  2176.83   AOI21X1
+       66  158.004   AOI221X1
+       11   33.858   AOI222X1
+      913 1.87E+03   AOI22X1
+      307  629.964   AOI2BB1X1
+        1     3.42   AOI2BB2X1
+      142  291.384   AOI31X1
+       66  158.004   AOI32X1
+        6   14.364   AOI33XL
+        5    10.26   BUFX3
+     1379 3.77E+03   CLKXOR2X1
+     9397 5.14E+04   DFFHQX1
+     1366  11679.3   EDFFHQX1
+     1222  835.848   INVX1
+     1523 3.65E+03   MX2X1
+        1    4.788   MX3XL
+      737 1.76E+03   MXI2XL
+        4   28.728   MXI4X1
+     1299 1.78E+03   NAND2BX1
+     5096 5.23E+03   NAND2X1
+      230    393.3   NAND3BXL
+      208   355.68   NAND3X1
+      238   406.98   NAND4XL
+     1372 1.88E+03   NOR2BX1
+     3681 3.78E+03   NOR2X1
+       42   86.184   NOR3BX1
+      300      513   NOR3X1
+        2    4.788   NOR4BX1
+       46    78.66   NOR4X1
+      262  537.624   OA21X1
+       42  100.548   OA22X1
+     1405  2402.55   OAI211X1
+     1067  1824.57   OAI21X1
+       42  100.548   OAI221X1
+       11   30.096   OAI222X1
+      173  354.996   OAI22X1
+     1022  1747.62   OAI2BB1X1
+       50    102.6   OAI31X1
+       27   64.638   OAI32X1
+      625      855   OR2X1
+      105   215.46   OR3X1
+       39   80.028   OR4X1
+        1    1.026   TIELO
+     8303 1.99E+04   XNOR2X1
+        1    7.524   XOR3X1
+
+   Chip area for module '\flexnn_top_rq_masked': 126267.768000
+     of which used for sequential elements: 63099.684000 (49.97%)
+

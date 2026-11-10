@@ -1,0 +1,102 @@
+Startpoint: u_rqs.g_core[0].u_core.ct[6][0]_reg
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_rqs.g_core[0].u_core.g_mul_p.ph1q[25]_reg
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+Corner: slow
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock clk (rise edge)
+   3.112    3.112   clock network delay (propagated)
+   0.000    3.112 ^ u_rqs.g_core[0].u_core.ct[6][0]_reg/CK (DFFQX4)
+   0.399    3.511 v u_rqs.g_core[0].u_core.ct[6][0]_reg/Q (DFFQX4)
+   0.236    3.747 v wire1564/Y (BUFX20)
+   0.296    4.043 ^ _29907_/Y (MXI2X2)
+   0.486    4.528 v _29908_/Y (OAI22X4)
+   0.388    4.916 v rebuffer8450/Y (BUFX6)
+   0.087    5.003 v rebuffer8415/Y (BUFX6)
+   0.180    5.183 v fanout898/Y (CLKBUFX20)
+   0.178    5.361 ^ _30821_/Y (NAND2X1)
+   0.331    5.692 v _30824_/Y (OAI21X1)
+   0.374    6.066 v _30861_/Y (OAI2BB1X2)
+   0.161    6.227 ^ _30862_/Y (NAND2X1)
+   0.207    6.435 ^ _30869_/Y (XNOR2X1)
+   0.314    6.749 v _30870_/Y (AOI32X1)
+   0.430    7.178 v _30884_/Y (CLKAND2X6)
+   0.126    7.304 ^ _30885_/Y (NOR2X1)
+   0.225    7.529 v _30920_/Y (XNOR2X1)
+   0.220    7.749 ^ _30924_/Y (XNOR2X1)
+   0.216    7.964 v _30956_/Y (XNOR2X1)
+   0.210    8.174 v _31038_/Y (XNOR2X1)
+   0.106    8.281 ^ _31039_/Y (INVX1)
+   0.145    8.425 v _31040_/Y (OAI2BB1X2)
+   0.275    8.700 v _31044_/Y (OAI2BB1X2)
+   0.244    8.944 ^ _31046_/Y (AOI21X2)
+   0.264    9.208 v _31048_/Y (OAI21X2)
+   0.264    9.472 ^ _31050_/Y (AOI21X2)
+   0.223    9.695 v _31052_/Y (OAI21X2)
+   0.222    9.917 ^ _31055_/Y (AOI21X2)
+   0.236   10.153 v _31057_/Y (OAI21X2)
+   0.222   10.374 ^ _31059_/Y (AOI21X2)
+   0.194   10.568 v _31061_/Y (OAI21X4)
+   0.178   10.746 ^ _31064_/Y (AOI21X2)
+   0.215   10.960 v _31067_/Y (OAI21X2)
+   0.187   11.148 v _31068_/Y (AND2X1)
+   0.168   11.316 v _31070_/Y (NAND2BX1)
+   0.140   11.455 ^ _31071_/Y (NAND2X1)
+   0.240   11.696 v _31072_/Y (NAND2BX1)
+   0.310   12.005 v _31073_/Y (OAI2BB1X2)
+   0.197   12.203 ^ _31075_/Y (AOI21X2)
+   0.196   12.399 v _31080_/Y (OAI21X2)
+   0.156   12.555 ^ _31081_/Y (OAI21X1)
+   0.304   12.859 ^ _31082_/Y (XNOR2X1)
+   0.000   12.859 ^ u_rqs.g_core[0].u_core.g_mul_p.ph1q[25]_reg/D (DFFHQX1)
+           12.859   data arrival time
+
+  10.000   10.000   clock clk (rise edge)
+   3.068   13.068   clock network delay (propagated)
+   0.000   13.069   clock reconvergence pessimism
+           13.069 ^ u_rqs.g_core[0].u_core.g_mul_p.ph1q[25]_reg/CK (DFFHQX1)
+  -0.165   12.904   library setup time
+           12.904   data required time
+-----------------------------------------------------------
+           12.904   data required time
+          -12.859   data arrival time
+-----------------------------------------------------------
+            0.045   slack (MET)
+
+
+Startpoint: u_rqs.g_core[0].u_core.ct[3][0]_reg
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_rqs.g_core[0].u_core.ct[4][0]_reg
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+Corner: fast
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock clk (rise edge)
+   0.794    0.794   clock network delay (propagated)
+   0.000    0.794 ^ u_rqs.g_core[0].u_core.ct[3][0]_reg/CK (DFFHQX1)
+   0.056    0.850 v u_rqs.g_core[0].u_core.ct[3][0]_reg/Q (DFFHQX1)
+   0.000    0.850 v u_rqs.g_core[0].u_core.ct[4][0]_reg/D (DFFHQX1)
+            0.850   data arrival time
+
+   0.000    0.000   clock clk (rise edge)
+   0.798    0.798   clock network delay (propagated)
+  -0.001    0.796   clock reconvergence pessimism
+            0.796 ^ u_rqs.g_core[0].u_core.ct[4][0]_reg/CK (DFFHQX1)
+   0.004    0.801   library hold time
+            0.801   data required time
+-----------------------------------------------------------
+            0.801   data required time
+           -0.850   data arrival time
+-----------------------------------------------------------
+            0.049   slack (MET)
+
+
+wns max 0.00
+tns max 0.00

@@ -1,21 +1,4 @@
-//=====================================================================
-// masking_gadgets.sv -- first-order, 2-share Boolean masking gadgets
-//
-//   msk_dly        1-cycle delay (REG=1) or wire (REG=0)
-//   dom_and        DOM-independent AND, 1 fresh random bit
-//   msk_cout_tree  masked carry-out of A+B   (reduction tree, log depth)
-//   msk_sklansky   masked adder A+B -> Boolean shares of the sum (A2B core)
-//   msk_and_tree   masked AND of N bits     (reduction tree, log depth)
-//   rng_bank       free-running xorshift64 bank, W random bits per cycle
-//
-// REG=1 registers every DOM AND layer (cross terms registered before they
-// are combined): this is the glitch-robust form. REG=0 is combinational:
-// still first-order secure in a glitch-free (RTL / toggle-count) model,
-// NOT at gate level with glitches.
-//
-// Every gadget takes FRESH random bits every cycle (z bus). Shares are
-// (x0, x1) with x = x0 ^ x1.
-//=====================================================================
+// First-order, 2-share Boolean masking gadgets
 
 module msk_dly #(parameter W = 1, parameter REG = 1) (
     input  wire         clk,
@@ -33,8 +16,7 @@ module msk_dly #(parameter W = 1, parameter REG = 1) (
     endgenerate
 endmodule
 
-// q = a & b. Inner terms stay in their domain; cross terms are refreshed
-// with z and (REG=1) registered before being combined.
+// q = a & b
 module dom_and #(parameter REG = 1) (
     input  wire clk,
     input  wire a0, a1, b0, b1, z,
@@ -57,11 +39,7 @@ module dom_and #(parameter REG = 1) (
     endgenerate
 endmodule
 
-//---------------------------------------------------------------------
-// Carry-out of A + B (N bits). Inputs are Boolean sharings of A and B.
-// Level 0: g = A&B (masked), p = A^B (linear). Then pairwise combine
-// (G,P)hi o (G,P)lo = (Ghi ^ Phi&Glo, Phi&Plo). Latency REG ? 1+clog2(N) : 0.
-//---------------------------------------------------------------------
+// Carry-out of A + B (N bits)
 module msk_cout_tree (clk, a0, a1, b0, b1, z, c0, c1);
     parameter N   = 8;
     parameter REG = 1;
@@ -116,10 +94,7 @@ module msk_cout_tree (clk, a0, a1, b0, b1, z, c0, c1);
     assign c1 = G1[L*N];
 endmodule
 
-//---------------------------------------------------------------------
-// Sklansky prefix adder: Boolean sharings of A, B in -> sharing of A+B
-// (mod 2^N) and of the carry-out. Latency REG ? 1+clog2(N) : 0.
-//---------------------------------------------------------------------
+// Sklansky prefix adder
 module msk_sklansky (clk, a0, a1, b0, b1, z, s0, s1, co0, co1);
     parameter N   = 16;
     parameter REG = 1;
@@ -187,9 +162,7 @@ module msk_sklansky (clk, a0, a1, b0, b1, z, s0, s1, co0, co1);
     assign co1 = G1[L*N + N - 1];
 endmodule
 
-//---------------------------------------------------------------------
-// AND of all N shared bits. Latency REG ? clog2(N) : 0.
-//---------------------------------------------------------------------
+// AND of all N shared bits
 module msk_and_tree (clk, x0, x1, z, y0, y1);
     parameter N   = 8;
     parameter REG = 1;
@@ -231,14 +204,7 @@ module msk_and_tree (clk, x0, x1, z, y0, y1);
     assign y1 = Y1[L*N];
 endmodule
 
-//---------------------------------------------------------------------
-// W fresh random bits per cycle from ceil(W/64) xorshift64 generators.
-// en = 1: new bits every cycle. en = 0: bits held (no switching while the
-// consumer is idle). The consumer must keep en = 1 in EVERY cycle in which
-// any of its inputs or pipeline registers can change, so that no two
-// different values are ever processed with the same random bits.
-// Sits OUTSIDE the TVLA dump scope (like wmask_gen / act_masker).
-//---------------------------------------------------------------------
+// W fresh random bits per cycle from ceil(W/64) xorshift64 generators
 module rng_bank #(
     parameter W = 64,
     parameter [63:0] SEED = 64'h0123_4567_89AB_CDEF
@@ -267,13 +233,7 @@ module rng_bank #(
     assign rnd = all[W-1:0];
 endmodule
 
-//---------------------------------------------------------------------
-// msk_prefix -- masked Sklansky prefix tree on level-0 (g, p) sharings.
-// Returns the Boolean sharing of the carry-generate prefix G[i:0] for
-// every position i (carry INTO bit i+1). The last level computes G only
-// (no P), saving one DOM AND and one random bit per last-level node.
-// Latency REG ? clog2(N) : 0.
-//---------------------------------------------------------------------
+// msk_prefix
 module msk_prefix (clk, g0, g1, p0, p1, z, G0, G1);
     parameter N   = 16;
     parameter REG = 1;
@@ -338,11 +298,7 @@ module msk_prefix (clk, g0, g1, p0, p1, z, G0, G1);
     endgenerate
 endmodule
 
-//---------------------------------------------------------------------
-// dom_and_v -- W independent DOM ANDs as one vector (bit-for-bit the same
-// as W dom_and instances; one random bit per lane). Vector form keeps
-// simulation fast when the outputs feed many readers.
-//---------------------------------------------------------------------
+// dom_and_v
 module dom_and_v #(parameter W = 1, parameter REG = 1) (
     input  wire         clk,
     input  wire [W-1:0] a0, a1, b0, b1, z,

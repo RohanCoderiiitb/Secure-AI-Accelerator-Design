@@ -1,0 +1,105 @@
+Startpoint: g_post[0].u_requant.ph_s1[0]_reg
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_post[0].u_requant.p_s2[34]_reg
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+Corner: slow
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock clk (rise edge)
+   2.400    2.400   clock network delay (propagated)
+   0.000    2.400 ^ g_post[0].u_requant.ph_s1[0]_reg/CK (DFFHQX1)
+   0.350    2.750 ^ g_post[0].u_requant.ph_s1[0]_reg/Q (DFFHQX1)
+   0.239    2.990 v _54743_/Y (NAND2X1)
+   0.240    3.229 ^ _54747_/Y (NOR2X2)
+   0.147    3.376 v _54750_/Y (AOI21X1)
+   0.222    3.598 v _54754_/Y (OR2X1)
+   0.127    3.724 v _54757_/Y (AND2X1)
+   0.173    3.897 ^ _54759_/Y (NOR2X1)
+   0.229    4.127 v _54762_/Y (AOI21X1)
+   0.264    4.391 ^ _54766_/Y (NOR2X4)
+   0.155    4.546 v _54769_/Y (AOI21X2)
+   0.274    4.821 ^ _54771_/Y (NOR2X2)
+   0.205    5.025 v _54774_/Y (AOI21X1)
+   0.276    5.301 ^ _54777_/Y (NOR2X4)
+   0.169    5.471 ^ _54780_/Y (AO21X1)
+   0.218    5.689 ^ _54788_/Y (OAI2BB1X1)
+   0.179    5.868 v _54789_/Y (NAND2X1)
+   0.176    6.044 ^ _54792_/Y (OAI2BB1X1)
+   0.222    6.266 ^ _54797_/Y (OA21X1)
+   0.112    6.378 v _54799_/Y (AOI21X1)
+   0.281    6.660 ^ _54800_/Y (NOR2X1)
+   0.252    6.912 ^ _54803_/Y (AO21X1)
+   0.222    7.133 ^ _54811_/Y (OAI2BB1X1)
+   0.207    7.340 v _54812_/Y (NAND2X1)
+   0.216    7.556 ^ _54815_/Y (OAI2BB1X1)
+   0.240    7.796 ^ _54821_/Y (OA21X1)
+   0.100    7.896 v _54822_/Y (AOI21X1)
+   0.277    8.173 ^ _54823_/Y (NOR2X1)
+   0.233    8.405 ^ _54826_/Y (AO21X1)
+   0.220    8.625 ^ _54834_/Y (OAI2BB1X1)
+   0.224    8.849 v _54835_/Y (NAND2X2)
+   0.159    9.008 ^ _54838_/Y (OAI2BB1X4)
+   0.195    9.203 ^ _54844_/Y (OA21X1)
+   0.085    9.288 v _54845_/Y (AOI21X1)
+   0.270    9.558 ^ _54846_/Y (NOR2X1)
+   0.243    9.801 ^ _54849_/Y (AO21X1)
+   0.223   10.024 ^ _54857_/Y (OAI2BB1X1)
+   0.280   10.304 v _54858_/Y (NAND2X1)
+   0.308   10.611 v _54866_/Y (NAND2BX1)
+   0.217   10.828 ^ _54881_/Y (NOR2X1)
+   0.264   11.092 v _54883_/Y (AOI221X2)
+   0.278   11.370 v _54886_/Y (OR2X6)
+   0.207   11.577 ^ _54894_/Y (NOR2X1)
+   0.323   11.900 ^ _54899_/Y (OA21X1)
+   0.196   12.096 ^ _54900_/Y (AOI2BB1X2)
+   0.000   12.096 ^ g_post[0].u_requant.p_s2[34]_reg/D (DFFHQX1)
+           12.096   data arrival time
+
+  10.000   10.000   clock clk (rise edge)
+   2.330   12.330   clock network delay (propagated)
+   0.000   12.331   clock reconvergence pessimism
+           12.331 ^ g_post[0].u_requant.p_s2[34]_reg/CK (DFFHQX1)
+  -0.169   12.162   library setup time
+           12.162   data required time
+-----------------------------------------------------------
+           12.162   data required time
+          -12.096   data arrival time
+-----------------------------------------------------------
+            0.066   slack (MET)
+
+
+Startpoint: u_array.g_row[1].g_col[0].pe_inst.u_mul.pl_q[0]_reg
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_array.g_row[1].g_col[0].pe_inst.prod[0]_reg
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+Corner: fast
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock clk (rise edge)
+   0.625    0.625   clock network delay (propagated)
+   0.000    0.625 ^ u_array.g_row[1].g_col[0].pe_inst.u_mul.pl_q[0]_reg/CK (DFFHQX1)
+   0.060    0.686 v u_array.g_row[1].g_col[0].pe_inst.u_mul.pl_q[0]_reg/Q (DFFHQX1)
+   0.000    0.686 v u_array.g_row[1].g_col[0].pe_inst.prod[0]_reg/D (DFFHQX1)
+            0.686   data arrival time
+
+   0.000    0.000   clock clk (rise edge)
+   0.627    0.627   clock network delay (propagated)
+  -0.002    0.625   clock reconvergence pessimism
+            0.625 ^ u_array.g_row[1].g_col[0].pe_inst.prod[0]_reg/CK (DFFHQX1)
+   0.009    0.634   library hold time
+            0.634   data required time
+-----------------------------------------------------------
+            0.634   data required time
+           -0.686   data arrival time
+-----------------------------------------------------------
+            0.052   slack (MET)
+
+
+wns max 0.00
+tns max 0.00

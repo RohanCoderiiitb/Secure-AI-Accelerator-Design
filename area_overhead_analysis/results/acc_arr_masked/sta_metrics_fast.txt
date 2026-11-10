@@ -1,4 +1,8 @@
-setup_wns_ns 3.1062
+setup_wns_ns 7.1157
 setup_tns_ns 0.0000
-hold_wns_ns 0.0503
-crit_arrival_ns 7.5314
+hold_wns_ns 0.0507
+hold_tns_ns 0.0000
+spef postroute_fast.spef
+max_slew_violations 194
+max_cap_violations 0
+crit_arrival_ns 0.8843

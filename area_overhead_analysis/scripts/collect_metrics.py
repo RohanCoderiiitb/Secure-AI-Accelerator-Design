@@ -28,10 +28,10 @@ ROWS = [
     ("sa_act_masked",             "Systolic array",  "Activation-masked 5x5 array",                "sa_unmasked"),
     ("sa_wt_masked",              "Systolic array",  "Weight-masked 5x5 array",                    "sa_unmasked"),
     ("sa_wmask_shared",           "Systolic array",  "Weight-masked 5x5 array (shared mask column)", "sa_unmasked"),
-    ("acc_unmasked",              "Accelerator",     "Unprotected accelerator (5x5 array)",        None),
+    ("acc_unmasked",              "Accelerator",     "Unprotected accelerator (5x5, ACCW=19, timing-closed)", None),
     ("acc_arr_masked",            "Accelerator",     "Accelerator: array masked only",             "acc_unmasked"),
-    ("acc_rq_masked",             "Accelerator",     "Accelerator: requantizer masked only",       "acc_unmasked"),
-    ("acc_both_masked",           "Accelerator",     "Accelerator: array + requantizer masked",    "acc_unmasked"),
+    ("acc_rq_masked",             "Accelerator",     "Accelerator: requantizer masked only (NRQ=1)", "acc_unmasked"),
+    ("acc_both_masked",           "Accelerator",     "Accelerator: array + requantizer masked (NRQ=1)", "acc_unmasked"),
     ("act_masker",                "Support",         "act_masker alone (5 rows: RNG + splitter)",  None),
 ]
 

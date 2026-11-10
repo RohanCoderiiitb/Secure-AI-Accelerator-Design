@@ -1,0 +1,118 @@
+Startpoint: requant_sat_flat[1]_reg
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: requant_sat_flat[1] (output port clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                            0.000    0.000   clock clk (rise edge)
+                            0.611    0.611   clock network delay (propagated)
+                   0.079    0.000    0.611 ^ requant_sat_flat[1]_reg/CK (DFFQX2)
+     1    0.065    0.219    0.182    0.794 v requant_sat_flat[1]_reg/Q (DFFQX2)
+                   0.219    0.004    0.797 v requant_sat_flat[1] (out)
+                                     0.797   data arrival time
+
+                           10.000   10.000   clock clk (rise edge)
+                            0.000   10.000   clock network delay (propagated)
+                            0.000   10.000   clock reconvergence pessimism
+                           -2.000    8.000   output external delay
+                                     8.000   data required time
+---------------------------------------------------------------------------------
+                                     8.000   data required time
+                                    -0.797   data arrival time
+---------------------------------------------------------------------------------
+                                     7.203   slack (MET)
+
+
+Startpoint: u_array.g_row[1].g_col[0].pe_inst.u_mul.pl_q[0]_reg
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_array.g_row[1].g_col[0].pe_inst.prod[0]_reg
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock clk (rise edge)
+   0.613    0.613   clock network delay (propagated)
+   0.000    0.613 ^ u_array.g_row[1].g_col[0].pe_inst.u_mul.pl_q[0]_reg/CK (DFFHQX1)
+   0.059    0.672 v u_array.g_row[1].g_col[0].pe_inst.u_mul.pl_q[0]_reg/Q (DFFHQX1)
+   0.000    0.672 v u_array.g_row[1].g_col[0].pe_inst.prod[0]_reg/D (DFFHQX1)
+            0.672   data arrival time
+
+   0.000    0.000   clock clk (rise edge)
+   0.615    0.615   clock network delay (propagated)
+  -0.002    0.613   clock reconvergence pessimism
+            0.613 ^ u_array.g_row[1].g_col[0].pe_inst.prod[0]_reg/CK (DFFHQX1)
+   0.008    0.621   library hold time
+            0.621   data required time
+-----------------------------------------------------------
+            0.621   data required time
+           -0.672   data arrival time
+-----------------------------------------------------------
+            0.051   slack (MET)
+
+
+max_delay/setup group clk
+
+                                     Required  Actual
+Endpoint                               Delay   Delay   Slack
+------------------------------------------------------------
+requant_sat_flat[1] (output)            8.00    0.80    7.20 (MET)
+of_rd_data_flat[21] (output)            8.00    0.79    7.21 (MET)
+of_rd_data_flat[36] (output)            8.00    0.79    7.21 (MET)
+done (output)                           8.00    0.77    7.23 (MET)
+requant_sat_flat[0] (output)            8.00    0.77    7.23 (MET)
+of_rd_data_flat[7] (output)             8.00    0.77    7.23 (MET)
+of_rd_data_flat[2] (output)             8.00    0.77    7.23 (MET)
+of_rd_data_flat[15] (output)            8.00    0.76    7.24 (MET)
+of_rd_data_flat[39] (output)            8.00    0.76    7.24 (MET)
+of_rd_data_flat[37] (output)            8.00    0.75    7.25 (MET)
+of_rd_data_flat[38] (output)            8.00    0.75    7.25 (MET)
+requant_sat_flat[4] (output)            8.00    0.75    7.25 (MET)
+of_rd_data_flat[25] (output)            8.00    0.75    7.25 (MET)
+of_rd_data_flat[35] (output)            8.00    0.75    7.25 (MET)
+of_rd_data_flat[33] (output)            8.00    0.75    7.25 (MET)
+of_rd_data_flat[34] (output)            8.00    0.75    7.25 (MET)
+of_rd_data_flat[20] (output)            8.00    0.75    7.25 (MET)
+requant_sat_flat[2] (output)            8.00    0.74    7.26 (MET)
+of_rd_data_flat[30] (output)            8.00    0.74    7.26 (MET)
+of_rd_data_flat[12] (output)            8.00    0.74    7.26 (MET)
+
+min_delay/hold group clk
+
+                                     Required  Actual
+Endpoint                               Delay   Delay   Slack
+------------------------------------------------------------
+u_array.g_row[1].g_col[0].pe_inst.prod[0]_reg/D (DFFHQX1)    0.62    0.67    0.05 (MET)
+u_array.g_row[1].g_col[3].pe_inst.prod[3]_reg/D (DFFHQX1)    0.60    0.65    0.05 (MET)
+u_array.g_row[1].g_col[3].pe_inst.prod[2]_reg/D (DFFHQX1)    0.60    0.65    0.05 (MET)
+u_array.g_row[3].g_col[0].pe_inst.prod[2]_reg/D (DFFHQX1)    0.63    0.68    0.05 (MET)
+u_array.g_row[3].g_col[2].pe_inst.prod[0]_reg/D (DFFHQX1)    0.62    0.67    0.05 (MET)
+u_array.g_row[1].g_col[1].pe_inst.prod[5]_reg/D (DFFHQX1)    0.60    0.66    0.05 (MET)
+u_array.g_row[4].g_col[0].pe_inst.prod[1]_reg/D (DFFHQX1)    0.62    0.67    0.05 (MET)
+u_array.g_row[3].g_col[4].pe_inst.prod[1]_reg/D (DFFHQX1)    0.60    0.65    0.05 (MET)
+u_array.g_row[0].g_col[4].pe_inst.u_mul.x_q[7]_reg/D (DFFHQX1)    0.62    0.68    0.05 (MET)
+u_array.g_row[3].g_col[4].pe_inst.prod[4]_reg/D (DFFHQX1)    0.60    0.65    0.05 (MET)
+u_array.g_row[1].g_col[0].pe_inst.prod[1]_reg/D (DFFHQX1)    0.62    0.67    0.05 (MET)
+u_array.g_row[1].g_col[3].pe_inst.prod[0]_reg/D (DFFHQX1)    0.60    0.66    0.05 (MET)
+u_array.g_row[1].g_col[3].pe_inst.prod[1]_reg/D (DFFHQX1)    0.60    0.66    0.05 (MET)
+u_array.g_row[2].g_col[3].pe_inst.prod[3]_reg/D (DFFHQX1)    0.61    0.66    0.05 (MET)
+u_array.g_row[3].g_col[2].pe_inst.prod[4]_reg/D (DFFHQX1)    0.60    0.66    0.05 (MET)
+u_array.g_row[0].g_col[3].pe_inst.prod[4]_reg/D (DFFHQX1)    0.62    0.67    0.05 (MET)
+u_array.g_row[0].g_col[4].pe_inst.prod[4]_reg/D (DFFHQX1)    0.62    0.67    0.05 (MET)
+u_array.g_row[1].g_col[4].pe_inst.prod[0]_reg/D (DFFHQX1)    0.61    0.66    0.05 (MET)
+u_array.g_row[2].g_col[2].pe_inst.prod[2]_reg/D (DFFHQX1)    0.62    0.67    0.05 (MET)
+u_array.g_row[3].g_col[1].pe_inst.prod[4]_reg/D (DFFHQX1)    0.61    0.66    0.05 (MET)
+
+max slew
+
+Pin                                    Limit    Slew   Slack
+------------------------------------------------------------
+clkbuf_2_3_0_clk/A                      0.28    0.40   -0.12 (VIOLATED)
+clkbuf_2_1_0_clk/A                      0.28    0.40   -0.12 (VIOLATED)
+clkbuf_2_2_0_clk/A                      0.28    0.40   -0.12 (VIOLATED)
+clkbuf_2_0_0_clk/A                      0.28    0.40   -0.12 (VIOLATED)
+clkbuf_0_clk/Y                          0.28    0.40   -0.12 (VIOLATED)
+

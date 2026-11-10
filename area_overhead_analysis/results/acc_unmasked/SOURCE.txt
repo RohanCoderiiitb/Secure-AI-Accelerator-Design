@@ -1,0 +1,1 @@
+Copied from timing/results/acc_unmasked (timing-closed MCMM flow, see timing/REPORT_v2.md). Large files (netlists, DEF, ODB, SPEF) are in that directory.

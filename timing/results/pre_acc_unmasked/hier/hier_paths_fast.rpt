@@ -1,0 +1,267 @@
+Startpoint: g_post[0].u_requant/sh_s2[0]_reg
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_post[0].u_requant/q_out[0]_reg
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock clk (rise edge)
+   0.000    0.000   clock network delay (ideal)
+   0.000    0.000 ^ g_post[0].u_requant/sh_s2[0]_reg/CK (DFFHQX1)
+   0.150    0.150 v g_post[0].u_requant/sh_s2[0]_reg/Q (DFFHQX1)
+   0.160    0.310 ^ g_post[0].u_requant/_7218_/Y (NOR4X1)
+   0.075    0.385 v g_post[0].u_requant/_7222_/Y (NOR2X1)
+   0.106    0.491 ^ g_post[0].u_requant/_7410_/Y (NOR4BX1)
+   0.101    0.592 v g_post[0].u_requant/_7415_/Y (AOI31X1)
+   0.065    0.657 ^ g_post[0].u_requant/_7419_/Y (OAI21X1)
+   0.058    0.715 v g_post[0].u_requant/_7422_/Y (AOI21X1)
+   0.059    0.774 ^ g_post[0].u_requant/_7425_/Y (OAI21X1)
+   0.060    0.834 v g_post[0].u_requant/_7426_/Y (AOI21X1)
+   0.061    0.895 ^ g_post[0].u_requant/_7427_/Y (OAI21X1)
+   0.060    0.954 v g_post[0].u_requant/_7428_/Y (AOI21X1)
+   0.059    1.014 ^ g_post[0].u_requant/_7431_/Y (OAI21X1)
+   0.061    1.075 v g_post[0].u_requant/_7432_/Y (AOI21X1)
+   0.061    1.136 ^ g_post[0].u_requant/_7433_/Y (OAI21X1)
+   0.061    1.197 v g_post[0].u_requant/_7434_/Y (AOI21X1)
+   0.059    1.256 ^ g_post[0].u_requant/_7436_/Y (OAI21X1)
+   0.060    1.316 v g_post[0].u_requant/_7439_/Y (AOI21X1)
+   0.059    1.375 ^ g_post[0].u_requant/_7440_/Y (OAI21X1)
+   0.060    1.435 v g_post[0].u_requant/_7443_/Y (AOI21X1)
+   0.061    1.495 ^ g_post[0].u_requant/_7444_/Y (OAI21X1)
+   0.061    1.557 v g_post[0].u_requant/_7445_/Y (AOI21X1)
+   0.061    1.617 ^ g_post[0].u_requant/_7448_/Y (OAI21X1)
+   0.061    1.679 v g_post[0].u_requant/_7449_/Y (AOI21X1)
+   0.061    1.740 ^ g_post[0].u_requant/_7450_/Y (OAI21X1)
+   0.064    1.804 v g_post[0].u_requant/_7451_/Y (AOI21X1)
+   0.066    1.870 ^ g_post[0].u_requant/_7453_/Y (OAI211X1)
+   0.079    1.949 v g_post[0].u_requant/_7455_/Y (AOI31X1)
+   0.068    2.017 ^ g_post[0].u_requant/_7457_/Y (OAI21X1)
+   0.082    2.099 v g_post[0].u_requant/_7460_/Y (AOI211XL)
+   0.090    2.189 ^ g_post[0].u_requant/_7462_/Y (OAI31X1)
+   0.072    2.261 v g_post[0].u_requant/_7463_/Y (AOI21X1)
+   0.062    2.324 ^ g_post[0].u_requant/_7464_/Y (OAI21X1)
+   0.062    2.385 v g_post[0].u_requant/_7465_/Y (AOI21X1)
+   0.059    2.444 ^ g_post[0].u_requant/_7466_/Y (OAI21X1)
+   0.060    2.504 v g_post[0].u_requant/_7470_/Y (AOI21X1)
+   0.061    2.565 ^ g_post[0].u_requant/_7471_/Y (OAI21X1)
+   0.061    2.626 v g_post[0].u_requant/_7472_/Y (AOI21X1)
+   0.061    2.687 ^ g_post[0].u_requant/_7473_/Y (OAI21X1)
+   0.061    2.748 v g_post[0].u_requant/_7474_/Y (AOI21X1)
+   0.061    2.809 ^ g_post[0].u_requant/_7475_/Y (OAI21X1)
+   0.060    2.869 v g_post[0].u_requant/_7476_/Y (AOI21X1)
+   0.055    2.924 v g_post[0].u_requant/_7477_/Y (OA21X1)
+   0.049    2.972 v g_post[0].u_requant/_7478_/Y (OA21X1)
+   0.049    3.021 ^ g_post[0].u_requant/_7479_/Y (OAI21X1)
+   0.060    3.081 v g_post[0].u_requant/_7481_/Y (AOI21X1)
+   0.059    3.140 ^ g_post[0].u_requant/_7482_/Y (OAI21X1)
+   0.060    3.200 v g_post[0].u_requant/_7485_/Y (AOI21X1)
+   0.057    3.257 ^ g_post[0].u_requant/_7486_/Y (OAI21X1)
+   0.050    3.307 ^ g_post[0].u_requant/_7489_/Y (OAI2BB1X1)
+   0.048    3.355 ^ g_post[0].u_requant/_7490_/Y (OAI2BB1X1)
+   0.048    3.403 v g_post[0].u_requant/_7523_/Y (XNOR2X1)
+   0.065    3.468 ^ g_post[0].u_requant/_7577_/Y (MXI2XL)
+   0.063    3.531 ^ g_post[0].u_requant/_7578_/Y (MX2X1)
+   0.073    3.604 ^ g_post[0].u_requant/_7581_/Y (MX3XL)
+   0.053    3.656 ^ g_post[0].u_requant/_7582_/Y (AOI2BB1X1)
+   0.073    3.729 v g_post[0].u_requant/_7908_/Y (OAI211X1)
+   0.086    3.815 ^ g_post[0].u_requant/_7909_/Y (NOR4X1)
+   0.124    3.939 v g_post[0].u_requant/_7910_/Y (NAND4XL)
+   0.103    4.042 ^ g_post[0].u_requant/_7915_/Y (OAI31X1)
+   0.098    4.140 v g_post[0].u_requant/_7921_/Y (AOI31X1)
+   0.113    4.253 ^ g_post[0].u_requant/_8117_/Y (AOI211XL)
+   0.000    4.253 ^ g_post[0].u_requant/q_out[0]_reg/D (DFFHQX1)
+            4.253   data arrival time
+
+  10.000   10.000   clock clk (rise edge)
+   0.000   10.000   clock network delay (ideal)
+   0.000   10.000   clock reconvergence pessimism
+           10.000 ^ g_post[0].u_requant/q_out[0]_reg/CK (DFFHQX1)
+  -0.047    9.953   library setup time
+            9.953   data required time
+-----------------------------------------------------------
+            9.953   data required time
+           -4.253   data arrival time
+-----------------------------------------------------------
+            5.700   slack (MET)
+
+
+Startpoint: g_post[0].u_requant/sh_s2[0]_reg
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_post[0].u_requant/q_out[1]_reg
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock clk (rise edge)
+   0.000    0.000   clock network delay (ideal)
+   0.000    0.000 ^ g_post[0].u_requant/sh_s2[0]_reg/CK (DFFHQX1)
+   0.150    0.150 v g_post[0].u_requant/sh_s2[0]_reg/Q (DFFHQX1)
+   0.160    0.310 ^ g_post[0].u_requant/_7218_/Y (NOR4X1)
+   0.075    0.385 v g_post[0].u_requant/_7222_/Y (NOR2X1)
+   0.106    0.491 ^ g_post[0].u_requant/_7410_/Y (NOR4BX1)
+   0.101    0.592 v g_post[0].u_requant/_7415_/Y (AOI31X1)
+   0.065    0.657 ^ g_post[0].u_requant/_7419_/Y (OAI21X1)
+   0.058    0.715 v g_post[0].u_requant/_7422_/Y (AOI21X1)
+   0.059    0.774 ^ g_post[0].u_requant/_7425_/Y (OAI21X1)
+   0.060    0.834 v g_post[0].u_requant/_7426_/Y (AOI21X1)
+   0.061    0.895 ^ g_post[0].u_requant/_7427_/Y (OAI21X1)
+   0.060    0.954 v g_post[0].u_requant/_7428_/Y (AOI21X1)
+   0.059    1.014 ^ g_post[0].u_requant/_7431_/Y (OAI21X1)
+   0.061    1.075 v g_post[0].u_requant/_7432_/Y (AOI21X1)
+   0.061    1.136 ^ g_post[0].u_requant/_7433_/Y (OAI21X1)
+   0.061    1.197 v g_post[0].u_requant/_7434_/Y (AOI21X1)
+   0.059    1.256 ^ g_post[0].u_requant/_7436_/Y (OAI21X1)
+   0.060    1.316 v g_post[0].u_requant/_7439_/Y (AOI21X1)
+   0.059    1.375 ^ g_post[0].u_requant/_7440_/Y (OAI21X1)
+   0.060    1.435 v g_post[0].u_requant/_7443_/Y (AOI21X1)
+   0.061    1.495 ^ g_post[0].u_requant/_7444_/Y (OAI21X1)
+   0.061    1.557 v g_post[0].u_requant/_7445_/Y (AOI21X1)
+   0.061    1.617 ^ g_post[0].u_requant/_7448_/Y (OAI21X1)
+   0.061    1.679 v g_post[0].u_requant/_7449_/Y (AOI21X1)
+   0.061    1.740 ^ g_post[0].u_requant/_7450_/Y (OAI21X1)
+   0.064    1.804 v g_post[0].u_requant/_7451_/Y (AOI21X1)
+   0.066    1.870 ^ g_post[0].u_requant/_7453_/Y (OAI211X1)
+   0.079    1.949 v g_post[0].u_requant/_7455_/Y (AOI31X1)
+   0.068    2.017 ^ g_post[0].u_requant/_7457_/Y (OAI21X1)
+   0.082    2.099 v g_post[0].u_requant/_7460_/Y (AOI211XL)
+   0.090    2.189 ^ g_post[0].u_requant/_7462_/Y (OAI31X1)
+   0.072    2.261 v g_post[0].u_requant/_7463_/Y (AOI21X1)
+   0.062    2.324 ^ g_post[0].u_requant/_7464_/Y (OAI21X1)
+   0.062    2.385 v g_post[0].u_requant/_7465_/Y (AOI21X1)
+   0.059    2.444 ^ g_post[0].u_requant/_7466_/Y (OAI21X1)
+   0.060    2.504 v g_post[0].u_requant/_7470_/Y (AOI21X1)
+   0.061    2.565 ^ g_post[0].u_requant/_7471_/Y (OAI21X1)
+   0.061    2.626 v g_post[0].u_requant/_7472_/Y (AOI21X1)
+   0.061    2.687 ^ g_post[0].u_requant/_7473_/Y (OAI21X1)
+   0.061    2.748 v g_post[0].u_requant/_7474_/Y (AOI21X1)
+   0.061    2.809 ^ g_post[0].u_requant/_7475_/Y (OAI21X1)
+   0.060    2.869 v g_post[0].u_requant/_7476_/Y (AOI21X1)
+   0.055    2.924 v g_post[0].u_requant/_7477_/Y (OA21X1)
+   0.049    2.972 v g_post[0].u_requant/_7478_/Y (OA21X1)
+   0.049    3.021 ^ g_post[0].u_requant/_7479_/Y (OAI21X1)
+   0.060    3.081 v g_post[0].u_requant/_7481_/Y (AOI21X1)
+   0.059    3.140 ^ g_post[0].u_requant/_7482_/Y (OAI21X1)
+   0.060    3.200 v g_post[0].u_requant/_7485_/Y (AOI21X1)
+   0.057    3.257 ^ g_post[0].u_requant/_7486_/Y (OAI21X1)
+   0.050    3.307 ^ g_post[0].u_requant/_7489_/Y (OAI2BB1X1)
+   0.048    3.355 ^ g_post[0].u_requant/_7490_/Y (OAI2BB1X1)
+   0.048    3.403 v g_post[0].u_requant/_7523_/Y (XNOR2X1)
+   0.065    3.468 ^ g_post[0].u_requant/_7577_/Y (MXI2XL)
+   0.063    3.531 ^ g_post[0].u_requant/_7578_/Y (MX2X1)
+   0.073    3.604 ^ g_post[0].u_requant/_7581_/Y (MX3XL)
+   0.053    3.656 ^ g_post[0].u_requant/_7582_/Y (AOI2BB1X1)
+   0.073    3.729 v g_post[0].u_requant/_7908_/Y (OAI211X1)
+   0.086    3.815 ^ g_post[0].u_requant/_7909_/Y (NOR4X1)
+   0.124    3.939 v g_post[0].u_requant/_7910_/Y (NAND4XL)
+   0.103    4.042 ^ g_post[0].u_requant/_7915_/Y (OAI31X1)
+   0.098    4.140 v g_post[0].u_requant/_7921_/Y (AOI31X1)
+   0.113    4.253 ^ g_post[0].u_requant/_8179_/Y (AOI211XL)
+   0.000    4.253 ^ g_post[0].u_requant/q_out[1]_reg/D (DFFHQX1)
+            4.253   data arrival time
+
+  10.000   10.000   clock clk (rise edge)
+   0.000   10.000   clock network delay (ideal)
+   0.000   10.000   clock reconvergence pessimism
+           10.000 ^ g_post[0].u_requant/q_out[1]_reg/CK (DFFHQX1)
+  -0.047    9.953   library setup time
+            9.953   data required time
+-----------------------------------------------------------
+            9.953   data required time
+           -4.253   data arrival time
+-----------------------------------------------------------
+            5.700   slack (MET)
+
+
+Startpoint: g_post[0].u_requant/sh_s2[0]_reg
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_post[0].u_requant/q_out[2]_reg
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock clk (rise edge)
+   0.000    0.000   clock network delay (ideal)
+   0.000    0.000 ^ g_post[0].u_requant/sh_s2[0]_reg/CK (DFFHQX1)
+   0.150    0.150 v g_post[0].u_requant/sh_s2[0]_reg/Q (DFFHQX1)
+   0.160    0.310 ^ g_post[0].u_requant/_7218_/Y (NOR4X1)
+   0.075    0.385 v g_post[0].u_requant/_7222_/Y (NOR2X1)
+   0.106    0.491 ^ g_post[0].u_requant/_7410_/Y (NOR4BX1)
+   0.101    0.592 v g_post[0].u_requant/_7415_/Y (AOI31X1)
+   0.065    0.657 ^ g_post[0].u_requant/_7419_/Y (OAI21X1)
+   0.058    0.715 v g_post[0].u_requant/_7422_/Y (AOI21X1)
+   0.059    0.774 ^ g_post[0].u_requant/_7425_/Y (OAI21X1)
+   0.060    0.834 v g_post[0].u_requant/_7426_/Y (AOI21X1)
+   0.061    0.895 ^ g_post[0].u_requant/_7427_/Y (OAI21X1)
+   0.060    0.954 v g_post[0].u_requant/_7428_/Y (AOI21X1)
+   0.059    1.014 ^ g_post[0].u_requant/_7431_/Y (OAI21X1)
+   0.061    1.075 v g_post[0].u_requant/_7432_/Y (AOI21X1)
+   0.061    1.136 ^ g_post[0].u_requant/_7433_/Y (OAI21X1)
+   0.061    1.197 v g_post[0].u_requant/_7434_/Y (AOI21X1)
+   0.059    1.256 ^ g_post[0].u_requant/_7436_/Y (OAI21X1)
+   0.060    1.316 v g_post[0].u_requant/_7439_/Y (AOI21X1)
+   0.059    1.375 ^ g_post[0].u_requant/_7440_/Y (OAI21X1)
+   0.060    1.435 v g_post[0].u_requant/_7443_/Y (AOI21X1)
+   0.061    1.495 ^ g_post[0].u_requant/_7444_/Y (OAI21X1)
+   0.061    1.557 v g_post[0].u_requant/_7445_/Y (AOI21X1)
+   0.061    1.617 ^ g_post[0].u_requant/_7448_/Y (OAI21X1)
+   0.061    1.679 v g_post[0].u_requant/_7449_/Y (AOI21X1)
+   0.061    1.740 ^ g_post[0].u_requant/_7450_/Y (OAI21X1)
+   0.064    1.804 v g_post[0].u_requant/_7451_/Y (AOI21X1)
+   0.066    1.870 ^ g_post[0].u_requant/_7453_/Y (OAI211X1)
+   0.079    1.949 v g_post[0].u_requant/_7455_/Y (AOI31X1)
+   0.068    2.017 ^ g_post[0].u_requant/_7457_/Y (OAI21X1)
+   0.082    2.099 v g_post[0].u_requant/_7460_/Y (AOI211XL)
+   0.090    2.189 ^ g_post[0].u_requant/_7462_/Y (OAI31X1)
+   0.072    2.261 v g_post[0].u_requant/_7463_/Y (AOI21X1)
+   0.062    2.324 ^ g_post[0].u_requant/_7464_/Y (OAI21X1)
+   0.062    2.385 v g_post[0].u_requant/_7465_/Y (AOI21X1)
+   0.059    2.444 ^ g_post[0].u_requant/_7466_/Y (OAI21X1)
+   0.060    2.504 v g_post[0].u_requant/_7470_/Y (AOI21X1)
+   0.061    2.565 ^ g_post[0].u_requant/_7471_/Y (OAI21X1)
+   0.061    2.626 v g_post[0].u_requant/_7472_/Y (AOI21X1)
+   0.061    2.687 ^ g_post[0].u_requant/_7473_/Y (OAI21X1)
+   0.061    2.748 v g_post[0].u_requant/_7474_/Y (AOI21X1)
+   0.061    2.809 ^ g_post[0].u_requant/_7475_/Y (OAI21X1)
+   0.060    2.869 v g_post[0].u_requant/_7476_/Y (AOI21X1)
+   0.055    2.924 v g_post[0].u_requant/_7477_/Y (OA21X1)
+   0.049    2.972 v g_post[0].u_requant/_7478_/Y (OA21X1)
+   0.049    3.021 ^ g_post[0].u_requant/_7479_/Y (OAI21X1)
+   0.060    3.081 v g_post[0].u_requant/_7481_/Y (AOI21X1)
+   0.059    3.140 ^ g_post[0].u_requant/_7482_/Y (OAI21X1)
+   0.060    3.200 v g_post[0].u_requant/_7485_/Y (AOI21X1)
+   0.057    3.257 ^ g_post[0].u_requant/_7486_/Y (OAI21X1)
+   0.050    3.307 ^ g_post[0].u_requant/_7489_/Y (OAI2BB1X1)
+   0.048    3.355 ^ g_post[0].u_requant/_7490_/Y (OAI2BB1X1)
+   0.048    3.403 v g_post[0].u_requant/_7523_/Y (XNOR2X1)
+   0.065    3.468 ^ g_post[0].u_requant/_7577_/Y (MXI2XL)
+   0.063    3.531 ^ g_post[0].u_requant/_7578_/Y (MX2X1)
+   0.073    3.604 ^ g_post[0].u_requant/_7581_/Y (MX3XL)
+   0.053    3.656 ^ g_post[0].u_requant/_7582_/Y (AOI2BB1X1)
+   0.073    3.729 v g_post[0].u_requant/_7908_/Y (OAI211X1)
+   0.086    3.815 ^ g_post[0].u_requant/_7909_/Y (NOR4X1)
+   0.124    3.939 v g_post[0].u_requant/_7910_/Y (NAND4XL)
+   0.103    4.042 ^ g_post[0].u_requant/_7915_/Y (OAI31X1)
+   0.098    4.140 v g_post[0].u_requant/_7921_/Y (AOI31X1)
+   0.113    4.253 ^ g_post[0].u_requant/_8220_/Y (AOI211XL)
+   0.000    4.253 ^ g_post[0].u_requant/q_out[2]_reg/D (DFFHQX1)
+            4.253   data arrival time
+
+  10.000   10.000   clock clk (rise edge)
+   0.000   10.000   clock network delay (ideal)
+   0.000   10.000   clock reconvergence pessimism
+           10.000 ^ g_post[0].u_requant/q_out[2]_reg/CK (DFFHQX1)
+  -0.047    9.953   library setup time
+            9.953   data required time
+-----------------------------------------------------------
+            9.953   data required time
+           -4.253   data arrival time
+-----------------------------------------------------------
+            5.700   slack (MET)
+
+

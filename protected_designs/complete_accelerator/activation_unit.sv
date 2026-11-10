@@ -1,5 +1,4 @@
-//Design of the activation unit
-//4 types of activation functions have been implemented, configured via "mode"
+// Activation unit: identity / ReLU / clamped ReLU / leaky ReLU, selected by act_mode
 
 module activation_unit #(
     parameter N = 8
@@ -34,7 +33,7 @@ module activation_unit #(
         end
         else begin
             valid_out <= valid_in;
-            y_out     <= y_comb;
+            if(valid_in) y_out <= y_comb;   // holds between values (no switching on idle inputs)
         end
     end
 

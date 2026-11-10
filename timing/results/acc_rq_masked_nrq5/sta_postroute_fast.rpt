@@ -1,0 +1,160 @@
+Startpoint: sat0_q[4]_reg (rising edge-triggered flip-flop clocked by clk)
+Endpoint: requant_sat_flat[4] (output port clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                            0.000    0.000   clock clk (rise edge)
+                            0.714    0.714   clock network delay (propagated)
+                   0.031    0.000    0.714 ^ sat0_q[4]_reg/CK (DFFHQX1)
+     2    0.004    0.027    0.067    0.781 v sat0_q[4]_reg/Q (DFFHQX1)
+     1    0.288    0.262    0.211    0.992 v _082514_/Y (CLKXOR2X8)
+                   0.319    0.070    1.062 v requant_sat_flat[4] (out)
+                                     1.062   data arrival time
+
+                           10.000   10.000   clock clk (rise edge)
+                            0.000   10.000   clock network delay (propagated)
+                            0.000   10.000   clock reconvergence pessimism
+                           -2.000    8.000   output external delay
+                                     8.000   data required time
+---------------------------------------------------------------------------------
+                                     8.000   data required time
+                                    -1.062   data arrival time
+---------------------------------------------------------------------------------
+                                     6.938   slack (MET)
+
+
+Startpoint: u_rqs.g_core[1].u_core.u_pfx.Gs0[186][0]_reg
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_rqs.g_core[1].u_core.u_pfx.Gs0[223][0]_reg
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock clk (rise edge)
+   0.707    0.707   clock network delay (propagated)
+   0.000    0.707 ^ u_rqs.g_core[1].u_core.u_pfx.Gs0[186][0]_reg/CK (DFFHQX1)
+   0.058    0.764 v u_rqs.g_core[1].u_core.u_pfx.Gs0[186][0]_reg/Q (DFFHQX1)
+   0.000    0.764 v u_rqs.g_core[1].u_core.u_pfx.Gs0[223][0]_reg/D (DFFHQX1)
+            0.764   data arrival time
+
+   0.000    0.000   clock clk (rise edge)
+   0.714    0.714   clock network delay (propagated)
+  -0.001    0.713   clock reconvergence pessimism
+            0.713 ^ u_rqs.g_core[1].u_core.u_pfx.Gs0[223][0]_reg/CK (DFFHQX1)
+   0.008    0.721   library hold time
+            0.721   data required time
+-----------------------------------------------------------
+            0.721   data required time
+           -0.764   data arrival time
+-----------------------------------------------------------
+            0.043   slack (MET)
+
+
+max_delay/setup group clk
+
+                                     Required  Actual
+Endpoint                               Delay   Delay   Slack
+------------------------------------------------------------
+requant_sat_flat[4] (output)            8.00    1.06    6.94 (MET)
+requant_sat_flat[2] (output)            8.00    0.99    7.01 (MET)
+requant_sat_flat[1] (output)            8.00    0.99    7.01 (MET)
+requant_sat_flat[0] (output)            8.00    0.97    7.03 (MET)
+of_rd_data_flat[35] (output)            8.00    0.95    7.05 (MET)
+requant_sat_flat[3] (output)            8.00    0.95    7.05 (MET)
+of_rd_data_flat[28] (output)            8.00    0.94    7.06 (MET)
+of_rd_data_flat[17] (output)            8.00    0.93    7.07 (MET)
+of_rd_data_flat[32] (output)            8.00    0.92    7.08 (MET)
+of_rd_data_flat[13] (output)            8.00    0.92    7.08 (MET)
+of_rd_data_flat[2] (output)             8.00    0.90    7.10 (MET)
+of_rd_data_flat[15] (output)            8.00    0.90    7.10 (MET)
+of_rd_data_flat[21] (output)            8.00    0.90    7.10 (MET)
+of_rd_data_flat[7] (output)             8.00    0.90    7.10 (MET)
+of_rd_data_flat[11] (output)            8.00    0.90    7.10 (MET)
+of_rd_data_flat[8] (output)             8.00    0.90    7.10 (MET)
+array_compute_done (output)             8.00    0.89    7.11 (MET)
+of_rd_data_flat[22] (output)            8.00    0.89    7.11 (MET)
+of_rd_data_flat[14] (output)            8.00    0.89    7.11 (MET)
+of_rd_data_flat[19] (output)            8.00    0.89    7.11 (MET)
+
+min_delay/hold group clk
+
+                                     Required  Actual
+Endpoint                               Delay   Delay   Slack
+------------------------------------------------------------
+u_rqs.g_core[1].u_core.u_pfx.Gs0[223][0]_reg/D (DFFHQX1)    0.72    0.76    0.04 (MET)
+u_rqs.g_core[0].u_core.u_x.g_r.s[2][1]_reg/D (DFFHQX1)    0.72    0.77    0.04 (MET)
+u_rqs.g_core[1].u_core.u_pfx.g_lv[3].g_i[9].g_node.gh0_reg/D (DFFHQX1)    0.72    0.77    0.04 (MET)
+u_rqs.g_core[0].u_core.op1[15]_reg/D (DFFQX2)    0.73    0.78    0.05 (MET)
+u_array.g_row[1].g_col[0].pe_inst.prod[5]_reg/D (DFFHQX1)    0.73    0.78    0.05 (MET)
+u_rqs.g_core[4].u_core.op0[17]_reg/D (DFFQX2)    0.73    0.78    0.05 (MET)
+of_rd_data_flat[4]_reg/D (DFFHQX1)      0.74    0.79    0.05 (MET)
+u_rqs.g_core[2].u_core.u_lift.P0[28][0]_reg/D (DFFHQX1)    0.71    0.75    0.05 (MET)
+u_rqs.g_core[3].u_core.u_pfx.Gs1[182][0]_reg/D (DFFHQX1)    0.73    0.78    0.05 (MET)
+u_rqs.g_core[1].u_core.u_lift.g_lv[1].g_k[4].g_comb.gh0_reg/D (DFFHQX1)    0.70    0.75    0.05 (MET)
+u_rqs.g_core[1].u_core.u_x.g_r.s[2][7]_reg/D (DFFHQX1)    0.71    0.76    0.05 (MET)
+u_rqs.g_core[1].u_core.u_x.g_r.s[3][22]_reg/D (DFFHQX1)    0.69    0.74    0.05 (MET)
+u_rqs.g_core[1].u_core.u_pw.g_r.s[2][4]_reg/D (DFFHQX1)    0.78    0.83    0.05 (MET)
+u_rqs.g_core[1].u_core.u_x.g_r.s[1][17]_reg/D (DFFHQX1)    0.70    0.74    0.05 (MET)
+u_rqs.g_core[1].u_core.u_x.g_r.s[4][2]_reg/D (DFFHQX1)    0.71    0.75    0.05 (MET)
+u_rqs.g_core[0].u_core.u_pfx.Gs1[218][0]_reg/D (DFFHQX1)    0.71    0.76    0.05 (MET)
+u_rqs.g_core[1].u_core.u_x.g_r.s[4][1]_reg/D (DFFHQX1)    0.70    0.75    0.05 (MET)
+u_rqs.g_core[2].u_core.pd1[3]_reg/D (DFFHQX1)    0.71    0.76    0.05 (MET)
+u_rqs.g_core[2].u_core.pm1_reg/D (DFFHQX1)    0.71    0.76    0.05 (MET)
+u_rqs.g_core[4].u_core.u_pfx.Gs1[112][0]_reg/D (DFFHQX1)    0.71    0.76    0.05 (MET)
+
+max slew
+
+Pin                                    Limit    Slew   Slack
+------------------------------------------------------------
+clkbuf_2_1_0_clk/A                      0.28    0.37   -0.09 (VIOLATED)
+clkbuf_2_2_0_clk/A                      0.28    0.37   -0.09 (VIOLATED)
+clkbuf_2_3_0_clk/A                      0.28    0.37   -0.09 (VIOLATED)
+clkbuf_2_0_0_clk/A                      0.28    0.37   -0.09 (VIOLATED)
+clkbuf_0_clk/Y                          0.28    0.37   -0.09 (VIOLATED)
+u_rqs.g_core[0].u_core.keep[6]_reg/D    0.28    0.34   -0.06 (VIOLATED)
+u_rqs.g_core[0].u_core.keep[5]_reg/D    0.28    0.34   -0.06 (VIOLATED)
+u_rqs.g_core[0].u_core.keep[7]_reg/D    0.28    0.34   -0.06 (VIOLATED)
+u_rqs.g_core[0].u_core.keep[8]_reg/D    0.28    0.34   -0.06 (VIOLATED)
+u_rqs.g_core[0].u_core.keep[1]_reg/D    0.28    0.34   -0.06 (VIOLATED)
+u_rqs.g_core[0].u_core.keep[3]_reg/D    0.28    0.34   -0.06 (VIOLATED)
+u_rqs.g_core[0].u_core.keep[4]_reg/D    0.28    0.34   -0.06 (VIOLATED)
+u_rqs.g_core[0].u_core.keep[2]_reg/D    0.28    0.33   -0.05 (VIOLATED)
+u_rqs.g_core[1].u_core.keep[3]_reg/D    0.28    0.32   -0.04 (VIOLATED)
+u_rqs.g_core[1].u_core.keep[2]_reg/D    0.28    0.31   -0.03 (VIOLATED)
+u_rqs.g_core[1].u_core.keep[1]_reg/D    0.28    0.31   -0.03 (VIOLATED)
+u_rqs.g_core[1].u_core.keep[4]_reg/D    0.28    0.31   -0.03 (VIOLATED)
+u_rqs.g_core[1].u_core.keep[7]_reg/D    0.28    0.30   -0.02 (VIOLATED)
+u_rqs.g_core[1].u_core.keep[8]_reg/D    0.28    0.30   -0.02 (VIOLATED)
+u_rqs.g_core[1].u_core.keep[5]_reg/D    0.28    0.30   -0.02 (VIOLATED)
+u_rqs.g_core[1].u_core.u_pfx.Ps1[21][0]_reg/D    0.28    0.29   -0.01 (VIOLATED)
+_094684_/Y                              0.28    0.29   -0.01 (VIOLATED)
+_113518_/Y                              0.28    0.29   -0.01 (VIOLATED)
+u_rqs.g_core[1].u_core.g_mul_p.pl0q[26]_reg/D    0.28    0.29   -0.01 (VIOLATED)
+u_rqs.g_core[1].u_core.keep[6]_reg/D    0.28    0.28   -0.00 (VIOLATED)
+
+max capacitance
+
+Pin                                    Limit     Cap   Slack
+------------------------------------------------------------
+fanout325/Y                             0.25    0.32   -0.07 (VIOLATED)
+
+fanout2833/Y                            0.25    0.29   -0.04 (VIOLATED)
+
+fanout2831/Y                            0.25    0.29   -0.04 (VIOLATED)
+
+fanout2824/Y                            0.25    0.29   -0.04 (VIOLATED)
+
+fanout2822/Y                            0.25    0.29   -0.04 (VIOLATED)
+
+fanout2826/Y                            0.25    0.28   -0.03 (VIOLATED)
+
+fanout2837/Y                            0.25    0.27   -0.02 (VIOLATED)
+
+fanout2815/Y                            0.25    0.27   -0.02 (VIOLATED)
+
+fanout2896/Y                            0.25    0.26   -0.01 (VIOLATED)
+

@@ -17,7 +17,7 @@ module address_generator #(
 
     input  wire [ARRAY_COLS-1:0]              valid_sum_out,   // from systolic_array, drives capture directly
     output wire [ARRAY_COLS-1:0]              out_wr_en,       // == valid_sum_out (bounded), fires the SAME cycle as out_wr_addr_flat
-    output wire [ARRAY_COLS*WADDR_W-1:0]      out_wr_addr_flat // MUST be combinational, in lockstep with out_wr_en -
+    output wire [ARRAY_COLS*WADDR_W-1:0]      out_wr_addr_flat // combinational, in lockstep with out_wr_en
 );
     integer r, c;
 
@@ -55,7 +55,7 @@ module address_generator #(
                 for (c = 0; c < ARRAY_COLS; c = c + 1)
                     out_cnt[c] <= {WADDR_W{1'b0}};
             end else if (stream_busy) begin
-                // Row r is active while r <= stream_cyc < r + WAVES.
+                // Row r is active while r <= stream_cyc < r + WAVES
                 for (r = 0; r < ARRAY_ROWS; r = r + 1) begin
                     if (stream_cyc >= r && (stream_cyc - r) < WAVES) begin
                         act_rd_en[r] <= 1'b1;
@@ -71,7 +71,7 @@ module address_generator #(
                     stream_cyc <= stream_cyc + 1'b1;
             end
 
-            // act_valid tracks act_rd_en delayed by 1 cycle (
+            // act_valid is act_rd_en delayed by one cycle (scratchpad read latency)
             act_valid <= act_rd_en;
 
             // Output de-skew

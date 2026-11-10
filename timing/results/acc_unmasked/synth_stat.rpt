@@ -1,0 +1,67 @@
+
+29. Printing statistics.
+
+=== flexnn_top ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+    33250        - wires
+    33609        - wire bits
+     5913        - public wires
+     6272        - public wire bits
+       23        - ports
+      382        - port bits
+    33279 7.76E+04 cells
+     1472 2.01E+03   AND2X1
+      310   636.12   AND3XL
+       44  105.336   AND4X1
+      273  653.562   AO21X1
+       51  139.536   AO22X1
+      240   492.48   AOI211XL
+     1404  2400.84   AOI21X1
+       99  237.006   AOI221X1
+       17   52.326   AOI222X1
+      767 1.57E+03   AOI22X1
+      408  837.216   AOI2BB1X1
+      136  279.072   AOI31X1
+       99  237.006   AOI32X1
+       10    23.94   AOI33XL
+        5    10.26   BUFX3
+      429 1.17E+03   CLKXOR2X1
+     4236 2.32E+04   DFFHQX1
+      944   8071.2   EDFFHQX1
+      901  616.284   INVX1
+     1155  2765.07   MX2X1
+        8   57.456   MX4XL
+      597 1.43E+03   MXI2XL
+      941 1.29E+03   NAND2BX1
+     4121 4.23E+03   NAND2X1
+      174   297.54   NAND3BXL
+      185   316.35   NAND3X1
+      474   810.54   NAND4XL
+     1257 1.72E+03   NOR2BX1
+     3457 3.55E+03   NOR2X1
+       58  119.016   NOR3BX1
+      251   429.21   NOR3X1
+        2    4.788   NOR4BX1
+      203   347.13   NOR4X1
+      482  989.064   OA21X1
+       41   98.154   OA22X1
+      402   687.42   OAI211X1
+     1243  2125.53   OAI21X1
+       47  112.518   OAI221X1
+      186  381.672   OAI22X1
+     1145  1957.95   OAI2BB1X1
+       73  149.796   OAI31X1
+        9   21.546   OAI32X1
+        1    2.736   OAI33X1
+      803  1.1E+03   OR2X1
+       42   86.184   OR3X1
+       23   47.196   OR4X1
+        1    1.026   TIELO
+     4053  9.7E+03   XNOR2X1
+
+   Chip area for module '\flexnn_top': 77553.288000
+     of which used for sequential elements: 31250.592000 (40.30%)
+

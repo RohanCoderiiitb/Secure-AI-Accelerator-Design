@@ -1,0 +1,105 @@
+Startpoint: u_rqs/g_core[0].busy[0]_reg
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_rqs/g_core[0].u_rng/rnd[22]_reg
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock clk (rise edge)
+   0.000    0.000   clock network delay (ideal)
+   0.000    0.000 ^ u_rqs/g_core[0].busy[0]_reg/CK (DFFHQX1)
+   0.246    0.246 v u_rqs/g_core[0].busy[0]_reg/Q (DFFHQX1)
+   0.375    0.620 v u_rqs/_0807_/Y (OR4X1)
+   0.329    0.950 ^ u_rqs/_0830_/Y (NOR4X1)
+  15.750   16.700 v u_rqs/_0852_/Y (NAND3BXL)
+  18.807   35.507 ^ u_rqs/g_core[0].u_rng/_4103_/Y (INVX1)
+   2.883   38.390 v u_rqs/g_core[0].u_rng/_4244_/Y (AOI21X1)
+   0.494   38.883 ^ u_rqs/g_core[0].u_rng/_4245_/Y (OAI211X1)
+   0.000   38.883 ^ u_rqs/g_core[0].u_rng/rnd[22]_reg/D (DFFHQX1)
+           38.883   data arrival time
+
+  10.000   10.000   clock clk (rise edge)
+   0.000   10.000   clock network delay (ideal)
+   0.000   10.000   clock reconvergence pessimism
+           10.000 ^ u_rqs/g_core[0].u_rng/rnd[22]_reg/CK (DFFHQX1)
+  -1.636    8.364   library setup time
+            8.364   data required time
+-----------------------------------------------------------
+            8.364   data required time
+          -38.883   data arrival time
+-----------------------------------------------------------
+          -30.520   slack (VIOLATED)
+
+
+Startpoint: u_rqs/g_core[0].busy[0]_reg
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_rqs/g_core[0].u_rng/rnd[274]_reg
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock clk (rise edge)
+   0.000    0.000   clock network delay (ideal)
+   0.000    0.000 ^ u_rqs/g_core[0].busy[0]_reg/CK (DFFHQX1)
+   0.246    0.246 v u_rqs/g_core[0].busy[0]_reg/Q (DFFHQX1)
+   0.375    0.620 v u_rqs/_0807_/Y (OR4X1)
+   0.329    0.950 ^ u_rqs/_0830_/Y (NOR4X1)
+  15.750   16.700 v u_rqs/_0852_/Y (NAND3BXL)
+  18.807   35.507 ^ u_rqs/g_core[0].u_rng/_4103_/Y (INVX1)
+   2.883   38.390 v u_rqs/g_core[0].u_rng/_3158_/Y (AOI21X1)
+   0.494   38.883 ^ u_rqs/g_core[0].u_rng/_3159_/Y (OAI211X1)
+   0.000   38.883 ^ u_rqs/g_core[0].u_rng/rnd[274]_reg/D (DFFHQX1)
+           38.883   data arrival time
+
+  10.000   10.000   clock clk (rise edge)
+   0.000   10.000   clock network delay (ideal)
+   0.000   10.000   clock reconvergence pessimism
+           10.000 ^ u_rqs/g_core[0].u_rng/rnd[274]_reg/CK (DFFHQX1)
+  -1.636    8.364   library setup time
+            8.364   data required time
+-----------------------------------------------------------
+            8.364   data required time
+          -38.883   data arrival time
+-----------------------------------------------------------
+          -30.520   slack (VIOLATED)
+
+
+Startpoint: u_rqs/g_core[0].busy[0]_reg
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_rqs/g_core[0].u_rng/all[478]_reg
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock clk (rise edge)
+   0.000    0.000   clock network delay (ideal)
+   0.000    0.000 ^ u_rqs/g_core[0].busy[0]_reg/CK (DFFHQX1)
+   0.246    0.246 v u_rqs/g_core[0].busy[0]_reg/Q (DFFHQX1)
+   0.375    0.620 v u_rqs/_0807_/Y (OR4X1)
+   0.329    0.950 ^ u_rqs/_0830_/Y (NOR4X1)
+  15.750   16.700 v u_rqs/_0852_/Y (NAND3BXL)
+  18.807   35.507 ^ u_rqs/g_core[0].u_rng/_4103_/Y (INVX1)
+   2.850   38.357 v u_rqs/g_core[0].u_rng/_2826_/Y (NAND2X1)
+   0.456   38.814 ^ u_rqs/g_core[0].u_rng/_2827_/Y (OAI211X1)
+   0.000   38.814 ^ u_rqs/g_core[0].u_rng/all[478]_reg/D (DFFHQX1)
+           38.814   data arrival time
+
+  10.000   10.000   clock clk (rise edge)
+   0.000   10.000   clock network delay (ideal)
+   0.000   10.000   clock reconvergence pessimism
+           10.000 ^ u_rqs/g_core[0].u_rng/all[478]_reg/CK (DFFHQX1)
+  -1.636    8.364   library setup time
+            8.364   data required time
+-----------------------------------------------------------
+            8.364   data required time
+          -38.814   data arrival time
+-----------------------------------------------------------
+          -30.450   slack (VIOLATED)
+
+

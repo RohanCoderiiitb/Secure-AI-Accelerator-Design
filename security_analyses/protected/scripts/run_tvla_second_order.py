@@ -145,7 +145,7 @@ def do_plots(prefix, r1_by, r2_by, P2_by, labels, thr, ttd_by):
         ax.grid(alpha=0.3)
         ax.legend(fontsize=7)
     np.atleast_1d(axes)[-1].set_xlabel("clock cycle within capture window")
-    fig.suptitle("Second-order (centered-squared) Welch t, fixed vs random" + (("\n" + os.environ["PLOT_TITLE_SUFFIX"]) if os.environ.get("PLOT_TITLE_SUFFIX") else ""))
+    fig.suptitle("Second-order (centered-squared) Welch t, fixed vs random")
     fig.tight_layout()
     fig.savefig(prefix + "_t.png", dpi=140)
     plt.close(fig)

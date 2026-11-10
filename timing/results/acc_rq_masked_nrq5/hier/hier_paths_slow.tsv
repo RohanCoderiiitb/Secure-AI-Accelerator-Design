@@ -1,0 +1,21 @@
+rank	slack_ns	arrival_ns	startpoint	endpoint	instances
+1	-30.520	38.883	u_rqs/g_core[0].busy[0]_reg/CK	u_rqs/g_core[0].u_rng/rnd[22]_reg/D	u_rqs/g_core[0].u_rng u_rqs
+2	-30.520	38.883	u_rqs/g_core[0].busy[0]_reg/CK	u_rqs/g_core[0].u_rng/rnd[274]_reg/D	u_rqs/g_core[0].u_rng u_rqs
+3	-30.450	38.814	u_rqs/g_core[0].busy[0]_reg/CK	u_rqs/g_core[0].u_rng/all[478]_reg/D	u_rqs/g_core[0].u_rng u_rqs
+4	-30.450	38.814	u_rqs/g_core[0].busy[0]_reg/CK	u_rqs/g_core[0].u_rng/all[479]_reg/D	u_rqs/g_core[0].u_rng u_rqs
+5	-30.450	38.814	u_rqs/g_core[0].busy[0]_reg/CK	u_rqs/g_core[0].u_rng/all[480]_reg/D	u_rqs/g_core[0].u_rng u_rqs
+6	-30.450	38.814	u_rqs/g_core[0].busy[0]_reg/CK	u_rqs/g_core[0].u_rng/all[481]_reg/D	u_rqs/g_core[0].u_rng u_rqs
+7	-30.450	38.814	u_rqs/g_core[0].busy[0]_reg/CK	u_rqs/g_core[0].u_rng/all[483]_reg/D	u_rqs/g_core[0].u_rng u_rqs
+8	-30.450	38.814	u_rqs/g_core[0].busy[0]_reg/CK	u_rqs/g_core[0].u_rng/all[486]_reg/D	u_rqs/g_core[0].u_rng u_rqs
+9	-30.450	38.814	u_rqs/g_core[0].busy[0]_reg/CK	u_rqs/g_core[0].u_rng/all[488]_reg/D	u_rqs/g_core[0].u_rng u_rqs
+10	-30.450	38.814	u_rqs/g_core[0].busy[0]_reg/CK	u_rqs/g_core[0].u_rng/all[489]_reg/D	u_rqs/g_core[0].u_rng u_rqs
+11	-30.450	38.814	u_rqs/g_core[0].busy[0]_reg/CK	u_rqs/g_core[0].u_rng/all[498]_reg/D	u_rqs/g_core[0].u_rng u_rqs
+12	-30.450	38.814	u_rqs/g_core[0].busy[0]_reg/CK	u_rqs/g_core[0].u_rng/all[502]_reg/D	u_rqs/g_core[0].u_rng u_rqs
+13	-30.450	38.814	u_rqs/g_core[0].busy[0]_reg/CK	u_rqs/g_core[0].u_rng/all[504]_reg/D	u_rqs/g_core[0].u_rng u_rqs
+14	-30.450	38.814	u_rqs/g_core[0].busy[0]_reg/CK	u_rqs/g_core[0].u_rng/all[508]_reg/D	u_rqs/g_core[0].u_rng u_rqs
+15	-30.450	38.814	u_rqs/g_core[0].busy[0]_reg/CK	u_rqs/g_core[0].u_rng/all[509]_reg/D	u_rqs/g_core[0].u_rng u_rqs
+16	-30.450	38.814	u_rqs/g_core[0].busy[0]_reg/CK	u_rqs/g_core[0].u_rng/rnd[100]_reg/D	u_rqs/g_core[0].u_rng u_rqs
+17	-30.450	38.814	u_rqs/g_core[0].busy[0]_reg/CK	u_rqs/g_core[0].u_rng/rnd[101]_reg/D	u_rqs/g_core[0].u_rng u_rqs
+18	-30.450	38.814	u_rqs/g_core[0].busy[0]_reg/CK	u_rqs/g_core[0].u_rng/rnd[104]_reg/D	u_rqs/g_core[0].u_rng u_rqs
+19	-30.450	38.814	u_rqs/g_core[0].busy[0]_reg/CK	u_rqs/g_core[0].u_rng/rnd[107]_reg/D	u_rqs/g_core[0].u_rng u_rqs
+20	-30.450	38.814	u_rqs/g_core[0].busy[0]_reg/CK	u_rqs/g_core[0].u_rng/rnd[108]_reg/D	u_rqs/g_core[0].u_rng u_rqs

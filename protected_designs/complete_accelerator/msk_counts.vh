@@ -1,13 +1,11 @@
-// msk_counts.vh -- constant functions shared by the masking gadgets, the
-// masked requantizer and the protected top: random bits per cycle and
-// pipeline latency. `include inside a module body.
+// Constant functions shared by the masking gadgets, the masked requantizer and the tops
 
 function integer mskf_m;                 // number of groups at tree level l
     input integer n, l;
     begin mskf_m = (n + (1 << l) - 1) >> l; end
 endfunction
 
-// ---- carry-out reduction tree (n bits): n generate ANDs + 2 per combine ----
+// carry-out reduction tree (n bits)
 function integer mskf_cout_zoff;
     input integer n, lv;
     integer l;
@@ -21,7 +19,7 @@ function integer mskf_cout_z;
     begin mskf_cout_z = mskf_cout_zoff(n, $clog2(n)); end
 endfunction
 
-// ---- AND reduction tree (n inputs): one AND per combine ----
+// AND reduction tree (n inputs)
 function integer mskf_and_zoff;
     input integer n, lv;
     integer l;
@@ -35,7 +33,7 @@ function integer mskf_and_z;
     begin mskf_and_z = mskf_and_zoff(n, $clog2(n)); end
 endfunction
 
-// ---- Sklansky prefix adder (n bits) ----
+// Sklansky prefix adder (n bits)
 function integer mskf_skl_cnt;           // nodes at level j
     input integer n, j;
     integer i;
@@ -61,7 +59,7 @@ function integer mskf_skl_rank;          // index of node i among level-j nodes
     begin mskf_skl_rank = ((i >> (j + 1)) << j) + (i & ((1 << j) - 1)); end
 endfunction
 
-// ---- prefix (carry) tree with G-only last level ----
+// prefix (carry) tree with G-only last level
 function integer mskf_pfx_zoff;          // random bits of levels < jv (2 per node)
     input integer n, jv;
     integer j;
@@ -80,7 +78,7 @@ function integer mskf_pfx_z;             // whole tree: last level needs G only 
     end
 endfunction
 
-// ---- masked requantizer (v2) totals ----
+// masked requantizer totals
 function integer mskf_rq_rnd;            // random bits per cycle
     input integer xw, rw;
     begin

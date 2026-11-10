@@ -3,7 +3,8 @@
 **Technology:** 45nm PDK — Cadence GPDK045 (`gsclib045`), from `45_nm_PDK/cadence/cadence_45nm/`
 **Corner:** implemented and timed in the **fast** library (`fast_vdd1v0`, 1.1 V, 0 °C), the corner the lab Genus/Innovus flow uses; a second OpenSTA check runs in the **slow** library (`slow_vdd1v0`, 0.9 V, 125 °C)
 **Flow:** Yosys 0.69+75 → OpenROAD 26Q3-2361 (floorplan → place → CTS → global/detailed route) → OpenSTA 3.1.0
-**Clock:** 100 MHz (10 ns) — quick timing sanity check only
+**Clock:** 100 MHz (10 ns) — quick timing sanity check only for the block-level designs
+**Complete accelerator (§4.6):** the four accelerator rows are the **timing-closed** builds from `timing/` (100 MHz met post-route at both the fast and the slow corner, multi-corner setup/hold repair); see `timing/REPORT_v2.md`.
 **Metric:** post-route area (µm²): total standard-cell area, split into register
 (flip-flop) and combinational area, plus total die area. Power is out of scope.
 
@@ -29,9 +30,9 @@
 | 5×5 systolic array (act-masked) | 35,406.6 | 160,098.8 | **4.52×** | 6,898.1 → 19,948.2 | **2.89×** | 27,913.7 → 138,843.8 | **4.97×** | 65,426 → 280,958 | **4.29×** |
 | 5×5 systolic array (weight-masked) | 35,406.6 | 166,220.9 | **4.70×** | 6,898.1 → 19,726.6 | **2.86×** | 27,913.7 → 145,224.1 | **5.20×** | 65,426 → 293,022 | **4.48×** |
 | 5×5 systolic array (weight-masked, shared mask column) ² | 35,406.6 | 60,452.9 | **1.71×** | 6,898.1 → 8,709.4 | **1.26×** | 27,913.7 → 51,045.2 | **1.83×** | 65,426 → 107,902 | **1.65×** |
-| Full accelerator, 5×5: array masked only ³ | 117,291.3 | 152,386.3 | **1.30×** | 19,215.6 → 22,443.8 | **1.17×** | 96,777.4 → 128,671.7 | **1.33×** | 209,329 → 269,314 | **1.29×** |
-| Full accelerator, 5×5: requantizer masked only ³ | 117,291.3 | 390,025.0 | **3.33×** | 19,215.6 → 129,591.3 | **6.74×** | 96,777.4 → 249,288.2 | **2.58×** | 209,329 → 654,424 | **3.13×** |
-| Full accelerator, 5×5: array + requantizer masked ³ | 117,291.3 | 422,202.1 | **3.60×** | 19,215.6 → 134,965.5 | **7.02×** | 96,777.4 → 276,145.2 | **2.85×** | 209,329 → 715,631 | **3.42×** |
+| Full accelerator, 5×5: array masked only ³ | 94,018.2 | 131,719.2 | **1.40×** | 32,077.2 → 40,141.6 | **1.25×** | 59,484.4 → 89,146.4 | **1.50×** | 158,273 → 218,337 | **1.38×** |
+| Full accelerator, 5×5: requantizer masked only, NRQ=1 ³ | 94,018.2 | 109,792.6 | **1.17×** | 32,077.2 → 45,470.9 | **1.42×** | 59,484.4 → 58,185.5 | **0.98×** | 158,273 → 181,442 | **1.15×** |
+| Full accelerator, 5×5: array + requantizer masked, NRQ=1 ³ | 94,018.2 | 152,051.1 | **1.62×** | 32,077.2 → 57,361.6 | **1.79×** | 59,484.4 → 88,513.7 | **1.49×** | 158,273 → 251,713 | **1.59×** |
 
 ¹ The multiplier baseline is the unmasked Baugh-Wooley multiplier **plus its weight
 register** (`bw_multiplier_wreg`), because every masked multiplier stores its weight
@@ -44,11 +45,17 @@ computed once in a shadow column and added back at the bottom of each column. It
 includes its own mask generator. It is not like-for-like with the two-share arrays:
 narrower shares, one share per PE, and a mask shared across each row (§4.5).
 
-³ The complete `complete_accelerator/` design at 5×5, against the unprotected
-`flexnn_top`. Buffers, controllers, activation unit and maxpool are identical and
-unmasked in all four; the three masked variants differ only in which block is
-masked: the shared-mask-column array (`flexnn_top_arr_masked`), the requantizer
-(`flexnn_top_rq_masked`), or both (`flexnn_top_protected`) (§4.6).
+³ The timing-closed complete accelerator (`protected_designs/complete_accelerator/`)
+at 5×5, WAVES=4, against the timing-closed unprotected `flexnn_top`. **All four
+builds use identical parameters** (ACCW=19, MW=16, SW=6, BW=32, registered I/O,
+pipelined PE multipliers and requantizers). Buffers, controllers, activation unit
+and maxpool are identical and unmasked in all four; the three masked variants
+differ only in which block is masked: the shared-mask-column array
+(`flexnn_top_arr_masked`), the requantizer (`flexnn_top_rq_masked`, one shared
+masked requantizer core, NRQ=1), or both (`flexnn_top_protected`, NRQ=1) (§4.6).
+These rows come from the `timing/` flow (implemented in the fast library, setup
+and hold repaired at both corners), not from the block-level flow used for the
+other rows.
 
 **Findings:**
 - **Combinational logic drives the overhead everywhere.** Masking duplicates
@@ -71,22 +78,27 @@ masked: the shared-mask-column array (`flexnn_top_arr_masked`), the requantizer
 - **A shared mask column cuts weight-masking cost to 1.71×,** against 4.70× for the
   two-share weight-masked array (60,453 vs 166,221 µm², about 36 %). It avoids
   duplicating the multiplier in every PE, but it protects against less (§4.5).
-- **In the full accelerator, the masked requantizer is the cost, not the array:**
-  - array masked only: 1.30× (+35,095 µm²)
-  - requantizer masked only: 3.33× (+272,734 µm²)
-  - both: 3.60× (+304,911 µm²)
+- **Full accelerator (timing-closed, against the timing-closed unprotected
+  accelerator, 94,018 µm²):**
+  - array masked only: 1.40× (+37,701 µm²)
+  - requantizer masked only, NRQ=1: 1.17× (+15,774 µm²)
+  - both, NRQ=1: 1.62× (+58,033 µm²)
 
-  Masking the array on top of a masked requantizer adds only 0.27× (§4.6).
+  All four now share the same parameters, so the two single-block overheads
+  add up to about the both-masked overhead (+53,475 vs +58,033 µm²). With one
+  shared masked requantizer core (NRQ=1) the array is now the larger cost (§4.6).
 - **Die area tracks total area.** It is slightly lower for the small designs because
   the 2 µm core margin weighs less as the die grows.
 
 **Timing:**
-- **Fast corner:** all 17 designs meet setup at 100 MHz with at least 2.6 ns slack.
-  Hold slack is positive everywhere except the array + requantizer masked
-  accelerator, which misses by 0.002 ns (a marginal violation, §4.8).
-- **Slow corner:** **none of them meet 100 MHz**, with setup slack between −3.0 and
-  −24.0 ns (§4.8). The accelerators (−19.1 to −24.0 ns) and the two-share masked
-  blocks miss by the most.
+- **Complete accelerators:** all four **meet 100 MHz at both corners**, setup and
+  hold, TNS 0 (slow-corner setup slack +0.38 to +1.01 ns, hold ≥ +0.05 ns; fast
+  corner setup ≥ +7.0 ns, hold ≥ +0.041 ns) (§4.8, `timing/REPORT_v2.md`).
+- **Block-level designs, fast corner:** all 13 meet setup at 100 MHz with at least
+  3.4 ns slack, with positive hold slack.
+- **Block-level designs, slow corner:** none of them meet 100 MHz, with setup slack
+  between −3.0 and −18.2 ns (§4.8). These blocks were not timing-optimised for the
+  slow corner.
 - **Routing:** all 17 route with **0 DRC violations**.
 
 ![Post-route area](results/area_postroute.png)
@@ -114,10 +126,10 @@ Parameters match the configurations used by the design testbenches
 | `sa_act_masked` | `systolic_array_masked_act` | `systolic_array_masked_act.sv` | 5×5, N=8, SHARE_W=32 | 25 × `processing_element_masked_act` |
 | `sa_wt_masked` | `systolic_array_masked` | `systolic_array_masked_wt.sv` | 5×5, N=8, SHARE_W=32 | 25 × `processing_element_masked` |
 | `sa_wmask_shared` | `systolic_array_wmask_shared` | `systolic_array_wmask_shared.sv` + `source/multiplier.sv` (adders) | 5×5, N=8, SW=19 (RTL defaults) | 25 × `processing_element_wshare` (one 19-bit weight share each) + 5 × `shadow_pe` + S delay line + `wmask_gen` (xorshift64, one mask per row) |
-| `acc_unmasked` | `flexnn_top` | `complete_accelerator/complete_accelerator/top.sv` + its submodules (identical to `source/`) | ARRAY_ROWS=ARRAY_COLS=5; WAVES=4, POOL_LEN=1, MW=32, SW=6 (RTL defaults) | Complete unprotected accelerator: IF/FL global buffers, load controller, activation scratchpads, address generator, `systolic_array`, `psum_accum`, 5 × (`requantize` + `activation_unit` + `maxpool_unit`), output scratchpads |
-| `acc_arr_masked` | `flexnn_top_arr_masked` | `top_protected_arr_only.sv` + `systolic_array_wmask_shared.sv` | as `acc_unmasked`; array SW=19 | **Array masked only:** shared-mask-column array (shares recombined at the column outputs); plain `psum_accum` and `requantize` |
-| `acc_rq_masked` | `flexnn_top_rq_masked` | `top_protected_rq_only.sv` + `requantize_masked.sv`, `masking_gadgets.sv` | as `acc_unmasked`; XW=19, DOM_REG=1 | **Requantizer masked only:** plain array and `psum_accum`; each accumulator output split into two fresh arithmetic shares, then `requantize_masked` + `rng_bank` per column |
-| `acc_both_masked` | `flexnn_top_protected` | `top_protected.sv` + `systolic_array_wmask_shares.sv`, `systolic_array_wmask_shared.sv`, `psum_accum_masked.sv`, `requantize_masked.sv`, `masking_gadgets.sv` | as `acc_unmasked`; XW=19, DOM_REG=1 | **Array + requantizer masked:** shared-mask-column array (two output shares), `psum_accum_masked`, 5 × (`requantize_masked` + `rng_bank`) |
+| `acc_unmasked` | `flexnn_top` | `protected_designs/complete_accelerator/top.sv` + submodules | 5×5, WAVES=4, ACCW=19, MW=16, SW=6, BW=32, POOL_LEN=1 (RTL defaults, identical in all four) | Complete unprotected accelerator: registered I/O, IF/FL global buffers, load controller, activation scratchpads, address generator, `systolic_array` (pipelined multipliers), `psum_accum`, `bias_scale`, 5 × (3-stage `requantize` + `activation_unit` + `maxpool_unit`), output scratchpads |
+| `acc_arr_masked` | `flexnn_top_arr_masked` | `top_protected_arr_only.sv` + `systolic_array_wmask_shared.sv` | same | **Array masked only:** shared-mask-column array (shares recombined at the column outputs); plain `psum_accum` and `requantize` |
+| `acc_rq_masked` | `flexnn_top_rq_masked` | `top_protected_rq_only.sv` + `rq_share_server.sv`, `requantize_masked.sv`, `masking_gadgets.sv` | same; DOM_REG=1, **NRQ=1** | **Requantizer masked only:** plain array and `psum_accum`; each accumulator output split into two fresh shares, held in the share buffer and served by one shared `requantize_masked` core with its own `rng_bank` |
+| `acc_both_masked` | `flexnn_top_protected` | `top_protected.sv` + `systolic_array_wmask_shares.sv`, `systolic_array_wmask_shared.sv`, `psum_accum_masked.sv`, `rq_share_server.sv`, `requantize_masked.sv`, `masking_gadgets.sv` | same; DOM_REG=1, **NRQ=1** | **Array + requantizer masked:** shared-mask-column array (two output shares), `psum_accum_masked`, share buffer + one shared `requantize_masked` core + `rng_bank` |
 | `act_masker` | `act_masker` | `act_masker.sv` | 5 rows, SHARE_W=32 | West-boundary share generator (xorshift64 RNG + splitter per row) |
 
 The wrapper in `rtl/area_ref_wrappers.sv` changes no design under test. It only adds
@@ -148,10 +160,10 @@ own mask generator (`wmask_gen`) and the north-edge share subtractors.
 | Systolic array | Activation-masked 5×5 | 160,098.8 | 19,948.2 | 138,843.8 | 1,306.8 | 280,958 | 4.52× | 2.89× | 4.97× | 4.29× |
 | Systolic array | Weight-masked 5×5 | 166,220.9 | 19,726.6 | 145,224.1 | 1,270.2 | 293,022 | 4.70× | 2.86× | 5.20× | 4.48× |
 | Systolic array | Weight-masked 5×5, shared mask column (incl. `wmask_gen`) | 60,452.9 | 8,709.4 | 51,045.2 | 698.4 | 107,902 | 1.71× | 1.26× | 1.83× | 1.65× |
-| Accelerator | Unprotected, 5×5 array (**baseline**) | 117,291.3 | 19,215.6 | 96,777.4 | 1,298.2 | 209,329 | — | — | — | — |
-| Accelerator | Array masked only | 152,386.3 | 22,443.8 | 128,671.7 | 1,270.9 | 269,314 | 1.30× | 1.17× | 1.33× | 1.29× |
-| Accelerator | Requantizer masked only | 390,025.0 | 129,591.3 | 249,288.2 | 11,145.4 | 654,424 | 3.33× | 6.74× | 2.58× | 3.13× |
-| Accelerator | Array + requantizer masked | 422,202.1 | 134,965.5 | 276,145.2 | 11,091.4 | 715,631 | 3.60× | 7.02× | 2.85× | 3.42× |
+| Accelerator | Unprotected, timing-closed (**baseline**) | 94,018.2 | 32,077.2 | 59,484.4 | 2,456.6 | 158,273 | — | — | — | — |
+| Accelerator | Array masked only | 131,719.2 | 40,141.6 | 89,146.4 | 2,431.3 | 218,337 | 1.40× | 1.25× | 1.50× | 1.38× |
+| Accelerator | Requantizer masked only, NRQ=1 | 109,792.6 | 45,470.9 | 58,185.5 | 6,136.2 | 181,442 | 1.17× | 1.42× | 0.98× | 1.15× |
+| Accelerator | Array + requantizer masked, NRQ=1 | 152,051.1 | 57,361.6 | 88,513.7 | 6,175.8 | 251,713 | 1.62× | 1.79× | 1.49× | 1.59× |
 | Support | `act_masker` alone (5 rows, 32-bit shares) | 7,114.6 | 1,754.1 | 5,191.2 | 169.3 | 13,407 | — | — | — | — |
 
 Total = register + combinational + clock-tree/tie cells (gsclib045 is a tapless
@@ -174,10 +186,10 @@ component of the baseline marked **baseline** in its level.
 | sa_act_masked | 19,948.2 | 116,602.2 | 22,241.6 | 1,306.8 | 0.0 | **160,098.8** | 138,367.7 | 76,870 | 58.2 % | +4.259 | +0.069 | −15.377 | 0 |
 | sa_wt_masked | 19,726.6 | 125,584.8 | 19,639.3 | 1,270.2 | 0.0 | **166,220.9** | 144,354.8 | 75,404 | 57.8 % | +3.472 | +0.075 | −18.244 | 0 |
 | sa_wmask_shared | 8,709.4 | 44,166.9 | 6,878.3 | 697.3 | 1.0 | **60,452.9** | 52,645.8 | 25,806 | 58.0 % | +5.528 | +0.047 | −5.337 | 0 |
-| acc_unmasked | 19,215.6 | 85,042.1 | 11,735.4 | 1,298.2 | 0.0 | **117,291.3** | 102,841.4 | 54,595 | 57.3 % | +3.261 | +0.025 | −23.277 | 0 |
-| acc_arr_masked | 22,443.8 | 111,830.2 | 16,841.5 | 1,269.8 | 1.0 | **152,386.3** | 132,589.6 | 68,119 | 57.7 % | +3.106 | +0.050 | −24.013 | 0 |
-| acc_rq_masked | 129,591.3 | 199,007.8 | 50,280.5 | 11,144.4 | 1.0 | **390,025.0** | 323,983.8 | 140,559 | 60.4 % | +2.674 | +0.003 | −19.113 | 0 |
-| acc_both_masked | 134,965.5 | 223,917.0 | 52,228.2 | 11,090.4 | 1.0 | **422,202.1** | 354,439.6 | 154,191 | 59.7 % | +3.016 | −0.002 | −19.101 | 0 |
+| acc_unmasked | 32,077.2 | 48,579.1 | 10,905.4 | 2,455.6 | 1.0 | **94,018.2** | 77,553.3 | 36,865 | 61.0 % | +7.203 | +0.051 | +0.514 | 0 |
+| acc_arr_masked | 40,141.6 | 70,987.2 | 18,159.2 | 2,430.2 | 1.0 | **131,719.2** | 107,307.3 | 53,716 | 61.6 % | +7.116 | +0.051 | +0.380 | 0 |
+| acc_rq_masked | 45,470.9 | 45,283.2 | 12,902.3 | 6,135.1 | 1.0 | **109,792.6** | 89,025.3 | 38,067 | 62.1 % | +7.137 | +0.047 | +0.862 | 0 |
+| acc_both_masked | 57,361.6 | 68,911.6 | 19,602.1 | 6,174.8 | 1.0 | **152,051.1** | 123,857.7 | 55,734 | 61.6 % | +7.054 | +0.041 | +1.007 | 0 |
 | act_masker | 1,754.1 | 4,431.6 | 759.6 | 169.3 | 0.0 | **7,114.6** | 6,248.3 | 2,945 | 58.3 % | +3.299 | +0.097 | −7.420 | 0 |
 
 - **Comb. logic + Buf/Inv** gives the combinational column of §3.1. "Buf/Inv" covers
@@ -341,41 +353,69 @@ component of the baseline marked **baseline** in its level.
     concerns. The design needs first- and second-order TVLA before its 1.71× can be
     compared with the 4.70× design on security.
 
-### 4.6 Full accelerator: which block to mask (array only 1.30× / requantizer only 3.33× / both 3.60×)
-- **What is compared.** Four complete accelerators from `complete_accelerator/` at
-  5×5. Buffers, controllers, activation units and maxpools are identical and
-  unmasked in all four. The masked variants differ only in which block is masked:
+### 4.6 Full accelerator: which block to mask (array only 1.40× / requantizer only 1.17× / both 1.62×, NRQ=1)
+- **What is compared.** Four complete accelerators from
+  `protected_designs/complete_accelerator/`, all **timing-closed at 100 MHz at
+  both corners** with the `timing/` flow (details in `timing/REPORT_v2.md`).
+  They use **identical parameters**: 5×5 array, WAVES=4, ACCW=19 (2N + clog2(5)),
+  MW=16, SW=6, BW=32, registered I/O, pipelined PE multipliers (same in both
+  arrays) and pipelined plain/masked requantizers, bias·M0 precomputed once per
+  tile (`bias_scale`). Every timing, quantization and I/O change was applied to
+  all four builds, including the baseline. Buffers, controllers, activation
+  units and maxpools are identical and unmasked in all four.
 
-  | Variant | Total (µm²) | × | Flops | What is masked |
-  |---|---:|---:|---:|---|
-  | Unprotected (baseline) | 117,291 | — | 2,901 | nothing |
-  | Array masked only | 152,386 | 1.30× | 3,437 | shared-mask-column array (shares recombined at its output) |
-  | Requantizer masked only | 390,025 | 3.33× | 22,851 | fresh-share split + `requantize_masked` + `rng_bank` per column |
-  | Array + requantizer masked | 422,202 | 3.60× | 23,737 | array with two-share output + `psum_accum_masked` + `requantize_masked` + `rng_bank` |
+  | Variant | Total (µm²) | × | Flops | What is masked | Latency / period (cycles) |
+  |---|---:|---:|---:|---|---|
+  | Unprotected (baseline) | 94,018 | — | see `results/area_tables.md` | nothing | 91 / 85 |
+  | Array masked only | 131,719 | 1.40× | | shared-mask-column array (shares recombined at its output) | 97 / 91 |
+  | Requantizer masked only, NRQ=1 | 109,793 | 1.17× | | fresh-share split + share buffer + one shared `requantize_masked` core + `rng_bank` | 118 / 85 |
+  | Array + requantizer masked, NRQ=1 | 152,051 | 1.62× | | array with two-share output + `psum_accum_masked` + share buffer + one shared `requantize_masked` core + `rng_bank` | 124 / 91 |
 
-- **Functional check.** RTL simulation of all four on the same 40 random jobs
-  (random activations, weights, bias, M0, shift and activation mode): the three
-  masked variants' output buffers matched the unprotected one exactly (800 bytes
-  each, 0 mismatches).
-- **The requantizer is the cost.** Masking it adds 272,734 µm² and ~19,950 flops:
-  per column, a registered DOM masked adder and AND trees (`DOM_REG=1`), the
-  per-share multipliers, the pipeline and the RNG state. Masking the array adds
-  35,095 µm² on its own, the same order as the standalone shared-column array
-  (+25,046 µm², §4.5) plus the wider 19-bit share path into the accumulator.
-- **The two costs simply add up** (3.60× vs. 1.30× + 3.33× − 1 = 3.63×; the 0.03×
-  gap is within mapping noise). Feeding the array's shares straight into the
-  requantizer neither saves nor costs anything measurable.
-- **Any further area reduction has to come from the requantizer** (e.g.
-  `DOM_REG=0`, which drops the registered gadget layers but is first-order secure
-  only in a glitch-free model).
+- **Number of masked requantizer cores (NRQ).** The masked requantizer is shared
+  between the 5 columns: NRQ cores, round-robin, each with its own RNG, and the
+  accumulator shares wait in a per-column share buffer (never recombined).
+  Requantization of tile k overlaps the array work on tile k+1, so the
+  throughput does not depend on NRQ; only latency and area do. NRQ=1 is the
+  evaluated configuration. For reference (`timing/REPORT_v2.md`):
+
+  | Build | NRQ=1 | NRQ=2 | NRQ=5 |
+  |---|---:|---:|---:|
+  | Requantizer masked only | 1.17× (118 cycles) | 1.64× (110) | 3.01× (106) |
+  | Array + requantizer masked | 1.62× (124) | 2.11× (116) | 3.41× (112) |
+
+- **Functional check.** `tb_accel_func.sv` compares every masked build with the
+  unprotected build and with a behavioural model on random tiles (random
+  activations, weights, bias, M0, shift, activation mode), plus back-to-back
+  bursts: every output identical for all builds and NRQ = 1, 2, 5.
+- **Where the area goes (both-masked, NRQ=1, hierarchical synthesis, see
+  `BLOCK_AREA_REPORT.md`):** the masked array is the largest block (about half of
+  the design); the single masked requantizer core is about 20 %, its RNG about
+  5 %, the share buffer about 7 %.
+- **The overheads now add up.** Because all builds use the same widths, array-only
+  plus requantizer-only (+37,701 + 15,774 = +53,475 µm²) is close to the
+  both-masked overhead (+58,033 µm²); the remainder is `psum_accum_masked`.
+- **Requantizer-only combinational area is below the baseline (0.98×).** The
+  five plain per-column requantizers (each a 5-stage pipelined 19×16 multiply) are
+  removed and replaced by one shared masked core with two share multipliers, so
+  the combinational logic stays about the same; the overhead is registers (the
+  18-stage masked pipeline, share buffer and RNG state, 1.42×).
+- **What changed against the earlier (not timing-closed) numbers** (1.79× / 4.58× /
+  4.96× against 85,127 µm²; kept in `results/old_pre_timing_closure/`): MW=16
+  instead of 32, bias·M0 moved after the multiply, the masked requantizer shared
+  (NRQ=1 instead of one core per column), and the same ACCW=19 in every build. The
+  baseline itself grew (85,127 → 94,018 µm²) from the I/O registers and pipeline
+  stages needed to close timing at the slow corner (incl. a 5-stage plain
+  requantizer, which makes the masked overheads slightly smaller).
 - **Caveats:**
   - Memories (global buffers, scratchpads, `psum_accum` storage) are synthesised as
     flops in all four, since the PDK has no SRAM macros. They are identical across
     the variants, so they dilute the ratios rather than inflate them.
-  - Protection scope: §4.5 applies to the array; the requantizer masking has not
-    been TVLA-tested here.
-  - These numbers come from single-threaded Yosys (§5 caveats). Multithreaded runs
-    of the requantizer-masked designs crashed, hung or deleted output buffers.
+  - Slew (max-transition) is repaired at the fast corner only (5–289 pins per
+    build remain slightly above 0.28 ns there); setup and hold are repaired and
+    checked at both corners.
+  - Protection scope: §4.5 applies to the array; TVLA / ADLA of the complete
+    accelerators is a separate step (`security_analyses/protected`, targets
+    `acc_random` and `acc_fixed`).
 
 ### 4.7 Physical-design effects
 - **Post-route area exceeds the Yosys estimate** by 0.5–9.4 % for multipliers and
@@ -391,6 +431,17 @@ component of the baseline marked **baseline** in its level.
   2.2× the baseline (1,307 vs 595 µm²).
 
 ### 4.8 Timing at 100 MHz
+- **Complete accelerators (§4.6): timing-closed at both corners.**
+
+  | Build | Setup WNS fast (ns) | Hold WNS fast (ns) | Setup WNS slow (ns) | Hold WNS slow (ns) |
+  |---|---:|---:|---:|---:|
+  | Unprotected | +7.203 | +0.051 | +0.514 | +0.063 |
+  | Array masked only | +7.116 | +0.051 | +0.380 | +0.056 |
+  | Requantizer masked only, NRQ=1 | +7.137 | +0.047 | +0.862 | +0.070 |
+  | Array + requantizer masked, NRQ=1 | +7.054 | +0.041 | +1.007 | +0.071 |
+
+  TNS is 0 for setup and hold at both corners and routing has 0 DRC violations.
+  The rest of this section is about the block-level designs.
 - **Fast corner** (`fast_vdd1v0`, 1.1 V, 0 °C): the implementation corner, as in the
   lab Genus/Innovus flow.
   - Every design meets 10 ns, with at least 3.3 ns setup slack and positive hold
@@ -407,10 +458,9 @@ component of the baseline marked **baseline** in its level.
     their 8×32 share multipliers and 32-bit adders form much longer paths. The
     shared-column array misses by −5.3 ns, close to the unprotected array (−9.1 ns),
     because its PEs keep a single 8×19 multiplier.
-  - Hold slack is also slightly negative in the slow corner for the four arrays and
-    all four accelerators (down to −1.07 ns), since hold was fixed in the fast
-    corner only. The array + requantizer masked accelerator also misses hold by
-    0.002 ns in the fast corner.
+  - Hold slack is also slightly negative in the slow corner for the four arrays
+    (down to −1.01 ns), since hold was fixed in the fast corner only for the
+    block-level designs.
 - **What it means.** Meeting 100 MHz at worst-case PVT would need pipelining or a
   slower clock. Closing timing in the slow corner would also make timing repair
   upsize cells, which would add area beyond the numbers here.
@@ -510,8 +560,8 @@ component of the baseline marked **baseline** in its level.
   `hierarchy -chparam` hit an internal assertion on the array tops. All four array
   tops are therefore elaborated with their RTL defaults, which are already the
   intended configuration (5×5, N=8; SHARE_W=32 for the fully masked arrays; SW=19
-  for the shared-mask-column array). The two accelerator tops do accept `chparam`
-  and are set to 5×5 that way.
+  for the shared-mask-column array). The accelerator tops are elaborated with their
+  RTL defaults too (5×5, identical parameters in all four), in the `timing/` flow.
 
 ---
 
@@ -519,7 +569,10 @@ component of the baseline marked **baseline** in its level.
 
 ```bash
 cd area_overhead_analysis
-scripts/run_all.sh                    # all designs in parallel, then table + plots
+scripts/run_all.sh                    # all block-level designs in parallel, then table + plots
+# complete accelerators (timing-closed, both corners): built by timing/, e.g.
+#   ../timing/scripts/run_design.sh acc_both_masked_nrq1
+# then copy the small report files into results/acc_*/ (see results/acc_*/SOURCE.txt)
 # or one design:
 scripts/run_design.sh pe_act_masked
 python3 scripts/collect_metrics.py    # -> results/area_results.csv, results/area_tables.md
@@ -550,6 +603,8 @@ area_overhead_analysis/
 └── results/
     ├── area_results.csv, area_tables.md, area_postroute.png, area_overhead.png
     ├── pdk_derived/              generated router tech LEF
+    ├── acc_*/                    timing-closed accelerator results (copied from timing/results)
+    ├── old_pre_timing_closure/   the earlier, not timing-closed accelerator runs
     └── <design>/                 synth_stat.rpt, netlists, postroute_metrics.txt,
                                   report_cell_usage.rpt, sta_postroute_{fast,slow}.rpt,
                                   logs (*.odb / *.def / *.spef are git-ignored)

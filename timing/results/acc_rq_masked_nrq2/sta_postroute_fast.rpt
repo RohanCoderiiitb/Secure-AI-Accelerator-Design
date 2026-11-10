@@ -1,0 +1,179 @@
+Startpoint: array_compute_done_reg
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: array_compute_done (output port clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                            0.000    0.000   clock clk (rise edge)
+                            0.749    0.749   clock network delay (propagated)
+                   0.059    0.000    0.749 ^ array_compute_done_reg/CK (DFFHQX1)
+     1    0.044    0.278    0.214    0.963 v array_compute_done_reg/Q (DFFHQX1)
+                   0.278    0.001    0.964 v array_compute_done (out)
+                                     0.964   data arrival time
+
+                           10.000   10.000   clock clk (rise edge)
+                            0.000   10.000   clock network delay (propagated)
+                            0.000   10.000   clock reconvergence pessimism
+                           -2.000    8.000   output external delay
+                                     8.000   data required time
+---------------------------------------------------------------------------------
+                                     8.000   data required time
+                                    -0.964   data arrival time
+---------------------------------------------------------------------------------
+                                     7.036   slack (MET)
+
+
+Startpoint: u_array.act[22][7]_reg
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_array.g_row[3].g_col[4].pe_inst.u_mul.x_q[7]_reg
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock clk (rise edge)
+   0.710    0.710   clock network delay (propagated)
+   0.000    0.710 ^ u_array.act[22][7]_reg/CK (DFFHQX1)
+   0.055    0.764 v u_array.act[22][7]_reg/Q (DFFHQX1)
+   0.022    0.787 v hold5041/Y (CLKBUFX2)
+   0.000    0.787 v u_array.g_row[3].g_col[4].pe_inst.u_mul.x_q[7]_reg/D (DFFQX2)
+            0.787   data arrival time
+
+   0.000    0.000   clock clk (rise edge)
+   0.735    0.735   clock network delay (propagated)
+  -0.001    0.734   clock reconvergence pessimism
+            0.734 ^ u_array.g_row[3].g_col[4].pe_inst.u_mul.x_q[7]_reg/CK (DFFQX2)
+   0.004    0.738   library hold time
+            0.738   data required time
+-----------------------------------------------------------
+            0.738   data required time
+           -0.787   data arrival time
+-----------------------------------------------------------
+            0.048   slack (MET)
+
+
+max_delay/setup group clk
+
+                                     Required  Actual
+Endpoint                               Delay   Delay   Slack
+------------------------------------------------------------
+array_compute_done (output)             8.00    0.96    7.04 (MET)
+requant_sat_flat[0] (output)            8.00    0.96    7.04 (MET)
+requant_sat_flat[4] (output)            8.00    0.95    7.05 (MET)
+requant_sat_flat[2] (output)            8.00    0.94    7.06 (MET)
+requant_sat_flat[1] (output)            8.00    0.93    7.07 (MET)
+requant_sat_flat[3] (output)            8.00    0.93    7.07 (MET)
+of_rd_data_flat[9] (output)             8.00    0.92    7.08 (MET)
+of_rd_data_flat[8] (output)             8.00    0.91    7.09 (MET)
+of_rd_data_flat[11] (output)            8.00    0.90    7.10 (MET)
+done (output)                           8.00    0.90    7.10 (MET)
+of_rd_data_flat[14] (output)            8.00    0.90    7.10 (MET)
+of_rd_data_flat[30] (output)            8.00    0.89    7.11 (MET)
+of_rd_data_flat[7] (output)             8.00    0.89    7.11 (MET)
+of_rd_data_flat[4] (output)             8.00    0.88    7.12 (MET)
+of_rd_data_flat[12] (output)            8.00    0.88    7.12 (MET)
+of_rd_data_flat[23] (output)            8.00    0.87    7.13 (MET)
+of_rd_data_flat[28] (output)            8.00    0.87    7.13 (MET)
+of_rd_data_flat[26] (output)            8.00    0.87    7.13 (MET)
+of_rd_data_flat[5] (output)             8.00    0.87    7.13 (MET)
+of_rd_data_flat[13] (output)            8.00    0.86    7.14 (MET)
+
+min_delay/hold group clk
+
+                                     Required  Actual
+Endpoint                               Delay   Delay   Slack
+------------------------------------------------------------
+u_array.g_row[3].g_col[4].pe_inst.u_mul.x_q[7]_reg/D (DFFQX2)    0.74    0.79    0.05 (MET)
+u_rqs.g_core[0].u_core.u_x.g_r.s[4][33]_reg/D (DFFHQX1)    0.74    0.78    0.05 (MET)
+u_rqs.g_core[1].u_core.u_pw.g_r.s[2][8]_reg/D (DFFHQX1)    0.72    0.77    0.05 (MET)
+u_rqs.g_core[0].u_core.u_pfx.Gs1[102][0]_reg/D (DFFHQX1)    0.73    0.78    0.05 (MET)
+u_rqs.g_core[1].u_core.u_pfx.Ps0[180][0]_reg/D (DFFHQX1)    0.73    0.78    0.05 (MET)
+u_rqs.g_core[0].u_core.u_pw.g_r.s[4][9]_reg/D (DFFHQX1)    0.72    0.77    0.05 (MET)
+u_rqs.g_core[0].u_core.u_pfx.g_lv[4].g_i[17].g_node.gh0_reg/D (DFFHQX1)    0.74    0.79    0.05 (MET)
+u_rqs.g_core[1].u_core.u_x.g_r.s[1][6]_reg/D (DFFHQX1)    0.72    0.77    0.05 (MET)
+u_rqs.g_core[1].u_core.u_x.g_r.s[1][26]_reg/D (DFFHQX1)    0.73    0.78    0.05 (MET)
+u_rqs.g_core[0].u_core.u_lift.g_lv[4].g_k[0].g_comb.gh0_reg/D (DFFHQX1)    0.76    0.81    0.05 (MET)
+u_rqs.g_core[0].u_core.u_pfx.g_lv[5].g_i[32].g_node.gh0_reg/D (DFFHQX1)    0.74    0.79    0.05 (MET)
+u_rqs.g_core[1].u_core.u_pw.g_r.s[4][3]_reg/D (DFFHQX1)    0.71    0.76    0.05 (MET)
+u_array.g_row[3].g_col[1].pe_inst.prod[0]_reg/D (DFFHQX1)    0.74    0.79    0.05 (MET)
+u_array.g_row[4].g_col[2].pe_inst.prod[1]_reg/D (DFFHQX1)    0.73    0.78    0.05 (MET)
+u_rqs.g_core[1].u_core.u_x.g_r.s[2][7]_reg/D (DFFHQX1)    0.73    0.78    0.05 (MET)
+u_rqs.g_core[0].u_core.u_pfx.g_lv[3].g_i[9].g_node.gh1_reg/D (DFFHQX1)    0.73    0.78    0.05 (MET)
+u_rqs.g_core[0].u_core.u_t.Y0[181][0]_reg/D (DFFHQX1)    0.72    0.77    0.05 (MET)
+u_rqs.g_core[0].u_core.u_pw.g_r.s[1][6]_reg/D (DFFHQX1)    0.72    0.77    0.05 (MET)
+u_rqs.g_core[1].u_core.u_pfx.g_lv[1].g_i[34].g_node.gh0_reg/D (DFFHQX1)    0.73    0.78    0.05 (MET)
+u_rqs.g_core[1].u_core.u_x.g_r.s[1][30]_reg/D (DFFHQX1)    0.73    0.78    0.05 (MET)
+
+max slew
+
+Pin                                    Limit    Slew   Slack
+------------------------------------------------------------
+clkbuf_2_3_0_clk/A                      0.28    0.46   -0.18 (VIOLATED)
+clkbuf_2_1_0_clk/A                      0.28    0.46   -0.18 (VIOLATED)
+clkbuf_2_0_0_clk/A                      0.28    0.46   -0.18 (VIOLATED)
+clkbuf_2_2_0_clk/A                      0.28    0.46   -0.18 (VIOLATED)
+clkbuf_0_clk/Y                          0.28    0.46   -0.18 (VIOLATED)
+clkbuf_6_62_0_clk/A                     0.28    0.30   -0.02 (VIOLATED)
+clkbuf_6_63_0_clk/A                     0.28    0.30   -0.02 (VIOLATED)
+clkbuf_6_61_0_clk/A                     0.28    0.30   -0.02 (VIOLATED)
+clkbuf_6_60_0_clk/A                     0.28    0.30   -0.02 (VIOLATED)
+clkbuf_6_59_0_clk/A                     0.28    0.30   -0.02 (VIOLATED)
+clkbuf_6_58_0_clk/A                     0.28    0.30   -0.02 (VIOLATED)
+clkbuf_6_56_0_clk/A                     0.28    0.30   -0.02 (VIOLATED)
+clkbuf_6_52_0_clk/A                     0.28    0.30   -0.02 (VIOLATED)
+clkbuf_6_53_0_clk/A                     0.28    0.30   -0.02 (VIOLATED)
+clkbuf_6_57_0_clk/A                     0.28    0.30   -0.02 (VIOLATED)
+clkbuf_6_55_0_clk/A                     0.28    0.30   -0.02 (VIOLATED)
+clkbuf_6_54_0_clk/A                     0.28    0.30   -0.02 (VIOLATED)
+clkbuf_6_48_0_clk/A                     0.28    0.30   -0.02 (VIOLATED)
+clkbuf_6_50_0_clk/A                     0.28    0.30   -0.02 (VIOLATED)
+clkbuf_6_49_0_clk/A                     0.28    0.30   -0.02 (VIOLATED)
+clkbuf_6_51_0_clk/A                     0.28    0.30   -0.02 (VIOLATED)
+clkbuf_2_3_0_clk/Y                      0.28    0.29   -0.01 (VIOLATED)
+clkbuf_6_32_0_clk/A                     0.28    0.29   -0.01 (VIOLATED)
+clkbuf_6_33_0_clk/A                     0.28    0.29   -0.01 (VIOLATED)
+clkbuf_6_34_0_clk/A                     0.28    0.29   -0.01 (VIOLATED)
+clkbuf_6_35_0_clk/A                     0.28    0.29   -0.01 (VIOLATED)
+clkbuf_6_43_0_clk/A                     0.28    0.29   -0.01 (VIOLATED)
+clkbuf_6_42_0_clk/A                     0.28    0.29   -0.01 (VIOLATED)
+clkbuf_6_40_0_clk/A                     0.28    0.29   -0.01 (VIOLATED)
+array_compute_done_reg/Q                0.28    0.29   -0.01 (VIOLATED)
+clkbuf_6_41_0_clk/A                     0.28    0.29   -0.01 (VIOLATED)
+clkbuf_6_47_0_clk/A                     0.28    0.29   -0.01 (VIOLATED)
+clkbuf_6_46_0_clk/A                     0.28    0.29   -0.01 (VIOLATED)
+clkbuf_6_45_0_clk/A                     0.28    0.29   -0.01 (VIOLATED)
+clkbuf_6_38_0_clk/A                     0.28    0.29   -0.01 (VIOLATED)
+clkbuf_6_37_0_clk/A                     0.28    0.29   -0.01 (VIOLATED)
+clkbuf_6_36_0_clk/A                     0.28    0.29   -0.01 (VIOLATED)
+clkbuf_6_44_0_clk/A                     0.28    0.29   -0.01 (VIOLATED)
+clkbuf_6_39_0_clk/A                     0.28    0.29   -0.01 (VIOLATED)
+clkbuf_2_2_0_clk/Y                      0.28    0.29   -0.01 (VIOLATED)
+clkbuf_6_1_0_clk/A                      0.28    0.29   -0.01 (VIOLATED)
+clkbuf_6_0_0_clk/A                      0.28    0.29   -0.01 (VIOLATED)
+clkbuf_6_2_0_clk/A                      0.28    0.28   -0.00 (VIOLATED)
+clkbuf_6_3_0_clk/A                      0.28    0.28   -0.00 (VIOLATED)
+clkbuf_6_10_0_clk/A                     0.28    0.28   -0.00 (VIOLATED)
+clkbuf_6_11_0_clk/A                     0.28    0.28   -0.00 (VIOLATED)
+clkbuf_6_8_0_clk/A                      0.28    0.28   -0.00 (VIOLATED)
+clkbuf_6_9_0_clk/A                      0.28    0.28   -0.00 (VIOLATED)
+clkbuf_6_31_0_clk/A                     0.28    0.28   -0.00 (VIOLATED)
+clkbuf_6_30_0_clk/A                     0.28    0.28   -0.00 (VIOLATED)
+clkbuf_6_28_0_clk/A                     0.28    0.28   -0.00 (VIOLATED)
+clkbuf_6_29_0_clk/A                     0.28    0.28   -0.00 (VIOLATED)
+clkbuf_6_23_0_clk/A                     0.28    0.28   -0.00 (VIOLATED)
+clkbuf_6_15_0_clk/A                     0.28    0.28   -0.00 (VIOLATED)
+clkbuf_6_14_0_clk/A                     0.28    0.28   -0.00 (VIOLATED)
+clkbuf_6_13_0_clk/A                     0.28    0.28   -0.00 (VIOLATED)
+clkbuf_6_12_0_clk/A                     0.28    0.28   -0.00 (VIOLATED)
+clkbuf_6_5_0_clk/A                      0.28    0.28   -0.00 (VIOLATED)
+clkbuf_6_4_0_clk/A                      0.28    0.28   -0.00 (VIOLATED)
+clkbuf_6_21_0_clk/A                     0.28    0.28   -0.00 (VIOLATED)
+clkbuf_6_20_0_clk/A                     0.28    0.28   -0.00 (VIOLATED)
+clkbuf_6_7_0_clk/A                      0.28    0.28   -0.00 (VIOLATED)
+clkbuf_6_22_0_clk/A                     0.28    0.28   -0.00 (VIOLATED)
+clkbuf_6_6_0_clk/A                      0.28    0.28   -0.00 (VIOLATED)
+clkbuf_2_0_0_clk/Y                      0.28    0.28   -0.00 (VIOLATED)
+

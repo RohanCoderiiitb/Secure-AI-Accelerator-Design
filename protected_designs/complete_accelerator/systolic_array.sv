@@ -1,8 +1,4 @@
-//Parameterized Systolic Array Design
-//Input skew and Output de-skew left out of the design.
-//This has been done to prevent their switching activity resulting
-//from shift chains from contaminating the analysis of the systolic
-//array's switching activity and power consumption.
+// Weight-stationary systolic array (input skew / output de-skew outside)
 
 module systolic_array #(
     parameter N     = 8,
@@ -23,8 +19,7 @@ module systolic_array #(
     output wire [ROWS-1:0]      valid_act_out
 );
 
-    //Unpacking the flat input ports to form internal 2D arrays
-    //+1 padding allowed for the boundary entries or outputs
+    // Unpack the flat ports into 2-D arrays (+1 for the boundary)
     wire signed [N-1:0]    act  [0:ROWS-1][0:COLS];
     wire                   vld  [0:ROWS-1][0:COLS];
     wire signed [ACCW-1:0] psum [0:ROWS][0:COLS-1];
@@ -32,7 +27,6 @@ module systolic_array #(
 
     genvar r, c;
 
-    //Boundary conditions for the grid
     generate
         for(r=0; r<ROWS; r=r+1) begin : g_west
             assign act[r][0]             = act_flat[r*N+:N];
@@ -47,7 +41,6 @@ module systolic_array #(
         end
     endgenerate
 
-    //Grid of processing elements
     generate
         for(r=0; r<ROWS; r=r+1) begin : g_row
             for(c=0; c<COLS; c=c+1) begin: g_col
@@ -82,10 +75,16 @@ module systolic_array #(
         end
     endgenerate
 
-    //Asserting the valid bits for the psum outputs from the grid
+    // Asserting the valid bits for the psum outputs from the grid
+    localparam MUL_LAT = 2;
     generate
         for(c=0; c<COLS; c=c+1) begin: g_south_valid
-            assign valid_sum_out[c] = vld[ROWS-1][c+1];
+            reg [MUL_LAT-1:0] vd;
+            always @(posedge clk) begin
+                if(!reset_n) vd <= {MUL_LAT{1'b0}};
+                else         vd <= {vd[MUL_LAT-2:0], vld[ROWS-1][c+1]};
+            end
+            assign valid_sum_out[c] = vd[MUL_LAT-1];
         end
     endgenerate
 endmodule

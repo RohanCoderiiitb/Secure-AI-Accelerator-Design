@@ -1,5 +1,4 @@
-//Stand-alone MAC unit: This module performs multiply accumulate (MAC) operations
-//Could be useful for MLP workloads
+// Stand-alone MAC unit
 module mac_unit #(
     parameter N = 8,
     parameter ACCW = 32
@@ -12,7 +11,6 @@ module mac_unit #(
     input wire signed [N-1:0] wt,
     output reg [ACCW-1:0] accum
 );
-    //Multiplication of weight and activation
     wire [2*N-1:0] raw_prod;
     baugh_wooley_multiplier #(
         .N(N)
@@ -24,7 +22,6 @@ module mac_unit #(
     wire [2*N-1:0] prod = $signed(raw_prod);
     wire signed [ACCW-1:0] prod_ext = {{(ACCW-2*N){prod[2*N-1]}},prod};
 
-    //Accumulation logic
     always @(posedge clk) begin
         if(!reset_n) accum <= {ACCW{1'b0}};
         else if(clr) accum <= (en) ? prod_ext : {ACCW{1'b0}};
@@ -33,9 +30,7 @@ module mac_unit #(
 
 endmodule
 
-//Processing element for systolic array integration
-//Followed a weight stationary dataflow
-//Weights statically loaded and stored in a register, activations propagating horizontally and spatial sums propagating vertically
+// Weight-stationary processing element
 module processing_element #(
     parameter N = 8,
     parameter ACCW = 32
@@ -55,19 +50,19 @@ module processing_element #(
     reg signed [N-1:0] wt_reg;                      // wt_in is latched into this register inside the PE node          
     assign wt_out = wt_reg;
     
-    wire [2*N-1:0] raw_prod;
-    baugh_wooley_multiplier #(
+    wire [2*N-1:0] raw_prod;                        // registered, MUL_LAT cycles after act_in
+    bw_multiplier_pipe #(
         .N(N)
     ) u_mul(
+        .clk(clk),
         .x(act_in),
         .y(wt_reg),
         .p(raw_prod)
     );
 
-    //Sign extending the product
     wire signed [ACCW-1:0] prod = {{(ACCW-2*N){raw_prod[2*N-1]}}, raw_prod};
 
-    //Spatial accumulation, and propagation of the outputs to the neighbouring processing elements in the systolic array
+    // Spatial accumulation and propagation to the neighbouring PEs
     always @(posedge clk) begin
         if(!reset_n) begin
             valid_out <= 1'b0;

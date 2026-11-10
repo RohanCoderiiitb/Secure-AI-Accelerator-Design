@@ -1,0 +1,21 @@
+rank	slack_ns	arrival_ns	startpoint	endpoint	instances
+1	5.097	4.815	u_rqs/g_core[0].rr[1]_reg/CK	u_rqs/g_core[0].u_rng/rnd[22]_reg/D	u_rqs/g_core[0].u_rng u_rqs
+2	5.097	4.815	u_rqs/g_core[0].rr[1]_reg/CK	u_rqs/g_core[0].u_rng/rnd[274]_reg/D	u_rqs/g_core[0].u_rng u_rqs
+3	5.117	4.506	rst_n_reg/CK	u_rqs/_4766_/E	u_rqs
+4	5.117	4.506	rst_n_reg/CK	u_rqs/_4767_/E	u_rqs
+5	5.117	4.506	rst_n_reg/CK	u_rqs/_4768_/E	u_rqs
+6	5.117	4.506	rst_n_reg/CK	u_rqs/_4769_/E	u_rqs
+7	5.117	4.506	rst_n_reg/CK	u_rqs/_4770_/E	u_rqs
+8	5.117	4.506	rst_n_reg/CK	u_rqs/_4771_/E	u_rqs
+9	5.117	4.506	rst_n_reg/CK	u_rqs/_4772_/E	u_rqs
+10	5.117	4.506	rst_n_reg/CK	u_rqs/_4773_/E	u_rqs
+11	5.117	4.506	rst_n_reg/CK	u_rqs/_4774_/E	u_rqs
+12	5.117	4.506	rst_n_reg/CK	u_rqs/_4775_/E	u_rqs
+13	5.117	4.506	rst_n_reg/CK	u_rqs/_4776_/E	u_rqs
+14	5.117	4.506	rst_n_reg/CK	u_rqs/_4777_/E	u_rqs
+15	5.117	4.506	rst_n_reg/CK	u_rqs/_4778_/E	u_rqs
+16	5.117	4.506	rst_n_reg/CK	u_rqs/_4779_/E	u_rqs
+17	5.117	4.506	rst_n_reg/CK	u_rqs/_4780_/E	u_rqs
+18	5.117	4.506	rst_n_reg/CK	u_rqs/_4781_/E	u_rqs
+19	5.117	4.506	rst_n_reg/CK	u_rqs/_4782_/E	u_rqs
+20	5.117	4.506	rst_n_reg/CK	u_rqs/_4783_/E	u_rqs
