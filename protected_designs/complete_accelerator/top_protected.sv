@@ -142,7 +142,8 @@ module flexnn_top_protected #(
     wire [N-1:0]                  row_wr_data;
 
     wire                     wt_load;
-    wire [ARRAY_COLS*N-1:0]  wt_flat;
+    wire [ARRAY_COLS*XW-1:0] wt_flat;        // masked weight words
+    wire [XW-1:0]            arr_r_sel;      // row mask from the array to the load controller
 
     wire stream_start;
     wire compute_done;
@@ -171,7 +172,8 @@ module flexnn_top_protected #(
         .N          (N),
         .ARRAY_ROWS (ARRAY_ROWS),
         .ARRAY_COLS (ARRAY_COLS),
-        .WAVES      (WAVES)
+        .WAVES      (WAVES),
+        .WW         (XW)
     ) u_load_ctrl (
         .clk               (clk),
         .reset_n           (rst_n),
@@ -193,6 +195,7 @@ module flexnn_top_protected #(
 
         .wt_load           (wt_load),
         .wt_flat           (wt_flat),
+        .r_sel             (arr_r_sel),
 
         .stream_start      (stream_start),
         .compute_done      (compute_done)
@@ -250,7 +253,8 @@ module flexnn_top_protected #(
         .psum1_out     (arr_psum1_out),
         .valid_sum_out (valid_sum_out),
         .act_out       (arr_act_out),
-        .valid_act_out (arr_valid_act_out)
+        .valid_act_out (arr_valid_act_out),
+        .r_sel_out     (arr_r_sel)
     );
 
     wire [ARRAY_COLS-1:0]         out_wr_en;

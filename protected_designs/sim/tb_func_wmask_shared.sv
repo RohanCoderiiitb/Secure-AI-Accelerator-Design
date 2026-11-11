@@ -46,6 +46,18 @@ module tb_func_wmask_shared;
     wire [ROWS*N-1:0]    ao_ref, ao_dut;
     wire [ROWS-1:0]      va_ref, va_dut;
 
+`ifdef WMASK_PREMASK
+    // accelerator copy: tb acts as the load controller, masking each column with the array's row mask
+    wire [SW-1:0]        r_sel_dut;
+    wire [COLS*SW-1:0]   wt_flat_m;
+    genvar gm;
+    generate
+        for (gm = 0; gm < COLS; gm = gm + 1) begin : g_m
+            assign wt_flat_m[gm*SW +: SW] = {{(SW-N){wt_flat[gm*N+N-1]}}, wt_flat[gm*N +: N]} - r_sel_dut;
+        end
+    endgenerate
+`endif
+
     systolic_array #(.N(N), .ACCW(ACCW), .ROWS(ROWS), .COLS(COLS)) u_ref (
         .clk(clk), .reset_n(reset_n), .wt_load(wt_load), .wt_flat(wt_flat),
         .valid_act_in(valid_act_in), .act_flat(act_flat), .psum_flat(psum_flat),
@@ -53,7 +65,11 @@ module tb_func_wmask_shared;
 
     systolic_array_wmask_shared #(.N(N), .ACCW(ACCW), .ROWS(ROWS), .COLS(COLS)) u_dut (
         .clk(clk), .reset_n(reset_n), .mask_en(mask_en), .mask_refresh(mask_refresh),
+`ifdef WMASK_PREMASK
+        .wt_load(wt_load), .wt_flat(wt_flat_m), .r_sel_out(r_sel_dut),
+`else
         .wt_load(wt_load), .wt_flat(wt_flat),
+`endif
         .valid_act_in(valid_act_in), .act_flat(act_flat), .psum_flat(psum_flat),
         .psum_out(ps_dut), .valid_sum_out(vs_dut), .act_out(ao_dut), .valid_act_out(va_dut));
 

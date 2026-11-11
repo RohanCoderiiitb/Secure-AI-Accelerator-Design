@@ -178,6 +178,7 @@ module flexnn_top_rq_masked #(
 
         .wt_load           (wt_load),
         .wt_flat           (wt_flat),
+        .r_sel             ({N{1'b0}}),     // plain array: no weight mask
 
         .stream_start      (stream_start),
         .compute_done      (compute_done)

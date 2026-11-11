@@ -11,14 +11,15 @@ module systolic_array_wmask_shares #(
     input  wire                  mask_en,
     input  wire                  mask_refresh,
     input  wire                  wt_load,
-    input  wire [COLS*N-1:0]     wt_flat,
+    input  wire [COLS*SW-1:0]    wt_flat,      // already masked by the load controller
     input  wire [ROWS-1:0]       valid_act_in,
     input  wire [ROWS*N-1:0]     act_flat,
     output wire [COLS*SW-1:0]    psum0_out,
     output wire [COLS*SW-1:0]    psum1_out,
     output wire [COLS-1:0]       valid_sum_out,
     output wire [ROWS*N-1:0]     act_out,
-    output wire [ROWS-1:0]       valid_act_out
+    output wire [ROWS-1:0]       valid_act_out,
+    output wire [SW-1:0]         r_sel_out     // mask of the row being loaded
 );
     wire [ROWS*SW-1:0] r_flat;
     wmask_gen #(.SW(SW), .ROWS(ROWS), .SEED(MASK_SEED)) u_mgen (
@@ -42,6 +43,7 @@ module systolic_array_wmask_shares #(
         else if (wt_load && ld_cnt != ROWS-1)    ld_cnt <= ld_cnt + 1'b1;
     end
     wire [SW-1:0] r_sel = R[ROWS-1-ld_cnt];
+    assign r_sel_out = r_sel;
 
     wire signed [N-1:0] act [0:ROWS-1][0:COLS];
     wire                vld [0:ROWS-1][0:COLS];
@@ -56,9 +58,7 @@ module systolic_array_wmask_shares #(
             assign valid_act_out[r]  = vld[r][COLS];
         end
         for (c = 0; c < COLS; c = c + 1) begin : g_entry
-            wire signed [N-1:0] w_plain = wt_flat[c*N +: N];
-            wire [SW-1:0]       w_ext   = {{(SW-N){w_plain[N-1]}}, w_plain};
-            assign wt1[0][c] = w_ext - r_sel;
+            assign wt1[0][c] = wt_flat[c*SW +: SW];     // no subtraction here any more
             assign ps[0][c]  = {SW{1'b0}};                    // single tile
         end
     endgenerate
