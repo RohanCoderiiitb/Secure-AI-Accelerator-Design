@@ -12,7 +12,9 @@ module load_controller #(
     parameter WADDR_W   = (WAVES    <= 1) ? 1 : $clog2(WAVES),
     parameter RA_W       = (ARRAY_ROWS <= 1) ? 1 : $clog2(ARRAY_ROWS),
     parameter CA_W       = (ARRAY_COLS <= 1) ? 1 : $clog2(ARRAY_COLS),
-    parameter WW         = N      // weight word sent to the array: N = plain, XW = masked
+    parameter WW         = N,     // weight word sent to the array: N = plain, XW = masked
+    parameter MASKED     = 0,     // 1: two weight memories, m and sext(w) - m, converted here to w - R of the row
+    parameter FW         = MASKED ? WW : N
 ) (
     input  wire clk,
     input  wire reset_n,
@@ -33,12 +35,16 @@ module load_controller #(
     // FL_GB read port
     output wire                  fl_rd_en,
     output wire [FL_ADDR_W-1:0]  fl_rd_addr,
-    input  wire [N-1:0]          fl_rd_data,
+    input  wire [FW-1:0]         fl_rd_data,       // MASKED: share w - m
+    output wire                  fl_rdm_en,        // MASKED: read of the share-m memory (same address)
+    input  wire [WW-1:0]         fl_rdm_data,      // MASKED: share m
 
     // Systolic array weight-load interface
     output reg                      wt_load,
     output reg  [ARRAY_COLS*WW-1:0] wt_flat,
-    input  wire [WW-1:0]            r_sel,    // mask of the row being written (0 for plain builds)
+    input  wire [ARRAY_ROWS*WW-1:0] r_flat,   // MASKED: row masks of the array (unused otherwise)
+    input  wire [WW-1:0]            rnd_gap,  // MASKED: fresh random word every cycle (unused otherwise)
+    output wire                     wt_phase, // weight fetch in progress (MASKED: steps rnd_gap)
 
     // address_generator handshake
     output reg  stream_start,
@@ -69,13 +75,37 @@ module load_controller #(
     // WT_COL_FETCH
     reg [RA_W-1:0] wrow;                 // current row being assembled/presented (counts DOWN)
     reg [CA_W-1:0] wcol;                 // current column being fetched (counts UP, 0..ARRAY_COLS-1)
-    wire wt_issue = (state == S_WT_COL_FETCH);
+    // MASKED: two cycles per column: share m is read first, share w - m in the next cycle, so the two
+    // shares of a weight never sit in registers that change in the same cycle
+    reg  wgap;
+    wire wt_fetch = (state == S_WT_COL_FETCH);
+    wire wt_issue = wt_fetch && (!MASKED || wgap);      // w - m (or plain weight) read
+    wire wm_issue = wt_fetch && MASKED && !wgap;        // m read
+    assign wt_phase = (state == S_WT_COL_FETCH) || (state == S_WT_PRESENT) || (state == S_WT_NEXT);
     assign fl_rd_en   = wt_issue;
+    assign fl_rdm_en  = wm_issue;
     assign fl_rd_addr = wrow * ARRAY_COLS + wcol;
 
     reg               wt_commit_pending;
     reg [CA_W-1:0]    wcol_captured;
-    wire signed [WW-1:0] fl_ext = $signed(fl_rd_data);   // weight sign-extended to WW bits
+
+    // word to the array: plain weight, or (MASKED) (w - m) + (m - R) = w - R. dm_q holds m - R only
+    // for the commit cycle and rnd - R otherwise, so the converter only ever holds random values
+    wire [WW-1:0] wt_word;
+    generate
+        if (MASKED) begin : g_cv
+            reg  [WW-1:0] dm_q;
+            reg           m_valid_q;
+            wire [WW-1:0] r_row = r_flat[wrow*WW +: WW];
+            always @(posedge clk) begin
+                m_valid_q <= wm_issue;
+                dm_q      <= (m_valid_q ? fl_rdm_data : rnd_gap) - r_row;
+            end
+            assign wt_word = fl_rd_data + dm_q;
+        end else begin : g_pl
+            assign wt_word = fl_rd_data[WW-1:0];
+        end
+    endgenerate
 
     integer ii;
 
@@ -89,7 +119,7 @@ module load_controller #(
             row_wr_addr_flat <= {(ARRAY_ROWS*WADDR_W){1'b0}};
             row_wr_data <= {N{1'b0}};
             wrow <= 0; wcol <= 0;
-            wt_commit_pending <= 1'b0; wcol_captured <= 0;
+            wt_commit_pending <= 1'b0; wcol_captured <= 0; wgap <= 1'b0;
             wt_load <= 1'b0;
             wt_flat <= {(ARRAY_COLS*WW){1'b0}};
             stream_start <= 1'b0;
@@ -113,8 +143,8 @@ module load_controller #(
             wt_commit_pending <= wt_issue;
             wcol_captured     <= wcol;
             if (wt_commit_pending)
-                // masked once per column write, with this row's own mask
-                wt_flat[wcol_captured*WW +: WW] <= fl_ext - r_sel;
+                wt_flat[wcol_captured*WW +: WW] <= wt_word;
+            wgap <= MASKED && wt_fetch && !wgap;
 
             case (state)
                 S_IDLE: if (start) begin
@@ -142,7 +172,7 @@ module load_controller #(
                 end
 
                 S_WT_COL_FETCH: begin
-                    if (wcol != ARRAY_COLS-1)
+                    if (wt_issue && wcol != ARRAY_COLS-1)
                         wcol <= wcol + 1'b1;
 
                     if (wt_commit_pending && wcol_captured == ARRAY_COLS-1) begin

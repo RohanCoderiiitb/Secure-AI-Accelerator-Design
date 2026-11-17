@@ -88,6 +88,12 @@ module tb_tvla_accelerator;
         initial begin #1; $dumpvars(0, u_top.u_array); end
 `endif
         initial begin #1; $dumpvars(0, u_top.u_psum_accum); end
+        // weight path: weight memory (read port, words) and load controller, all builds
+        initial begin #1; $dumpvars(0, u_top.u_fl_gb); end
+`ifdef MASKED_ARRAY
+        initial begin #1; $dumpvars(0, u_top.u_fl_gbm); end         // second weight-share memory
+`endif
+        initial begin #1; $dumpvars(0, u_top.u_load_ctrl); end
 `ifdef MASKED_RQ
         // share server: whole scope (buffers, select registers, cores). Indexed hierarchical paths
         // through genvars (g_buf[gc], g_core[gk]) crash iverilog 13 (eval_vec4 assertion).
@@ -102,8 +108,11 @@ module tb_tvla_accelerator;
             initial begin
                 #1;
                 if (DUMP_TAIL_I != 0) begin
+`ifndef MASKED_RQ
+                    // masked builds: the activation is inside u_rqs (always dumped), no maxpool stage
                     $dumpvars(0, u_top.g_post[gp].u_act);
                     $dumpvars(0, u_top.g_post[gp].u_pool);
+`endif
                     $dumpvars(0, u_top.g_of_spad[gp].u_of_spad);
                 end
             end

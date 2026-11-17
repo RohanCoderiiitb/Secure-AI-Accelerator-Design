@@ -117,22 +117,60 @@ module flexnn_top_arr_masked #(
         .rd_data (if_gb_rd_data)
     );
 
-    wire                fl_gb_rd_en;
+    // weights are stored as two shares, m and sext(w) - m (fresh random m per word), in two memories
+    // that are read in different cycles; the load controller turns each pair into w - R of its row
+    wire              wt_phase;              // from the load controller
+    localparam NGW = (2*XW + 63) / 64;
+    wire [NGW*64-1:0] wrx;
+    genvar gw;
+    generate
+        for (gw = 0; gw < NGW; gw = gw + 1) begin : g_wrng
+            reg  [63:0] x;
+            wire [63:0] x1 = x  ^ (x  << 13);
+            wire [63:0] x2 = x1 ^ (x1 >> 7);
+            wire [63:0] x3 = x2 ^ (x2 << 17);
+            always @(posedge clk) begin
+                if (!rst_n)                    x <= 64'h5DEE_CE66_D1CE_4E5B ^ (64'h9E37_79B9_7F4A_7C15 * (gw + 1));
+                else if (fl_wr_en_q | wt_phase) x <= x3;      // steps only while weights are written or loaded
+            end
+            assign wrx[gw*64 +: 64] = x;
+        end
+    endgenerate
+    wire [XW-1:0]        fl_wr_m    = wrx[XW-1:0];
+    wire [XW-1:0]        wt_gap_rnd = wrx[2*XW-1:XW];
+    wire signed [XW-1:0] fl_wr_ext  = $signed(fl_wr_data_q);
+    wire [XW-1:0]        fl_wr_word = fl_wr_ext - fl_wr_m;
+
+    wire                fl_gb_rd_en, fl_gbm_rd_en;
     wire [FL_ADDR_W-1:0] fl_gb_rd_addr;
-    wire [N-1:0]         fl_gb_rd_data;
+    wire [XW-1:0]        fl_gb_rd_data, fl_gbm_rd_data;
 
     global_buffer #(
-        .GB_WORD_WIDTH (N),
+        .GB_WORD_WIDTH (XW),
         .GB_DEPTH      (FL_DEPTH),
         .GB_ADDR_WIDTH (FL_ADDR_W)
-    ) u_fl_gb (
+    ) u_fl_gb (                              // share w - m
         .clk     (clk),
         .wr_en   (fl_wr_en_q),
         .wr_addr (fl_wr_addr_q),
-        .wr_data (fl_wr_data_q),
+        .wr_data (fl_wr_word),
         .rd_en   (fl_gb_rd_en),
         .rd_addr (fl_gb_rd_addr),
         .rd_data (fl_gb_rd_data)
+    );
+
+    global_buffer #(
+        .GB_WORD_WIDTH (XW),
+        .GB_DEPTH      (FL_DEPTH),
+        .GB_ADDR_WIDTH (FL_ADDR_W)
+    ) u_fl_gbm (                             // share m
+        .clk     (clk),
+        .wr_en   (fl_wr_en_q),
+        .wr_addr (fl_wr_addr_q),
+        .wr_data (fl_wr_m),
+        .rd_en   (fl_gbm_rd_en),
+        .rd_addr (fl_gb_rd_addr),
+        .rd_data (fl_gbm_rd_data)
     );
 
     wire [ARRAY_ROWS-1:0]         row_wr_en;
@@ -141,29 +179,21 @@ module flexnn_top_arr_masked #(
 
     wire                     wt_load;
     wire [ARRAY_COLS*XW-1:0] wt_flat;        // masked weight words
-    wire [XW-1:0]            arr_r_sel;      // row mask from the array to the load controller
+    wire [ARRAY_ROWS*XW-1:0] arr_r;          // row masks from the array to the load controller
 
     wire stream_start;
     wire compute_done;
     wire array_done;
     wire lc_idle;
 
-    // mask refresh before every weight load
+    // new row masks at every start, drawn while the activations are fetched (before any weight is read)
+    wire      lc_start = start_q & lc_idle;
     reg [7:0] rf_cnt;
-    reg       lc_start;
     wire      mask_refresh = (rf_cnt != 8'd0);
     always @(posedge clk) begin
-        if (!rst_n) begin
-            rf_cnt   <= 8'd0;
-            lc_start <= 1'b0;
-        end else begin
-            lc_start <= 1'b0;
-            if (start_q && lc_idle && rf_cnt == 8'd0 && !lc_start) rf_cnt <= ARRAY_ROWS;
-            else if (rf_cnt != 8'd0) begin
-                rf_cnt <= rf_cnt - 1'b1;
-                if (rf_cnt == 8'd1) lc_start <= 1'b1;
-            end
-        end
+        if (!rst_n)              rf_cnt <= 8'd0;
+        else if (lc_start)       rf_cnt <= ARRAY_ROWS;
+        else if (rf_cnt != 8'd0) rf_cnt <= rf_cnt - 1'b1;
     end
 
     load_controller #(
@@ -171,7 +201,8 @@ module flexnn_top_arr_masked #(
         .ARRAY_ROWS (ARRAY_ROWS),
         .ARRAY_COLS (ARRAY_COLS),
         .WAVES      (WAVES),
-        .WW         (XW)
+        .WW         (XW),
+        .MASKED     (1)
     ) u_load_ctrl (
         .clk               (clk),
         .reset_n           (rst_n),
@@ -190,10 +221,14 @@ module flexnn_top_arr_masked #(
         .fl_rd_en          (fl_gb_rd_en),
         .fl_rd_addr        (fl_gb_rd_addr),
         .fl_rd_data        (fl_gb_rd_data),
+        .fl_rdm_en         (fl_gbm_rd_en),
+        .fl_rdm_data       (fl_gbm_rd_data),
 
         .wt_load           (wt_load),
         .wt_flat           (wt_flat),
-        .r_sel             (arr_r_sel),
+        .r_flat            (arr_r),
+        .rnd_gap           (wt_gap_rnd),
+        .wt_phase          (wt_phase),
 
         .stream_start      (stream_start),
         .compute_done      (compute_done)
@@ -253,7 +288,7 @@ module flexnn_top_arr_masked #(
         .valid_sum_out (valid_sum_out),
         .act_out       (arr_act_out),
         .valid_act_out (arr_valid_act_out),
-        .r_sel_out     (arr_r_sel)
+        .r_out         (arr_r)
     );
 
     wire [ARRAY_COLS-1:0]         out_wr_en;

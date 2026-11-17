@@ -228,7 +228,7 @@ module systolic_array_wmask_shared #(
     input  wire                  mask_en,
     input  wire                  mask_refresh,
     input  wire                  wt_load,
-    input  wire [COLS*SW-1:0]    wt_flat,      // already masked by the load controller
+    input  wire [COLS*SW-1:0]    wt_flat,      // weight row, already masked (w - R of its row)
     input  wire [ROWS-1:0]       valid_act_in,
     input  wire [ROWS*N-1:0]     act_flat,
     input  wire [COLS*ACCW-1:0]  psum_flat,
@@ -236,7 +236,7 @@ module systolic_array_wmask_shared #(
     output wire [COLS-1:0]       valid_sum_out,
     output wire [ROWS*N-1:0]     act_out,
     output wire [ROWS-1:0]       valid_act_out,
-    output wire [SW-1:0]         r_sel_out     // mask of the row being loaded
+    output wire [ROWS*SW-1:0]    r_out         // row masks, to the load controller
 );
     wire [ROWS*SW-1:0] r_flat;
     wmask_gen #(.SW(SW), .ROWS(ROWS), .SEED(MASK_SEED)) u_mgen (
@@ -251,16 +251,7 @@ module systolic_array_wmask_shared #(
         end
     endgenerate
 
-    // north-edge masking
-    localparam CW = (ROWS > 1) ? $clog2(ROWS) : 1;
-    reg [CW-1:0] ld_cnt;
-    // counts wt_load PULSES (gaps between pulses are allowed, as with the load controller)
-    always @(posedge clk) begin
-        if (!reset_n || mask_refresh)            ld_cnt <= {CW{1'b0}};
-        else if (wt_load && ld_cnt != ROWS-1)    ld_cnt <= ld_cnt + 1'b1;
-    end
-    wire [SW-1:0] r_sel = R[ROWS-1-ld_cnt];
-    assign r_sel_out = r_sel;
+    assign r_out = r_flat;
 
     wire signed [N-1:0]  act  [0:ROWS-1][0:COLS];
     wire                 vld  [0:ROWS-1][0:COLS];
@@ -269,7 +260,7 @@ module systolic_array_wmask_shared #(
 
     generate
         for (r = 0; r < ROWS; r = r + 1) begin : g_west
-            assign act[r][0]         = act_flat[r*N +: N];
+            assign act[r][0]         = valid_act_in[r] ? act_flat[r*N +: N] : {N{1'b0}};   // zeros when not valid
             assign vld[r][0]         = valid_act_in[r];
             assign act_out[r*N +: N] = act[r][COLS];
             assign valid_act_out[r]  = vld[r][COLS];

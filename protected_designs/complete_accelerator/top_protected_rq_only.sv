@@ -178,7 +178,6 @@ module flexnn_top_rq_masked #(
 
         .wt_load           (wt_load),
         .wt_flat           (wt_flat),
-        .r_sel             ({N{1'b0}}),     // plain array: no weight mask
 
         .stream_start      (stream_start),
         .compute_done      (compute_done)
@@ -284,13 +283,10 @@ module flexnn_top_rq_masked #(
     );
 
     wire [ARRAY_COLS-1:0]           rq_valid;
-    wire [ARRAY_COLS*N-1:0]         rq_q_flat;
-    wire [ARRAY_COLS*N-1:0]         rq_q0, rq_q1;
+    wire [ARRAY_COLS*N-1:0]         rq_q0, rq_q1;          // activated output shares
     wire [ARRAY_COLS-1:0]           rq_s0, rq_s1;
-    wire [ARRAY_COLS-1:0]           act_valid_stage;
-    wire [ARRAY_COLS*N-1:0]         act_y_flat;
     wire [ARRAY_COLS-1:0]           mp_valid;
-    wire [ARRAY_COLS*N-1:0]         mp_y_flat;
+    wire [ARRAY_COLS*N-1:0]         mp_y0, mp_y1;          // pooled output shares
     wire [ARRAY_COLS-1:0]           of_wr_en_c;
     wire [ARRAY_COLS*OF_ADDR_W-1:0] of_wr_addr_flat_c;
 
@@ -305,7 +301,7 @@ module flexnn_top_rq_masked #(
         end
     endgenerate
 
-    // NRQ shared masked requantizer cores
+    // NRQ shared masked requantizer cores, each followed by a masked activation unit
     rq_share_server #(
         .N(N), .XW(XW), .MW(MW), .SW(SW), .BMW(BMW), .COLS(ARRAY_COLS), .WAVES(WAVES),
         .NRQ(NRQ), .DOM_REG(DOM_REG), .SPLIT(1)
@@ -318,6 +314,9 @@ module flexnn_top_rq_masked #(
         .bm_flat    (bm_flat),
         .m0_flat    (m0_q),
         .shift_flat (shift_q),
+        .act_mode        (act_mode_q),
+        .act_clamp_high  (act_clamp_high_q),
+        .act_leaky_shift (act_leaky_shift_q),
         .valid_out  (rq_valid),
         .q0_flat    (rq_q0),
         .q1_flat    (rq_q1),
@@ -332,34 +331,38 @@ module flexnn_top_rq_masked #(
         sat1_q <= (rq_valid & rq_s1) | (~rq_valid & sat1_q);
     end
 
+    // outputs stay masked up to the output buffer read port; POOL_LEN = 1 needs no pooling logic
+    `include "msk_counts.vh"
+    localparam ZMP = mskf_cout_z(N) + N;                   // masked maxpool random bits per column
     genvar p;
     generate
+        if (POOL_LEN <= 1) begin : g_nopool
+            assign mp_valid = rq_valid;
+            assign mp_y0    = rq_q0;
+            assign mp_y1    = rq_q1;
+        end else begin : g_mpool
+            wire [ARRAY_COLS*ZMP-1:0] mp_z;
+            wire [ARRAY_COLS-1:0]     mp_busy;
+            rng_bank #(.W(ARRAY_COLS*ZMP), .SEED(64'hA5A5_0F0F_3C3C_9696)) u_mp_rng (
+                .clk(clk), .reset_n(rst_n), .en(|mp_busy), .rnd(mp_z));
+            for (p = 0; p < ARRAY_COLS; p = p + 1) begin : g_mp
+                maxpool_unit_masked #(.N(N), .CW(CW), .REG(DOM_REG), .FD(WAVES)) u_pool (
+                    .clk       (clk),
+                    .reset_n   (rst_n),
+                    .valid_in  (rq_valid[p]),
+                    .win_len   (pool_win_len_q),
+                    .x0        (rq_q0[p*N +: N]),
+                    .x1        (rq_q1[p*N +: N]),
+                    .z         (mp_z[p*ZMP +: ZMP]),
+                    .valid_out (mp_valid[p]),
+                    .y0        (mp_y0[p*N +: N]),
+                    .y1        (mp_y1[p*N +: N]),
+                    .busy      (mp_busy[p])
+                );
+            end
+        end
+
         for (p = 0; p < ARRAY_COLS; p = p + 1) begin : g_post
-            // shares recombined here, at the edge of the masked datapath
-            assign rq_q_flat[p*N +: N] = rq_q0[p*N +: N] ^ rq_q1[p*N +: N];
-
-            activation_unit #(.N(N)) u_act (
-                .clk         (clk),
-                .reset_n     (rst_n),
-                .mode        (act_mode_q),
-                .valid_in    (rq_valid[p]),
-                .x_in        (rq_q_flat[p*N +: N]),
-                .clamp_high  (act_clamp_high_q),
-                .leaky_shift (act_leaky_shift_q),
-                .valid_out   (act_valid_stage[p]),
-                .y_out       (act_y_flat[p*N +: N])
-            );
-
-            maxpool_unit #(.N(N), .CW(CW)) u_pool (
-                .clk       (clk),
-                .reset_n   (rst_n),
-                .valid_in  (act_valid_stage[p]),
-                .win_len   (pool_win_len_q),
-                .x_in      (act_y_flat[p*N +: N]),
-                .valid_out (mp_valid[p]),
-                .y_out     (mp_y_flat[p*N +: N])
-            );
-
             // OF_DEPTH outputs per column per tile
             assign of_wr_en_c[p] = mp_valid[p];
             assign of_wr_addr_flat_c[p*OF_ADDR_W +: OF_ADDR_W] = post_cnt[p];
@@ -385,18 +388,21 @@ module flexnn_top_rq_masked #(
     genvar c;
     generate
         for (c = 0; c < ARRAY_COLS; c = c + 1) begin : g_of_spad
+            wire [2*N-1:0] of_rd_sh;
+            // both shares stored; recombined only when the word is read out
             scratchpad #(
-                .DATA_WIDTH (N),
+                .DATA_WIDTH (2*N),
                 .SPAD_DEPTH (OF_DEPTH)
             ) u_of_spad (
                 .clk     (clk),
                 .wr_en   (of_wr_en_c[c]),
                 .wr_addr (of_wr_addr_flat_c[c*OF_ADDR_W +: OF_ADDR_W]),
-                .wr_data (mp_y_flat[c*N +: N]),
+                .wr_data ({mp_y1[c*N +: N], mp_y0[c*N +: N]}),
                 .rd_en   (of_rd_en_q[c]),
                 .rd_addr (of_rd_addr_q[c*OF_ADDR_W +: OF_ADDR_W]),
-                .rd_data (of_rd_data_c[c*N +: N])
+                .rd_data (of_rd_sh)
             );
+            assign of_rd_data_c[c*N +: N] = of_rd_sh[N-1:0] ^ of_rd_sh[2*N-1:N];
         end
     endgenerate
 

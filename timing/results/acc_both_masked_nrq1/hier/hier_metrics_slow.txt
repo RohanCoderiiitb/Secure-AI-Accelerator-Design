@@ -1,2 +1,0 @@
-setup_wns_ns -10.3336
-setup_tns_ns -12905.4009

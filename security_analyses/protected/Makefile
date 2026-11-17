@@ -263,7 +263,7 @@ VVPF  := $(BUILD)/tb_$(SUF).vvp
 ABS   := $(CURDIR)
 TTDF  := $(if $(filter 1,$(TTD)),--ttd --repeats $(REPEATS),)
 
-.PHONY: dirs check build null tvla tvla2_selftest tvla2_null tvla2 \
+.PHONY: acc_cycles acc_throughput dirs check build null tvla tvla2_selftest tvla2_null tvla2 \
         adla_null adla maskoff all main clean func \
         latency func_acc acc_all acc_random acc_fixed acc_build acc_list requant_tvla requant_2nd_adla \
         shuffle_func shuffle_tvla shuffle_2nd_adla shuffle_cpa shuffle_cpa_only
@@ -488,6 +488,32 @@ BDEF_both := -DPROT     $(call accp,tb_tvla_accelerator)
 
 # ---- every functional bench ----
 FNRQS ?= 1 2 5
+# throughput of the whole accelerator, unprotected vs fully masked (many tiles, new data every tile)
+ACC_TB_THRU := $(ACC_DIR)/tb_accel_throughput.sv
+THRU_NTILES ?= 100
+FMHZ_UNP    ?= 100      # clock (MHz) of the unprotected design, from timing analysis
+FMHZ_MSK    ?= 100      # clock (MHz) of the masked design
+acc_throughput:
+	@mkdir -p $(BUILD)
+	@test -f $(ACC_TB_THRU) || { echo "  [FAIL] $(ACC_TB_THRU) missing"; exit 1; }
+	@for n in $(FNRQS); do \
+	  echo "=== throughput: full masked accelerator NRQ=$$n"; \
+	  $(IVERILOG) -g2012 -I $(ACC_DIR) $(call accp,tb_accel_throughput) -Ptb_accel_throughput.NRQ=$$n \
+	    -Ptb_accel_throughput.FMHZ_R=$(strip $(FMHZ_UNP)).0 -Ptb_accel_throughput.FMHZ_D=$(strip $(FMHZ_MSK)).0 \
+	    -o $(BUILD)/tb_thru_$$n.vvp $(ACC_COMMON) $(ACC_UNP) $(ACC_PROT) $(ACC_TB_THRU) || exit 1; \
+	  $(VVP) -n $(BUILD)/tb_thru_$$n.vvp +NTILES=$(THRU_NTILES) +NBURST=$(THRU_NTILES) +SEED=$(SEED) | sed -n '/=====/,$$p'; \
+	done
+
+# total cycles of the full masked accelerator (one tile start->done, and back-to-back tiles)
+acc_cycles:
+	@mkdir -p $(BUILD)
+	@for n in $(FNRQS); do \
+	  echo "=== cycles: full masked accelerator NRQ=$$n"; \
+	  $(IVERILOG) -g2012 -I $(ACC_DIR) $(call accp,tb_accel_func) -Ptb_accel_func.NRQ=$$n \
+	    -o $(BUILD)/tb_cycles_$$n.vvp $(ACC_COMMON) $(ACC_UNP) $(ACC_PROT) $(ACC_TB_FUNC) || exit 1; \
+	  $(VVP) -n $(BUILD)/tb_cycles_$$n.vvp +NTEST=10 +SEED=$(SEED) | grep -E "start -> done|back-to-back|FAIL"; \
+	done
+
 func_acc:
 	@mkdir -p $(BUILD)
 	@for f in $(ACC_COMMON) $(ACC_UNP) $(ACC_PROT) $(ACC_DIR)/msk_counts.vh $(ACC_TB_LAT) $(ACC_TB_FUNC) $(FUNC_TB); do \
@@ -507,7 +533,7 @@ func_acc:
 	       $(ACC_DIR)/requantize_masked.sv $(ACC_TB_LAT)
 	$(VVP) -n $(BUILD)/tb_requant_latency.vvp +NBURST=$(LAT_NBURST) +SEED=$(SEED)
 	@echo "=== tb_func_wmask_shared (accelerator copies of the arrays)"
-	$(IVERILOG) -g2012 -Ptb_func_wmask_shared.N=$(ACC_N) -Ptb_func_wmask_shared.ACCW=$(ACC_ACCW) \
+	$(IVERILOG) -g2012 -DWMASK_PREMASK -Ptb_func_wmask_shared.N=$(ACC_N) -Ptb_func_wmask_shared.ACCW=$(ACC_ACCW) \
 	       -Ptb_func_wmask_shared.ROWS=$(ACC_ROWS) -Ptb_func_wmask_shared.COLS=$(ACC_COLS) \
 	       -o $(BUILD)/func_wmask_shared_acc.vvp $(ACC_DIR)/multiplier.sv $(ACC_DIR)/processing_element.sv \
 	       $(ACC_DIR)/systolic_array.sv $(ACC_DIR)/systolic_array_wmask_shared.sv $(FUNC_TB)
