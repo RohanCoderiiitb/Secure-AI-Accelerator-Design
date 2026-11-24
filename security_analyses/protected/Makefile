@@ -56,6 +56,8 @@
 #   make tvla                    first-order fixed vs random
 #   make tvla2_null              second-order null test  (must PASS)
 #   make tvla2                   second-order fixed vs random
+#   make biv_all                 BIVARIATE second order: shared-mask array + complete
+#                                accelerator, random and fixed activations (section below)
 #   make maskoff                 sanity: masking OFF, first order MUST detect
 #   make adla_null / make adla   ADLA (reuses the TVLA datasets, needs null / tvla first)
 #
@@ -263,7 +265,7 @@ VVPF  := $(BUILD)/tb_$(SUF).vvp
 ABS   := $(CURDIR)
 TTDF  := $(if $(filter 1,$(TTD)),--ttd --repeats $(REPEATS),)
 
-.PHONY: acc_cycles acc_throughput dirs check build null tvla tvla2_selftest tvla2_null tvla2 \
+.PHONY: arr_biv acc_biv arr_biv_all acc_biv_all biv_all acc_cycles acc_throughput acc_sensitivity acc_sensitivity_all dirs check build null tvla tvla2_selftest tvla2_null tvla2 \
         adla_null adla maskoff all main clean func \
         latency func_acc acc_all acc_random acc_fixed acc_build acc_list requant_tvla requant_2nd_adla \
         shuffle_func shuffle_tvla shuffle_2nd_adla shuffle_cpa shuffle_cpa_only
@@ -609,6 +611,76 @@ acc_build:
 	@$(call NAME_AD,$(BPFXA))
 	@find $(BOUTA) -type f -name '*.png' ! -name '*adla__statistic.png' -delete
 	@rm -f $(BTR)/$(BTAG)_summary.csv $(BTR)/$(BTAG)_tvla2.csv $(BTR)/$(BTAG)_adla.csv
+
+# ---- detection-sensitivity calibration (synthetic leak planted in existing traces) ----
+# needs traces/complete_accelerator_<ABUILD>_<ACTS>.npz (from acc_build); no new simulation
+SENS_OUT    := $(HERE)/out/sensitivity_outputs/$(BNAME)
+SENS_REF    := $(BTR)/complete_accelerator_unprotected_$(ACTS).npz
+SENS_PROXY  ?= P_tot,P_reg,P_comb
+SENS_TRIALS ?= 200
+SENS_CYCLES ?=
+# both attacker models (fixed and random activations) in one go
+acc_sensitivity_all:
+	@for a in fixed random; do \
+	  $(MAKE) --no-print-directory acc_sensitivity ABUILD=$(ABUILD) ACTS=$$a || exit 1; done
+
+acc_sensitivity:
+	@test -f $(BTR)/$(BTAG).npz || { echo "  [FAIL] $(BTR)/$(BTAG).npz missing -- run 'make acc_build ABUILD=$(ABUILD) ACTS=$(ACTS)' first"; exit 1; }
+	@mkdir -p $(SENS_OUT)
+	$(PY) $(HERE)/$(SCRIPTS)/calibrate_sensitivity.py --self-test
+	$(PY) $(HERE)/$(SCRIPTS)/calibrate_sensitivity.py --npz $(BTR)/$(BTAG).npz --out $(SENS_OUT) \
+	       --proxies $(SENS_PROXY) --trials $(SENS_TRIALS) --seed $(SEED) \
+	       $(if $(SENS_CYCLES),--cycles $(SENS_CYCLES)) $(if $(wildcard $(SENS_REF)),--ref $(SENS_REF)) \
+	       | tee $(SENS_OUT)/$(BNAME)__sensitivity_log.txt
+
+# =====================================================================
+# BIVARIATE second-order TVLA (two shares leaking in DIFFERENT cycles)
+#   make arr_biv ACTS=random|fixed   shared-mask array (DUT=wmask_shared_array):
+#        new dataset of BIV_N traces with the shadow column dumped (+DUMP_SHADOW=1,
+#        both shares in the traces); 1st order + univariate + bivariate 2nd order
+#   make acc_biv ABUILD=both ACTS=random|fixed   complete accelerator: bivariate on
+#        the existing traces/complete_accelerator_<build>_<acts>.npz (no new simulation)
+#   make arr_biv_all / acc_biv_all   both activation cases;  make biv_all   all four
+#   knobs: BIV_N=10000 traces (array), BIV_PERM=100 label shuffles for the null,
+#          BIV_MAXLAG= (empty = every pair of cycles)
+#   plots: out/second_order_tvla_outputs/<design>/...__bivariate__{t-heatmap,max-t-per-cycle}.png
+# =====================================================================
+BIV_N    ?= 10000
+BIV_PERM ?= 100
+BIV_MAXLAG ?=
+BIV_ARGS  = --bivariate --biv-perm $(BIV_PERM) $(if $(BIV_MAXLAG),--max-lag $(BIV_MAXLAG),)
+ARR_BTAG  = wmask_shared_array$(ROWS)x$(COLS)_wt_$(ACTS)acts_shadow
+ARR_BOUT  = $(OUT_T2)/wt_masked_shared_array$(ROWS)x$(COLS)/tvla_wt_bivariate_$(ACTS)acts
+ARR_BPFX  = $(ARR_BOUT)/wt_masked_shared_array$(ROWS)x$(COLS)__target-wt__$(ACTS)-acts__2nd-order
+arr_biv: dirs
+	@test -n "$(filter random fixed,$(ACTS))" || { echo "  [FAIL] ACTS=$(ACTS): use random or fixed"; exit 1; }
+	$(MAKE) --no-print-directory build DUT=wmask_shared_array ROWS=$(ROWS) COLS=$(COLS)
+	@mkdir -p $(TR) $(ARR_BOUT)
+	$(VVP) -n $(BUILD)/tb_wmask_shared_array$(ROWS)x$(COLS).vvp +NTRACES=$(BIV_N) +SEED=$(SEED) \
+	       +MODE=tvla +TVLA_TARGET=wt +ACTS=$(ACTS) +DUMP_SHADOW=1 +TAG=$(ARR_BTAG) +OUTDIR=$(TR)
+	$(PY) $(USCRIPTS)/vcd_power.py --vcd $(TR)/$(ARR_BTAG).vcd \
+	       --meta $(TR)/$(ARR_BTAG).meta.csv --out $(TR)/$(ARR_BTAG).npz
+	$(if $(filter 1,$(KEEP_VCD)),,rm -f $(TR)/$(ARR_BTAG).vcd)
+	$(PY) $(SCRIPTS)/run_tvla_second_order.py --npz $(TR)/$(ARR_BTAG).npz --compare $(BIV_ARGS) \
+	       --plot $(ARR_BPFX) --biv-plot $(ARR_BPFX) --csv $(OUT_T2)/tvla2_summary.csv
+	@$(call NAME,$(ARR_BPFX))
+
+acc_biv:
+	@test -f $(BTR)/$(BTAG).npz || { echo "  [FAIL] $(BTR)/$(BTAG).npz missing -- run 'make acc_build ABUILD=$(ABUILD) ACTS=$(ACTS)' first"; exit 1; }
+	@mkdir -p $(BOUT2)
+	$(PY) $(HERE)/$(SCRIPTS)/run_tvla_second_order.py --npz $(BTR)/$(BTAG).npz --no-univariate $(BIV_ARGS) \
+	       --biv-plot $(BPFX2) --csv $(BOUT2)/$(BNAME)__bivariate.csv
+
+arr_biv_all:
+	@for a in random fixed; do $(MAKE) --no-print-directory arr_biv ACTS=$$a || exit 1; done
+
+acc_biv_all:
+	@for a in random fixed; do $(MAKE) --no-print-directory acc_biv ABUILD=$(ABUILD) ACTS=$$a || exit 1; done
+
+biv_all:
+	$(PY) $(SCRIPTS)/run_tvla_second_order.py --self-test
+	$(MAKE) --no-print-directory arr_biv_all
+	$(MAKE) --no-print-directory acc_biv_all ABUILD=$(ABUILD)
 
 # =====================================================================
 # Stand-alone masked requantizer TVLA (fixed vs random acc_in),

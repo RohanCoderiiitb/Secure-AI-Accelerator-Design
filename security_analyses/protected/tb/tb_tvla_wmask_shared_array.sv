@@ -25,6 +25,8 @@
 //           +FIXSEED=<n>  seed for the FIXED weight matrix only (multi-seed runs)
 //           +DUMP_SHADOW=1  also dump the shadow column (should be clean)
 //           +DUMP_OUT=1     also dump the per-column recombination (g_out)
+//           +ACTS=fixed     same activation tile in every trace (attacker fixes the inputs);
+//                           default random. +ACTSEED=<n> seeds the fixed tile (default 93)
 //
 // Compile:
 //   iverilog -g2012 -I <dir of sca_capture.vh> -o tvla.vvp \
@@ -56,6 +58,9 @@ module tb_tvla_wmask_shared_array;
 
     integer MASK_OFF_I, FIXSEED_I, DUMP_SHADOW_I, DUMP_OUT_I;
     integer fixseed_state;
+    integer ACTSEED_I, actseed_state;     // +ACTS=fixed: one activation tile for every trace
+    reg [8*8-1:0] ACTS_S;
+    reg     acts_fixed;
     reg     use_fixseed;
     reg     mask_en = 1'b1;
 
@@ -97,6 +102,7 @@ module tb_tvla_wmask_shared_array;
     reg signed [N-1:0] act_tile [0:STREAM_LEN-1][0:ROWS-1];
     reg signed [N-1:0] cur_w    [0:ROWS-1][0:COLS-1];
     reg signed [N-1:0] fix_w    [0:ROWS-1][0:COLS-1];
+    reg signed [N-1:0] fix_act  [0:STREAM_LEN-1][0:ROWS-1];
 
     integer t, k, r, c, cyc, idx;
     reg grp, eff;
@@ -151,6 +157,16 @@ module tb_tvla_wmask_shared_array;
             for (c = 0; c < COLS; c = c + 1)
                 fix_w[r][c] = use_fixseed ? $random(fixseed_state) : rand_i8(0);
 
+        // +ACTS=fixed: own seed, so the weight / mask random streams are unchanged
+        if (!$value$plusargs("ACTS=%s", ACTS_S)) ACTS_S = "random";
+        if (!$value$plusargs("ACTSEED=%d", ACTSEED_I)) ACTSEED_I = 93;
+        acts_fixed = (ACTS_S == "fixed");
+        actseed_state = ACTSEED_I;
+        for (k = 0; k < STREAM_LEN; k = k + 1)
+            for (r = 0; r < ROWS; r = r + 1)
+                fix_act[k][r] = $random(actseed_state);
+        $display("[MASK] activations: %0s", acts_fixed ? "FIXED (same tile every trace)" : "random");
+
         $dumpfile({OUTDIR, "/", TAG, ".vcd"});
 
         sca_open_meta("systolic_array_wmask_shared", CLK_NS, CAPTURE);
@@ -177,7 +193,10 @@ module tb_tvla_wmask_shared_array;
                     cur_w[r][c] = rand_i8(0);
             for (k = 0; k < STREAM_LEN; k = k + 1)
                 for (r = 0; r < ROWS; r = r + 1)
-                    act_tile[k][r] = rand_i8(0);
+                begin
+                    tmp8 = rand_i8(0);              // always drawn: keeps the bench PRNG stream identical
+                    act_tile[k][r] = acts_fixed ? fix_act[k][r] : tmp8;
+                end
 
             if (!eff) begin
                 if (TVLA_TARGET == "row0") begin
